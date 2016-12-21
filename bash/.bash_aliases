@@ -29,7 +29,6 @@ alias ls="command ls ${colorflag}"
 alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
 
-
 alias du='du -kh'    # Makes a more readable output.
 alias df='df -kTh'
 
@@ -44,3 +43,7 @@ alias tf="tail -n 500 -f"
 # Editors and utilities
 alias em="emacs -nw"
 
+# Fast connect to known machines
+alias svante="ssh -Y darothen@svante.mit.edu"
+alias yellowstone="ssh -Y darothen@yellowstone.ucar.edu"
+alias legion="ssh -Y darothen@legion.mit.edu"
