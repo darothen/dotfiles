@@ -10,6 +10,13 @@ else
     echo "   none"
 fi
 
+# Compute and display quota usage 
+echo
+usage=$(du -h --max-depth=0 $HOME | awk '{print $1;}')
+total=$(df -h | grep "/home" | awk '{print $4" avail ("$5" full)";}')
+echo "$HOME - using $usage out of 300 GB; $total"
+echo
+
 # Load standard modules
 # module load miniconda
 
