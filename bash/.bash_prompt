@@ -45,7 +45,7 @@ case "$HOST" in
         mach_color=$BRed;;
     yslogin*)
         mach_color=$BYellow;;
-    svante*)
+    svante* | fs0* | c0*)
         mach_color=$BPurple;;
     newton*)
         mach_color=$BCyan;;
