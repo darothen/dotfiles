@@ -1,0 +1,18 @@
+
+printf "Configuring yellowstone directories and modules...\n"
+
+# Print out current usage and job status, just for reference
+gladequota
+bjobs
+printf "\n"
+
+# Load standard modules
+module load python all-python-libs
+
+# Set up working directory
+# SRATCH - 10 TB, no backup, purged after 90 days
+export SCRATCH=/glade/scratch/darothen
+export TMPDIR=$SCRATCH
+# WORK - 512 GB, no backup, no purge
+export WORK=/glade/p/work/darothen
+

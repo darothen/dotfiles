@@ -1,0 +1,74 @@
+[user]
+	name = Daniel Rothenberg
+	email = darothen@mit.edu
+[core]
+	editor = emacs -nw
+	excludesfile = $HOME/.gitignore_global
+[merge]
+	tool = diffmerge
+[pull]
+	rebase = true
+[alias]
+	co = checkout
+	ci = commit
+	br = branch
+
+	# list files in repo
+	ls = ls-tree --full-tree -r HEAD
+
+	# verbose pull
+	pv = pull -v
+
+	# friendly statuses
+	st = status -sb
+
+	# Add all unstaged changes/removals and commit. Just need to pass message
+	# example: git ac 'My message'
+	ac = !git add -A && git commit -m
+	
+	# Pretty log
+	lg = log --decorate --stat --graph --pretty=format:'%C(yellow)%h%Creset (%ar - %Cred%an%Creset), %s%n'
+
+	# Pretty visual tree
+	tree = "log --oneline --decorate --all --graph"
+
+	# Quickly get short git commit of HEAD
+	ver = describe --always --match v[0-9]*
+
+    ldiff = difftool -t latex
+[color]
+	ui = auto
+	branch = auto
+	interactive = auto
+	diff = auto
+
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+	
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true
+
+[diff]
+	tool = diffmerge
+[difftool]
+    prompt = false
+[difftool "diffmerge"]
+	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
+[difftool.latex]
+    cmd = git-latexdiff \"$LOCAL\" \"$REMOTE\"
+[mergetool "diffmerge"]
+	trustExitCode = true
+	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[filter "lfs"]
+	clean = git lfs clean %f
+	smudge = git lfs smudge %f
+	required = true

@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+""" Install dotfiles for a specific machine.
+
+"""
+from __future__ import print_function
+
+import errno
+import os
+
+DOTFILES = {
+    'git': [".gitconfig", ".gitignore", ],
+    'bash': ['.bashrc', ] +
+            [".bash_%s" % s for s in [
+                "aliases", "exports", "functions", "profile", "prompt"
+            ]],
+    'conda': ['.condarc', ],
+    '.emacs.d': ['init.el', ],
+    '.atom': ['config.cson', 'keymap.cson'],
+}
+INTERMEDIATES = ['.emacs.d', '.atom']
+
+MACHINES = [
+    "mbp",         # Work MacbookPro/OSX config
+    "legion",      # legion.mit.edu
+    "svante",      # svante.mit.edu
+    "yellowstone", # NCAR Yellowstone Supercomputer
+    "newton",      # Singapore Supercomputing Center
+    "ubuntu",      # Home/personal Ubuntu config
+    "midway",      # Midway cluster at UChicago, midway.rcc.uchicago.edu
+    "default",     # Barebones, no-configuration
+]
+
+
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
+parser = ArgumentParser(description=__doc__,
+                        formatter_class=RawDescriptionHelpFormatter)
+parser.add_argument("machine", type=str, choices=MACHINES,
+                    help="Name of machine for installation of bash scripts")
+
+
+def link(path_to_target, path_to_symlink):
+    """ Convenience function for symlinking; takes care of
+    printing information and overwriting files if necessary. """
+
+    link_str_fmt = "{mode:s} {target:s} -> {src:s}"
+
+    MODE = "Linking"
+    try:
+        os.symlink(path_to_target, path_to_symlink)
+    except OSError as e:
+        if e.errno == errno.EEXIST:  # File already exists
+            os.remove(path_to_symlink)
+            os.symlink(path_to_target, path_to_symlink)
+            MODE = "Overwriting"
+
+    print(link_str_fmt.format(mode=MODE, target=path_to_target,
+                              src=path_to_symlink))
+
+
+def install(machine):
+
+    HOME = os.environ['HOME']
+    DOT_DIR = os.getcwd()
+
+    if machine is None:
+        print("Not looking for machine-specific additional file.")
+    else:
+        src = os.path.join(DOT_DIR, 'bash', '.bash_%s' % machine)
+        dest = os.path.join(HOME, '.bash_machine')
+        if os.path.exists(src):
+            link(src, dest)
+
+    for tool in DOTFILES:
+        files = DOTFILES[tool]
+
+        for f in files:
+            src = os.path.join(DOT_DIR, tool, f)
+            # Do we need to include an intermediate folder in the dotfile path?
+            if tool in INTERMEDIATES:
+                dest = os.path.join(HOME, tool, f)
+            else:
+                dest = os.path.join(HOME, f)
+
+            link(src, dest)
+
+if __name__ == "__main__":
+
+    args = parser.parse_args()
+    print("Installing for machine {}".format(args.machine))
+    install(args.machine)

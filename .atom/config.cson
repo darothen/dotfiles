@@ -1,0 +1,126 @@
+"*":
+  "atom-beautify":
+    general:
+      _analyticsUserId: "307c24f6-918a-4aee-998d-c313fcdb1fe6"
+  "autocomplete-python": {}
+  build:
+    notificationOnRefresh: true
+  "build-make":
+    jobs: 1
+  core:
+    allowPendingPaneItems: false
+    automaticallyUpdate: false
+    disabledPackages: [
+      "linter-python-pep8"
+      "markdown-preview"
+      "linter-python-pyflakes"
+      "language-gfm"
+      "linter-pep8"
+      "minimap"
+    ]
+    ignoredNames: [
+      ".git"
+      ".hg"
+      ".svn"
+      ".DS_Store"
+      "._*"
+      "#*"
+      "*.pyc"
+      "Thumbs.db"
+      "*.ipynb"
+      "*.nc"
+      "__pycache__"
+    ]
+    themes: [
+      "atom-dark-ui"
+      "pubster-syntax"
+    ]
+  editor:
+    fontFamily: "Source Code Pro"
+    fontSize: 13
+    invisibles: {}
+    showInvisibles: true
+    softWrap: true
+    softWrapAtPreferredLineLength: true
+    tabLength: 4
+    tabType: "soft"
+  "exception-reporting":
+    userId: "085506b3-d535-1c9d-741e-20c385bce7cb"
+  jshint: {}
+  "latex-plus":
+    advancedEnabled: true
+    texBin: "/usr/texbin/"
+  latexer:
+    parameters_to_search_citations_by: [
+      "title"
+      "author"
+      "citekey"
+    ]
+  latextools:
+    builderSettings: {}
+    citeAutoTrigger: false
+    citeAutocompleteFormat: "{author_short}"
+    darwin: {}
+    linux: {}
+    win32: {}
+  linter:
+    errorPanelHeight: 22
+    lintOnFlyInterval: 500
+  "linter-chktex":
+    executablePath: "/usr/texbin/chktex"
+  "linter-eslint": {}
+  "linter-jshint":
+    lintInlineJavaScript: true
+    lintJSXFiles: true
+  "linter-pep8":
+    ignoreErrorCodes: [
+      "E501"
+      "E226"
+    ]
+  "markdown-preview-plus":
+    enablePandoc: true
+    liveUpdate: false
+    pandocArguments: [
+      "--smart --filter pandoc-crossref"
+    ]
+    pandocBIBFile: "/Users/daniel/Dropbox_MIT/Papers/library.bib"
+    pandocBibliography: true
+    pandocCSLFile: "/Users/daniel/tools/pandoc/csl/american-geophysical-union.csl"
+    pandocMarkdownFlavor: "markdown+simple_tables+table_captions+yaml_metadata_block+tex_math_double_backslash"
+    pandocRemoveReferences: false
+    useGitHubStyle: true
+  minimap:
+    absoluteMode: true
+    plugins:
+      "git-diff": true
+      "git-diffDecorationsZIndex": 0
+  "open-unsupported-files": {}
+  "spell-check":
+    grammars: [
+      "text.tex.latex"
+      "text.plain"
+      "text.html.basic"
+      "text.markdown"
+      "text.md"
+    ]
+  "svg-preview": {}
+  "todo-show": {}
+  "tree-view":
+    hideIgnoredNames: true
+    hideVcsIgnoredFiles: true
+    squashDirectoryNames: true
+  welcome:
+    showOnStartup: false
+".fortran.free.source":
+  editor:
+    showIndentGuide: true
+    showInvisibles: true
+".fortran.modern.source":
+  editor:
+    showIndentGuide: true
+"autocomplete-bibtex":
+  bibtex: [
+    "home/daniel/Dropbox_MIT/Papers/library.bib"
+  ]
+  resultTemplate: "citep{[key]}"
+  scope: "text.tex.latex"

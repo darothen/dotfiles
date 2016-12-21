@@ -1,0 +1,71 @@
+## OSX crud
+.DS_Store
+._*
+
+## Emacs 
+# -*- mode: gitignore; -*-
+*~
+*~
+\#*\#
+*.elc
+auto-save-list
+tramp
+.\#*
+
+## Fortran
+# Compiled objects
+*.slo
+*.lo
+*.o
+*obj
+
+# Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Module files
+*.mod
+
+# Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+
+## Python
+# Byte/compiled files
+*.py[cod]
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Sphinx documentation
+docs/_build/
+
+# IPython Notebook
+.ipynb_checkpoints/

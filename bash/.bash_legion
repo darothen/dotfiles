@@ -1,0 +1,51 @@
+## Load ModuleFiles package, but don't load anything in particular.
+if [ $hostnamestr = legion ]
+then
+    source /usr/share/modules/init/bash    
+fi
+export MODULEPATH=$HOME/modulefiles:$MODULEPATH
+
+# module load eaps/pgi
+# module load netcdf/pgi
+# module load mpich/pgi
+# module load miniconda
+
+# Setup nbserver alias for jupyter
+alias jupyter-nbserver='JUPYTER_CONFIG_DIR=~/.jupyter-nbserver jupyter notebook'
+
+# Update PATH with local libraries
+# export PATH=/home/darothen/bin:/home/darothen/local/bin:$PATH
+
+# Update LD_LIBRARY_PATH for locally installed packages
+# export LD_LIBRARY_PATH=/home/darothen/local/lib:/home/darothen/local$LD_LIBRARY_PATH
+
+## VisIt
+#export PATH=/home/darothen/visit/bin:$PATH
+
+## ADD DAKOTA LIBS
+#export DAKOTA_DIR=/home/darothen/dakota
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DAKOTA_DIR/bin:$DAKOTA_DIR/bin
+##export LD_LIBRARY_PATH=$DAKOTA_DIR/lib:/$ANACONDA/lib:$LD_LIBRARY_PATH
+#export PATH=$PATH:$DAKOTA_DIR/bin:$DAKOTA_DIR/test
+
+## Path to CESM/MARC code and run directories
+export CESM_SRC=$HOME/models/CESM/cesm1_2_2_marc-working
+export MARC_SRC=$HOME/models/CESM/marc
+export CESM_RUN=$HOME/workspace/CESM_runs/122-marc/
+
+## Paths to network drives
+export NETSTORE1=/net/s000/volume1/storage01
+export NETSTORE2=/net/s001/volume1/storage01
+
+# JASPER
+#export JASPERLIB=$LOCAL_LIB
+#export JASPERINC=$LOCAL_INC
+
+# NCARG
+#export NCARG_ROOT=/home/darothen/local
+
+# PERL5 - local install libraries
+export PERL5LIB=/home/darothen/perl5/lib/perl5:$PERL5LIB
+
+# Hack for Paraview client to open correctly
+export LIBGL_ALWAYS_INDIRECT=y

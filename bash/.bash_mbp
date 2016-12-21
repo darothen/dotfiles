@@ -1,0 +1,41 @@
+
+# If Anaconda or miniconda is locally installed, then add it to
+# the path
+if [ -d $HOME/anaconda ]; then
+    export PATH=$HOME/anaconda/bin:$PATH
+        export QT_API=pyside
+        fi
+        if [ -d $HOME/miniconda ]; then
+            export PATH=$HOME/miniconda/bin:$PATH
+            fi
+
+# Links to Dropbox folders, use quotes when accessing (cd "$DBPER")
+export DBPER=/Users/daniel/Dropbox\ \(Personal\)/
+export DBMIT=/Users/daniel/Dropbox\ \(MIT\)/
+export DBRESEARCH=$DBMIT/Research/
+
+# Use hub to make life way easier
+alias git=hub
+
+# Markdown alias -> MarkedApp
+marked_func() {
+    if [ $1 ]; then
+        open -a "Marked 2" $1;
+    else
+        open -a "Marked 2";
+    fi
+}
+alias md=marked_func
+
+# Unmount a network drive
+unmount_func() {
+    sudo diskutil umount force $1
+}
+alias unmount=unmount_func
+
+# Add experimental libs directory to python path
+export PYTHONPATH=$HOME/workspace/python_libs/:$PYTHONPATH
+
+# Fix unicode encoding on iterm2
+export LC_ALL=en_US.UTF-8  
+export LANG=en_US.UTF-8

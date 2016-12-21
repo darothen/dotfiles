@@ -1,0 +1,26 @@
+## Anaconda
+export ANACONDA=/home/daniel/miniconda
+export PATH=$ANACONDA/bin:$PATH
+
+## MOTD 
+if [ -d /etc/update-motd.d/ ]; then
+
+    if [ -e .logo ]; then cat .logo; fi 
+
+    /etc/update-motd.d/00-header
+    /etc/update-motd.d/10-help-text
+    /etc/update-motd.d/90-updates-available
+    /etc/update-motd.d/91-release-upgrade
+fi
+#/etc/update-motd.d/99-footer
+
+## Storage paths
+export STORAGE=/media/daniel/storage_ubuntu/
+if [ -d "$STORAGE" ]; then
+    echo "   Setting storage path to $STORAGE" 
+fi
+
+## CUDA setup
+export CUDA_ROOT=/usr/local/cuda-7.0
+export PATH=$CUDA_ROOT/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_ROOT/lib64:$LD_LIBRARY_PATH

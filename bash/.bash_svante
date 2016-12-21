@@ -1,0 +1,21 @@
+
+printf "\nCurrent machine status:"
+qstat -q
+
+echo "Current running jobs:"
+JOBS=$(qstat -u $USER)
+if [[ $? != 0 ]]; then
+    echo $JOBS
+else
+    echo "   none"
+fi
+
+# Load standard modules
+# module load miniconda
+
+# Set up working directories
+export SCRATCH=/scratch
+export TMPDIR=$SCRATCH
+
+# Add new line before returning prompt
+echo 
