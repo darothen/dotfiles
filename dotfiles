@@ -1,24 +1,19 @@
 #!/usr/bin/env python
-""" Install dotfiles for a specific machine.
+""" Install dotfiles, optionally for a specific machine.
 
 """
 from __future__ import print_function
 
 import errno
+import fnmatch
 import os
+import re
 
-DOTFILES = {
-    'git': [".gitconfig", ".gitignore", ],
-    'bash': ['.bashrc', ] +
-            [".bash_%s" % s for s in [
-                "aliases", "exports", "functions", "profile", "prompt"
-            ]],
-    'conda': ['.condarc', ],
-    '.emacs.d': ['init.el', ],
-    '.atom': ['config.cson', 'keymap.cson'],
-}
-INTERMEDIATES = ['.emacs.d', '.atom']
+#: Suffix patterns to ignore
+EXCLUDES = ["*~", ]
+EXCLUDES = r'|'.join([fnmatch.translate(x) for x in EXCLUDES])
 
+DOTFILES = ['atom', 'bash', 'conda', 'emacs', 'git', 'test']
 MACHINES = [
     "mbp",         # Work MacbookPro/OSX config
     "legion",      # legion.mit.edu
@@ -36,55 +31,95 @@ parser = ArgumentParser(description=__doc__,
                         formatter_class=RawDescriptionHelpFormatter)
 parser.add_argument("machine", type=str, choices=MACHINES,
                     help="Name of machine for installation of bash scripts")
+parser.add_argument("-O", "--overwrite", action='store_true',
+                    help="Overwrite any pre-existing dotfiles")
 
 
-def link(path_to_target, path_to_symlink):
+def link(path_to_target, path_to_symlink, overwrite=False):
     """ Convenience function for symlinking; takes care of
     printing information and overwriting files if necessary. """
 
     link_str_fmt = "{mode:s} {target:s} -> {src:s}"
 
     MODE = "Linking"
+
+    root_dir = os.path.split(path_to_symlink)[0]
+    if not os.path.exists(root_dir):
+        print("Creating directory at", root_dir)
+        os.makedirs(root_dir)
+
     try:
         os.symlink(path_to_target, path_to_symlink)
     except OSError as e:
-        if e.errno == errno.EEXIST:  # File already exists
+        if (e.errno == errno.EEXIST) and overwrite:  # File already exists, and we want to over-write
             os.remove(path_to_symlink)
             os.symlink(path_to_target, path_to_symlink)
             MODE = "Overwriting"
-
+        elif (e.errno == errno.EEXIST):
+            MODE = "Ignoring"
     print(link_str_fmt.format(mode=MODE, target=path_to_target,
                               src=path_to_symlink))
 
 
-def install(machine):
+def _strip_root(fn):
+    """ Strip the root directory from a filepath """
+    fn = fn.lstrip(os.sep)  # Get rid of leading /
+    return fn[fn.index(os.sep)+1:]
+
+
+def _get_files(dotfile):
+    """ Walk a dotfile path and get all the files (potentially) in
+    subdirectories) tthat will be linked, except for excluded files.
+
+    """
+    filepaths = []
+    for root, _, files in os.walk(dotfile):
+        # print(root, _, files)
+        # Prepend root to build absolute path
+        # NOTE: don't actually need, because we're listing the dotfile
+        #       path directly
+        files = [_strip_root(os.path.join(root, f)) for f in files]
+
+        # Filter the excluded files
+        files = filter(lambda f: not re.match(EXCLUDES, f), files)
+        # files = [f for f in files if not re.match(EXCLUDES, f)]
+
+        filepaths.extend(files)
+    return filepaths
+
+
+def install(machine, overwrite):
 
     HOME = os.environ['HOME']
     DOT_DIR = os.getcwd()
 
     if machine is None:
         print("Not looking for machine-specific additional file.")
-    else:
-        src = os.path.join(DOT_DIR, 'bash', '.bash_%s' % machine)
-        dest = os.path.join(HOME, '.bash_machine')
-        if os.path.exists(src):
-            link(src, dest)
+        machine = "default"
+    exclude_machines = [m for m in MACHINES if m != machine]
 
-    for tool in DOTFILES:
-        files = DOTFILES[tool]
+    for dotfile in DOTFILES:
+        # print(dotfile)
 
-        for f in files:
-            src = os.path.join(DOT_DIR, tool, f)
-            # Do we need to include an intermediate folder in the dotfile path?
-            if tool in INTERMEDIATES:
-                dest = os.path.join(HOME, tool, f)
-            else:
-                dest = os.path.join(HOME, f)
+        files = _get_files(dotfile)
+        for m in exclude_machines:
+            files = [f for f in files if not f.endswith('.' + m)]
 
-            link(src, dest)
+        for fn in files:
+            # print("   ", fn)
+
+            src = os.path.abspath(os.path.join(dotfile, fn))
+            dest = os.path.join(HOME, fn)
+
+            # Is this a machine-specific file?
+            if dest.endswith("." + machine):
+                dest = dest.replace("." + machine, "")
+
+            print("ln {} -> {}".format(dest, src))
+            link(src, dest, overwrite)
 
 if __name__ == "__main__":
 
     args = parser.parse_args()
     print("Installing for machine {}".format(args.machine))
-    install(args.machine)
+    install(args.machine, args.overwrite)
