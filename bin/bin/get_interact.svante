@@ -1,0 +1,16 @@
+#!/bin/env bash
+
+# Default to one core
+n=1
+if [ "$#" -eq 1 ]; then
+    n=$1
+fi
+
+echo ""
+echo "*********************************************"
+echo "Getting an interactive session with $n cores"
+echo "*********************************************"
+echo ""
+echo ""
+
+qsub -I -l nodes=1:sandy:ppn=$n

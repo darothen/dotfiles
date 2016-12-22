@@ -1,0 +1,10 @@
+#!/bin/env bash
+
+module load miniconda
+
+node=$(uname -n)
+port=$((10000+ $RANDOM % 20000))
+
+echo "Starting jupyter notebook on $node:$port"
+
+jupyter notebook --no-browser --port=$port --log-level="INFO"
