@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+function usage {
+    echo "Usage: svante_tunnel <node> <port>"
+}
+
+if [[ $# -lt 2 ]]; then
+    echo "Illegal number of parameters"
+    echo ""
+    echo $(usage)
+    echo ""
+    exit 1
+fi
+
+node=$1
+port=$2
+
+ssh -L $port:localhost:$port darothen@svante.mit.edu ssh -L $port:localhost:$port -N $node
