@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+sudo diskutil umount force $1

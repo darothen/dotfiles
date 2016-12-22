@@ -1,0 +1,26 @@
+#!/usr/bin/env ipython
+""" Convert PDFs in a directory to high-quality PNGs 
+
+Author: Daniel Rothenberg <darothen@mit.edu>
+"""
+
+from os.path import splitext
+from glob import glob
+
+def pdf_to_png(filename, density=300, resize=25):
+
+    fn_root, _ = splitext(filename)
+    new_filename = fn_root + ".png"
+
+    print("Converting %s -> %s" % (fn_root, new_filename))
+
+    density_str = "%d" % (int(density), )
+    resize_str = "%d" % (int(resize), )
+
+    !convert -density {density_str} {filename} -resize {resize_str}% {new_filename}
+
+
+if __name__ == "__main__":
+
+    for fn in glob("./*.pdf"):
+        pdf_to_png(fn)

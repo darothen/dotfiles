@@ -13,7 +13,7 @@ import re
 EXCLUDES = ["*~", ]
 EXCLUDES = r'|'.join([fnmatch.translate(x) for x in EXCLUDES])
 
-DOTFILES = ['atom', 'bash', 'conda', 'emacs', 'git', 'test', 'zsh']
+DOTFILES = ['atom', 'bash', 'bin', 'conda', 'emacs', 'git', 'test', 'zsh']
 MACHINES = [
     "mbp",         # Work MacbookPro/OSX config
     "legion",      # legion.mit.edu
@@ -33,9 +33,11 @@ parser.add_argument("machine", type=str, choices=MACHINES,
                     help="Name of machine for installation of bash scripts")
 parser.add_argument("-O", "--overwrite", action='store_true',
                     help="Overwrite any pre-existing dotfiles")
+parser.add_argument("-n", "--dry-run", action='store_true',
+                    help="Indicate changes to be made without actually running them")
 
 
-def link(path_to_target, path_to_symlink, overwrite=False):
+def link(path_to_target, path_to_symlink, overwrite=False, dry=True):
     """ Convenience function for symlinking; takes care of
     printing information and overwriting files if necessary. """
 
@@ -46,14 +48,14 @@ def link(path_to_target, path_to_symlink, overwrite=False):
     root_dir = os.path.split(path_to_symlink)[0]
     if not os.path.exists(root_dir):
         print("Creating directory at", root_dir)
-        os.makedirs(root_dir)
+        if not dry: os.makedirs(root_dir)
 
     try:
-        os.symlink(path_to_target, path_to_symlink)
+        if not dry: os.symlink(path_to_target, path_to_symlink)
     except OSError as e:
         if (e.errno == errno.EEXIST) and overwrite:  # File already exists, and we want to over-write
             os.remove(path_to_symlink)
-            os.symlink(path_to_target, path_to_symlink)
+            if not dry: os.symlink(path_to_target, path_to_symlink)
             MODE = "Overwriting"
         elif (e.errno == errno.EEXIST):
             MODE = "Ignoring"
@@ -88,7 +90,7 @@ def _get_files(dotfile):
     return filepaths
 
 
-def install(machine, overwrite):
+def install(machine, overwrite, dry):
 
     HOME = os.environ['HOME']
     DOT_DIR = os.getcwd()
@@ -99,7 +101,7 @@ def install(machine, overwrite):
     exclude_machines = [m for m in MACHINES if m != machine]
 
     for dotfile in DOTFILES:
-        # print(dotfile)
+        print("==", dotfile, "==")
 
         files = _get_files(dotfile)
         for m in exclude_machines:
@@ -116,10 +118,11 @@ def install(machine, overwrite):
                 dest = dest.replace("." + machine, "")
 
             print("ln {} -> {}".format(dest, src))
-            link(src, dest, overwrite)
+            link(src, dest, overwrite, dry)
+
 
 if __name__ == "__main__":
 
     args = parser.parse_args()
-    print("Installing for machine {}".format(args.machine))
-    install(args.machine, args.overwrite)
+    print("Installing for machine {}".format(args.machine), end="\n")
+    install(args.machine, args.overwrite, args.dry_run)
