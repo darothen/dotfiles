@@ -1,0 +1,127 @@
+;; This is a simplified, streamlined version of my emacs configuration for use
+;; on the svante cluster at MIT. It gets rid of all the org-mode configuration 
+;; that I use, as well as any packages that aren't immediately useful in the terminal
+;; and available for older versions of emacs.
+
+
+;; Function for determining if in terminal or not
+(defun is-in-terminal()
+  (not (display-graphic-p)))
+
+;; Disable startup screen
+(setq inhibit-startup-screen t
+      initial-scratch-message nil)
+
+;; Disable scroll bar, tool bar, menu bar
+;(scroll-bar-mode -1)
+;(tool-bar-mode -1)
+;(menu-bar-mode -1)
+
+(setq user-full-name "Daniel Rothenberg"
+      user-mail-address "daniel@danielrothenberg.com")
+
+(set-keyboard-coding-system nil)
+
+;; Turn on syntax highlighting for all buffers
+(global-font-lock-mode t)
+
+;; Setup UTF-8 encoding
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(setq default-buffer-file-coding-system 'utf-8)
+
+;; Quicker echoing of unfishined commands
+(setq echo-keystrokes 0.1)
+
+;; Ignore case when using completion for file names
+(setq read-file-name-completion-ignore-case t)
+
+;; Shortcut yes/no answer
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; Move around lines based on how they're displayed
+(setq line-move-visual t)
+
+;; Set fill column to 80 characters and 4-character tabs
+(setq-default fill-column 80)
+(setq default-tab-width 4)
+(setq-default indent-tabs-mode nil)
+
+;; Alias to bury scratch, but never kill it
+(defadvice kill-buffer (around kill-buffer-around-advice activate)
+  (let ((buffer-to-kill (ad-get-arg 0)))
+    (if (equal buffer-to-kill "*scratch*")
+        (bury-buffer)
+      ad-do-it)))
+
+;; Require newline at end of files
+(setq require-final-newline t)
+
+;; Automatically revert file if changed on disk
+(global-auto-revert-mode 1)
+;; be quiet about reverting files
+(setq auto-revert-verbose nil)
+
+;; Column and line modes
+(column-number-mode 1)
+(setq linum-format "%d ")
+(global-linum-mode 1)
+(global-visual-line-mode)
+
+;; Visualize empty lines
+(setq-default indicate-empty-lines t)
+(when (not indicate-empty-lines)
+  (toggle-indicate-empty-lines))
+
+;; Disable dialog boxes and beeping noise
+(setq use-dialog-box nil
+      visible-bell t)
+
+;; Show parentheses mode
+(show-paren-mode t)
+
+;;;
+;;; Package management / setup
+;;;
+;; List the packages we want to install
+(setq package-list
+  '(anaconda-mode
+    auto-complete
+    better-defaults
+    bind-key
+    color-theme
+    flycheck
+    leuven-theme
+    ; magit
+    markdown-mode
+    use-package)
+)
+(require 'package)
+;; Name the package archives
+(setq package-archives
+  '(("marmalade" . "http://marmalade-repo.org/packages/")
+    ("org" . "http://orgmode.org/elpa/")
+    ("gnu" . "http://elpa.gnu.org/packages/")
+    ("melpa" . "http://melpa.org/packages/"))
+)
+;; Fetch the list of available packages
+(package-initialize)
+;; Comment out this line to avoid re-polling the archive each startup
+; (package-refresh-contents)
+;; Install any missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+;;;
+;;; Aesthetic Tweaks
+;;;
+;; Loads of better default options
+(require 'better-defaults)
+
+;; Set default font
+
+;; Enable color theme
+(load-theme 'leuven t)
