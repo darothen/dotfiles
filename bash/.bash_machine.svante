@@ -17,7 +17,13 @@ total=$(df -h | grep "/home" | awk '{print $4" avail ("$5" full)";}')
 echo "$HOME - using $usage out of 300 GB; $total"
 echo
 
-# Load standard modules
+# Set up path to custom modules, and load
+export MODULEPATH=$HOME/software/modulefiles:$MODULEPATH
+
+# Custom-installed
+# module load emacs/25.1
+
+# System-installed
 # module load miniconda
 
 # Set up working directories
