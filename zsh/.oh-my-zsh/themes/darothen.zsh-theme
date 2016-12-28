@@ -48,8 +48,15 @@ case "$HOST" in
         mach_color=$fg_bold[blue];;
 esac
 
-PROMPT='$fg[blue]%}[%{$fg[red]%}%t%{$fg[blue]%}] %{$fg_bold[white]%}%n %{$reset_color%}%{$fg[red]%}at %{$mach_color%}%M%{$reset_color%}%{$fg[red]%} in %{$path_color%}%~%{$reset_color%} $(git_prompt_info)
- $reset_color%}%{$fg[red]%}%h $(virtualenv_info)%{$reset_color%}%{$fg[blue]%}$(prompt_char)%{$reset_color%} '
+PROMPT='%{$fg[blue]%}[%{$fg[red]%}%t%{$fg[blue]%}] '
+PROMPT+='%{$fg_bold[white]%}%n '
+PROMPT+='%{$reset_color%}%{$fg[red]%}at '
+PROMPT+='%{$mach_color%}%M%{$reset_color%}%{$fg[red]%} '
+PROMPT+='in %{$path_color%}%~%{$reset_color%} '
+PROMPT+='$(git_prompt_info) '
+PROMPT+='
+%{$reset_color%}%{$fg[red]%}%h '
+PROMPT+='$(virtualenv_info)%{$reset_color%}%{$fg[blue]%}$(prompt_char)%{$reset_color%} '
 
 # RPROMPT=""
 
