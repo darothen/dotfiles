@@ -277,7 +277,7 @@ Finally - I don't actually remember what this does, but I'm keeping it for poste
 I currently use a modification fo Bernt Hansen's task sequences, which make it very easy to implement a GTD-like system.
 
 #+header: :tangle yes
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "INPROGRESS(i)" "|" "DONE(d)")
         (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "SHELF(s@/!)")))
@@ -289,7 +289,7 @@ I currently use a modification fo Bernt Hansen's task sequences, which make it v
         ("WAITING" :foreground "gold" :weight bold)
         ("HOLD" :foreground "red" :weight bold)
         ("SHELF" :foreground "purple" :weight bold)))
-#+END_EXAMPLE
+#+END_SRC
 
 Also, to steal shamelessly from Bernt Hansen, here's the task sequence described using a flowchart via PlantUML
 
