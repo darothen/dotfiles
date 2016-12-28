@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# Check the current disk usage of the home directory and print to a hidden
+# file in $HOME
+
+du -h --max-depth=0 $HOME | awk '{print $1;}' >> $HOME/.home_use

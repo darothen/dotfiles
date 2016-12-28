@@ -51,6 +51,7 @@ export HOST=$hostnamestr
 echo "Configuring for platform $PLATFORM on host $HOST..."
 
 # Load shell dotfiles
+# for file in ~/.bash_{machine,aliases,exports,functions,prompt}; do
 for file in ~/.bash_{machine,aliases,exports,functions,prompt}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done

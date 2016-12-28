@@ -11,24 +11,29 @@ else
 fi
 
 # Compute and display quota usage 
-echo
-usage=$(du -h --max-depth=0 $HOME | awk '{print $1;}')
-total=$(df -h | grep "/home" | awk '{print $4" avail ("$5" full)";}')
-echo "$HOME - using $usage out of 300 GB; $total"
-echo
+# usage=$(du -h --max-depth=0 $HOME | awk '{print $1;}')
+usage=$(cat $HOME/.home_use)
+total=$(df -h | grep "/home" | awk '{print $5" avail ("$6" full)";}')
+printf  "\n$HOME - using $usage out of 300 GB; $total\n"
 
 # Set up path to custom modules, and load
 export MODULEPATH=$HOME/software/modulefiles:$MODULEPATH
 
 # Custom-installed
 # module load emacs/25.1
+# module load miniconda
 
 # System-installed
-# module load miniconda
+# module load pgi
+
+# Customized IDL start-up for use with GAMAP
+export IDL_STARTUP=$HOME/software/IDL/gamap2/idl_startup/idl_startup.pro
 
 # Set up working directories
 export SCRATCH=/scratch
-export TMPDIR=$SCRATCH
 
-# Add new line before returning prompt
+# Set default editor to windowless emacs
+export EDITOR="temacs -nw"
+
+# Add new line before returning prompt echo 
 echo 
