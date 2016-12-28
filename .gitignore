@@ -3,6 +3,7 @@
 
 # Emacs
 *~
+emacs/.emacs.d/darothen.el
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
