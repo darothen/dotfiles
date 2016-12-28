@@ -1,0 +1,554 @@
+#+TITLE: Org-mode configuration file
+#+AUTHOR: Daniel Rothenberg
+
+#+OPTIONS: H:3 num:t toc:3 \n:nil @:t ::t |:t ^:nil f:t *:t <:nil
+#+OPTIONS: TeX:t LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+* License
+
+#+BEGIN_EXAMPLE
+MIT License
+
+Copyright (c) 2017 Daniel Rothenberg
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+#+END_EXAMPLE
+
+Please feel free to re-produce any portion of [[https://github.com/darothen/dotfiles/blob/master/emacs/.emacs.d/darothen.org][this document]].
+However, I can't guarantee that things will work correctly. 
+Please let me know if something doesn't work, preferably by filing an Issue on the linked git repository.
+
+* Background
+
+This is [[http://orgmode.org][Org mode]] configuration, self-documenting and written itself in org. 
+The basic idea here is that all my configuration options are documented here and then automatically built by emacs (really, by an org-mode extension). 
+However, this serves to record my thoughts on how I organize my org workflow.
+
+I first started using Org towards the end of my PhD and found it really useful. 
+However, it has been very difficult finding good documentation, support, and tips for using Org as a scientific/research productivity manager. 
+I don't have anything super complicated, but this should be informative for anyone who is interested in seeing simpler examples of how they can setup Org to best serve themselves.
+
+** Installation
+   
+   Open this file and execute =C-c C-v C-t=, which will create the file =darothen.el=. This can be included in your emacs startup.
+
+** Useful Links
+
+   The following links have been incredibly informative in learning about how to use Org mode and how I can customize it:
+
+   1. [[http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html][Charles Cave - "How I use Emacs and Org-mode to implement GTD"]]
+   2. [[http://doc.norang.ca/org-mode.html][Bernt Hansen - Notes on Emacs / Org setup]] / [[http://doc.norang.ca/org-mode.org][org version]]
+   3. [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua - Emacs configuration]]
+   4. [[http://www.personal.psu.edu/bam49/notebook/org-mode-for-research/][Brian Maicke - Org Mode Project Management]]
+
+
+* Overview
+
+This document assumes that you already have Emacs and Org mode installed. 
+If you don't, check out [[http://orgmode.org/][the official documentation]].
+
+
+** Org-mode Setup
+
+   Enable ~org-mode~ for work buffers, but be sure to make it the default for =.org=, =.org_archive=, and plaintext files.
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+;;; 
+;;; Org Mode
+;;;
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+(require 'org)
+#+END_SRC
+
+** Org Files Listing
+
+   I have 
+
+a few different major org files, each of which tries to logically group projects, notes, and tasks. 
+
+   First, I have my personal files:
+
+| Filename     | Description                                      |
+|--------------+--------------------------------------------------|
+| personal.org | Personal tasks, notes, and other things to track |
+| private.gpg  | Encrypted/hidden personal information            |
+
+   Following this, I have a set of notebooks corresponding to various research projects and tasks, all under *research/*
+
+| Filename       | Description                                               |
+|----------------+-----------------------------------------------------------|
+| main.org       | Main hub for global project tasks and daily log           |
+| general.org    | General computing, tools, and research notes              |
+| thesis         | Research tasks, projects and notes from the end of my PhD |
+| marc.org       | Administration for the MARC aerosol-climate model         |
+| postdoc.org    | Notes, tasks, and initial post-doc research projects      |
+| papers.org     | Snippets and notes on papers I've read                    |
+| whats_this.org | Documentation on my research website tool                 |
+
+   I also have a few additional useful files which are useful buckets for things I want to import into the Org world. 
+   See [[#Calendars][the section on calendar synchronization]] for more details.
+
+| Filename          | Description                       |
+|-------------------+-----------------------------------|
+| refile.org        | Capture task bucket               |
+| cals/meetings.ics | Google Calendar - "Meetings"      |
+| cals/misc.ics     | Google Calendar - "Miscellaneous" |
+| cals/music.isc    | Google Calender - "Music"         |
+
+  I'm something of a fan of the "monolithic org file" approach to doing things, which is to keep lots of information in one file.
+  However, I do try to spin things off when they become unwieldy. 
+  For instance, *marc.org* was spun off from an earlier version of *phd.org* when it became clear that I would have a lot of tasks related to maintaining MARC that fell beyond the scope of my dissertation work.
+  Anytime a project evolves a life of its own, I think it's okay to spin off to another file.
+
+
+** Agenda Setup
+
+   I keep my whole org directory synced on Dropbox, and that directory symlinked from home. 
+   Then, I can add the agenda files where I keep tasks manually, and automatically infer any calendars that I'm syncing into the agenda.
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp 
+(setq org-agenda-files
+      (append '("~/org/general.org"
+                "~/org/main.org"
+                "~/org/marc.org"
+                "~/org/personal.org"
+                "~/org/thesis.org"
+                "~/org/postdoc.org")
+              (file-expand-wildcards "~/org/cals/*.org")))
+#+END_SRC
+
+   I don't use the default hooks =C-c ]= and =C-c [= to manage my agenda files.
+
+** Org File Layout
+
+   I'm not organized enough to have really explicit organization within each agenda file. 
+   For research tasks in particular, I've found it better to be flexible and agile, and overwhelmingly self-documenting.
+   As a result, I've adopted, for now, a continuation of the very simple setup that I used to use in my PhD for recording all my work. 
+   A basic research file should record all of my notes, thoughts, work, and results for a given set of projects so that I can share with others very easily - in other words, it emulates a notebook.
+   Such a file might look like this:
+
+   *thesis.org*
+      - Actvation Experiment
+        - MARC Emissions for AeroCom Experiment
+        - MARC/CESM Activation Experiment - Model Setup
+        - AEROCOM Data Serve
+        - AEROCOM Indirect Effect III - Output Fields Notes
+        - AeroCom Module for MARC
+        - Nudging
+      - Chaos Expansion Experiment
+      ...
+
+   The top-level headline is the notebook title, with tags that should be inherited. This is followed by a quick writeup.
+   Each of the level-2 headlines is a /Project Note/. 
+   Project Notes can be particular projects with lots of tasks and sub-tasks (but not sub-sub tasks!), or they can just be organized writing and quick snippets/notes on a particular topic. 
+   Importantly, they should be flexible and allowed to evolve.
+   If I start a note on a particular topic, then leave it for a while and resume course on something related, I should have the flexibility to tweak it, merge sub-trees, or do whatever I want. 
+
+   For instance, my postdoc research is starting very simply with a new notebook called *postdoc.org*. 
+   Notes and tasks for the specific projects I start here will all end up there. 
+   Basically, if it's work that I'll show my boss, it should go there.
+   When it becomes unwieldy, I'll split it off into different notebooks.
+
+   There are a few exceptions to these rules:
+
+   1. *papers.org* is just a flat file, with each H1 header corresponding to a paper I want to keep notes on.
+   2. *main.org* is my main hub, with three H1 headings: 
+      - /Inbox/: which are all my non-project-specific or generic professional tasks 
+      - /Projects/: more complex tasks which may need some notes and have tasks, but don't warrant a separate org file
+      - /Daily Log/: where I manually keep a quick log of everything that I do on a given day.
+   3. *notes.org* is a repository of generic information and notes I want to keep which aren't project specific. It has four headings:
+      - Notes: all the general notes I want to keep
+      - Meetings: Notes from group and individual meetings with other people
+      - Conferences: Collected notes from talks, seminars, events, and things occurring at specific conferences (grouping state of mind!)
+      - Seminars: Notes sketched from seminars around campus
+   
+
+** Key Bindings
+
+| Key         | Description                  | Used      |
+|-------------+------------------------------+-----------|
+| C-c !       | Insert a timestap            | Frequent  |
+| C-c {1,2,3} | Re-shape windows             | Frequent  |
+| C-c a       | Open the Org Agenda          | --        |
+| C-c b       | Switch open buffers          | Frequent  |
+| C-c c       | Open Org Capture             | --        |
+| C-c f       | Open a file                  | Frequent  |
+| C-c j       | Jump to active clock task    | --        |
+| C-c l       | Store a link quickly         | Frequent  |
+| C-c C-w     | Open Org refile mode         | --        |
+| C-c C-x C-s | Move subtree to archive file | Sometimes |
+| f9 h        | Hide other headings          | --        |
+
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+;; Keyboard Shortcuts
+(bind-key "C-c c" 'org-capture)
+(bind-key "C-c a" 'org-agenda)
+(bind-key "C-c l" 'org-store-link)
+(bind-key "C-c L" 'org-insert-link-global)
+(bind-key "C-c O" 'org-open-at-point-global)
+(bind-key "C-c j" 'org-clock-goto)
+(bind-key "C-c C-w" 'org-refile)
+(bind-key "<f9> h" 'bh/hide-other)
+(bind-key "<f9> <f9>" 'org-agenda-list)
+(bind-key "<f9> <f8>" (lambda () (interactive) (org-capture nil "r")))
+
+(defun bh/hide-other ()
+  (interactive)
+  (save-excursion
+    (org-back-to-heading 'invisible-ok)
+    (hide-other)
+    (org-cycle)
+    (org-cycle)
+    (org-cycle)))
+#+END_SRC
+
+
+* Logging and Clocking
+  :LOGBOOK:
+  CLOCK: [2016-12-27 Tue 23:13]--[2016-12-28 Wed 00:14] =>  1:01
+  :END:
+
+I really like the habit of logging all the major things I work on in a given day, to help hold me accountable. To encourage this, I've adding a top-level headline in *main.org* called "Daily Log". Each entry in the logbook is a 2nd-level header, as an inactive timestamp, inserted with =C-c !=. Below these headers are all the tasks that I do.
+
+Times are logged into a special /LOGBOOK/ drawer.
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(setq org-clock-into-drawer t)
+(setq org-drawers '("PROPERTIES" "LOGBOOK"))
+#+END_SRC
+
+To start the clock, add an entry and hit =C-c C-x C-i=. The clock should display in the lower-right corner, with the header it was initiated it. To stop the clock, hit =C-c C-x C-o=. This will complete the entry in the logbook like this:
+
+#+BEGIN_EXAMPLE
+  :LOGBOOK:
+  CLOCK: [2016-12-27 Tue 23:13]--[2016-12-27 Tue 23:14] =>  0:01
+  :END:
+#+END_EXAMPLE
+
+The clock can be manually altered by moving the cursor to the date or timestamp, and hitting =S-UP=, =S-DOWN=, =S-RIGHT=. or =S-LEFT=. The elapsed time should automatically update.
+
+We don't want to keep clocks with 0:00 durations.
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(setq org-clock-out-remove-zero-time-clocks t)
+#+END_SRC
+
+Also, we want to always leave the clock open so we can complete a previously initiated task
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(setq org-clock-in-resume t)
+#+END_SRC
+
+Finally - I don't actually remember what this does, but I'm keeping it for posterity until I do remember.
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(eval-after-load 'org-agenda
+ '(bind-key "i" 'org-agenda-clock-in org-agenda-mode-map))
+#+END_SRC
+
+* Tasks and States
+
+I currently use a modification fo Bernt Hansen's task sequences, which make it very easy to implement a GTD-like system.
+
+#+header: :tangle yes
+#+BEGIN_EXAMPLE emacs-lisp
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "NEXT(n)" "INPROGRESS(i)" "|" "DONE(d)")
+        (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "SHELF(s@/!)")))
+(setq org-todo-keyword-faces
+      '(("TODO" :foreground "blue" :weight bold)
+        ("NEXT" :foreground "orange" :weight bold)
+        ("INPROGRESS" :foreground "lightgreen" :weight bold)
+        ("DONE" :foreground "forestgreen" :weight bold)
+        ("WAITING" :foreground "gold" :weight bold)
+        ("HOLD" :foreground "red" :weight bold)
+        ("SHELF" :foreground "purple" :weight bold)))
+#+END_EXAMPLE
+
+Also, to steal shamelessly from Bernt Hansen, here's the task sequence described using a flowchart via PlantUML
+
+#+BEGIN_SRC plantuml :file task_states.png :cache yes
+@startuml
+title Task States
+[*] -> TODO
+TODO -> NEXT
+TODO -> INPROGRESS
+NEXT -> INPROGRESS
+TODO -> DONE
+NEXT -> DONE
+INPROGRESS -> DONE
+DONE -> [*]
+TODO --> WAITING
+TODO --> HOLD
+NEXT --> WAITING
+TODO --> SHELF
+WAITING --> SHELF
+HOLD --> SHELF
+TODO: t
+NEXT: n
+INPROGRESS: i
+WAITING: w
+note right of WAITING: Note records\nwhat is waiting for
+HOLD: h
+note left of HOLD: Note records\nholding why
+SHELF: s
+note right of SHELF: Note records\nwhy shelved or cancelled
+@enduml
+#+END_SRC
+
+#+CAPTION: PlantUML generated flowchart of task states
+#+NAME: fig:task-states
+[[http://www.plantuml.com/plantuml/png/ROx1QiCm44Jl-eev1_e3EXG2TXD3a4fiQA3jGTZhI5H8O8cQ_7qYnN5Sqyl2lDdPsMYY9JGg_A2EAb9WdvjllBoYaOLaQIGXobCpYqgy7-NkMDOrIto57bk55ENiP_5Scb4QITmwf-1DV6ohfXAx9zZBGp6T-i-kz-NXZKruGL9i8TC-Hyo7EDpY7GxpY7ECpFb86CnPH_WUio4ofjOFNVXoerOH9c1K9XftHk-7NCYXxmSizJb_Xt_3sjikXKPzOVavZh2gdV2wz8AWoVvI1p-WLQubQwcx0W00.png]]
+
+
+* TODO Tags
+
+Tags are useful for adding metadata to tasks or notes, allowing groupings across multiple agenda files or projects.
+
+* Capturing
+
+The philosophy behind Org Capture is that you should be able to quickly jot down an idea without breaking focus on your current task. I've not really used this feature yet, but I want to have a very simple focus: immediately be able to capture new tasks or note stubs, but move them for re-filing later.
+
+The setup looks something like this:
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(setq org-directory "~/org")
+(setq org-default-notes-files "~/org/refile.org")
+
+; Bind C-c c to start capture mode
+(global-set-key (kbd "C-c c") 'org-capture)
+
+; Capture templates - just TODOs and notes
+(setq org-capture-templates
+      (quote (("t" "todo" entry (file "~/org/refile.org")
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("n" "note" entry (file "~/org/refile.org")
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t))))
+#+END_SRC
+
+All of these should get dumped in [[file:~/org/refile.org][refile.org]] for review later on. By default, Org Capture is clock-aware, and will keep track of both the length of my capture interruption and how manage clocking out and back in to any active task I was working on.
+
+* Refiling
+
+The point of refiling is to properly file away any new notes or tasks you may generate away from their appropriate location. All of my files contribute to the agenda, so I just allow those to be refile targets as well as any currently open files.
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+(setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                 (org-agenda-files :maxlevel . 9))))
+
+; Use full outline paths for refile targets - we file directly with IDO
+(setq org-refile-use-outline-path t)
+
+; Targets complete directly with IDO
+(setq org-outline-path-complete-in-steps nil)
+
+; Allow refile to create parent tasks with confirmation
+(setq org-refile-allow-creating-parent-nodes (quote confirm))
+
+; Use IDO for both buffer and file completion and ido-everywhere to t
+(setq org-completion-use-ido t)
+(setq ido-everywhere t)
+(setq ido-max-directory-size 100000)
+(ido-mode (quote both))
+; Use the current window when visiting files and buffers with ido
+(setq ido-default-file-method 'selected-window)
+(setq ido-default-buffer-method 'selected-window)
+; Use the current window for indirect buffer display
+(setq org-indirect-buffer-display 'current-window)
+#+END_SRC
+
+* TODO Agenda 
+
+** Calendar Imports
+  :PROPERTIES:
+  :CUSTOM_ID: Calendars
+  :END:
+
+* Archiving
+
+  The only file that needs major archiving work is [[file:~/org/main.org][main.org]], since it tracks many one-off tasks and projects that will be completed and then forgotten about. I've added and =:ARCHIVE:= property to each of the headers in main.org so that we can use the default archival functionality: just move your cursor to the subtree to be archived and hit =C-c C-x C-s=. 
+
+  The Daily Log is a bit different; I don't yet see a compelling reason to archive it, at least not until a full year or so has elapsed.
+
+  Archiving is quick and easy, but I don't think it should be dont frequently. I'm compelled to make it part of my monthly review, which will let me defer decisions about how to archive things like the logbook.
+
+* TODO GTD 
+
+** Weekly Review
+
+   - Archive completed tasks
+
+* Miscellaneous 
+
+This is a catch-all section for other configuration options and things that I want to keep a record of.
+
+** Aesthetics and Presentation
+
+   Aesthetic tweaks altering how org-mode outlines are visualized
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+;; Navigation
+(setq org-goto-interface 'outline
+      org-goto-max-level 10)
+(require 'imenu)
+
+(setq org-startup-folded nil)      ; Don't start in folded mode
+(setq org-hide-leading-stars t)    ; Only show the last star in a headline
+(setq org-indent-mode nil)         ; Disable indent-mode - makes things flatter and easier to read
+
+; Respect content when you use C-RET to insert a heading, but split the
+; middle of an entry with M-S-RET
+(setq org-insert-heading-respect-contents nil)
+
+; Throw an error if we try to edit invisible text. Use org-reveal (C-c C-r) 
+; to display where the error point is
+(setq org-catch-invisible-edits 'error)
+
+;; Special key handling
+;; M-m or C-a C-a gets to the beginning of a line, and C-a gives access
+;; to the beginning of the heading text
+(setq org-special-ctrl-a/e t)
+(setq org-special-ctrl-k t)
+(setq org-yank-adjusted-subtrees t)
+
+(setq org-cycle-include-plain-lists 'integrate)
+
+(setq org-return-follows-link nil)
+(setq org-log-into-drawer nil)
+(setq org-tags-column 1)
+(setq org-ellipsis " \u25bc" )     ; unicode elipsis character
+
+(setq org-completion-use-ido t)
+(setq org-indent-mode nil)
+(setq org-enforce-todo-dependencies t) ; Can't close projects w/ incomplete tasks
+
+(setq auto-fill-mode -1)
+#+END_SRC
+
+*** Blank lines
+
+    Hide blank lines between headings, to keep folded views compact.
+    Then, take this a step further and prevent blank lines from being created before headings, while allowing list items to adapt to existing blank lines
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(setq org-cycle-separator-lines 0)
+(setq org-blank-before-new-entry (quote ((heading)
+                                         (plain-list-item . auto))))
+#+END_SRC
+
+** Encryption
+
+   I have a handful of files that I keep encrypted. The setup I use closely follows the [[http://orgmode.org/worg/org-tutorials/encrypting-files.html][Official Org mode tutorial]] using EasyPG.
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(require 'epa-file)
+(epa-file-enable)
+(setq epa-file-cache-passphrase-for-symmetric-encryption t)
+#+END_SRC
+
+   Files which I want to encrypt have the suffix =.gpg=. They must then also include the following first line:
+
+#+BEGIN_EXAMPLE
+-*- mode:org -*- -*- epa-file-encrypt-to: ("daniel@danielrothenberg.com") -*-
+#+END_EXAMPLE
+
+** utf-8 Encoding
+   
+   Set =utf-8= as the default coding system
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(setq org-export-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(set-charset-priority 'unicode)
+#+END_SRC
+
+** Org Reveal
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+#+END_SRC
+
+** Org Ref
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(defun load-org-ref ()
+  (require 'org-ref)
+)
+(add-hook 'org-mode-hook 'load-org-ref)
+(setq reftex-default-bibliography '("~/Dropbox_MIT/Papers/library.bib"))
+(setq org-ref-bibliography-notes "~/org/papers.org"
+      org-ref-default-bibliography '("~/Dropbox_MIT/Papers/library.bib")
+      org-ref-pdf-directory "~/Dropbox_MIT/Papers/")
+(setq bibtex-completion-bibliography "~/Dropbox_MIT/Papers/library.bib"
+      bibtex-completion-library-path "~/Dropbox_MIT/Papers/"
+      bibtex-completion-notes-path "~/Dropbox_MIT/Papers/helm-bibtex-notes")
+; open pdf with system pdf viewer (works on mac)
+(setq bibtex-completion-pdf-open-function
+  (lambda (fpath)
+    (start-process "open" "*open*" "open" fpath)))
+#+END_SRC
+
+** Babel
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)
+   (shell . t)
+   (latex . t)
+ ))
+#+END_SRC
+
+** Word Count
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode (lambda () require 'org-wc))
+#+END_SRC
+
+
+* TODO Publishing / Exporting
+
+** Pandoc
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'ox
+  (require 'ox-pandoc))
+#+END_SRC
