@@ -67,5 +67,8 @@ shopt -s histappend
 # autocorrect typos in path names via 'cd'
 shopt -s cdspell
 
+# set windowless emacs as default editor
+export EDITOR="emacs -nw"
+
 # Be sure that home/bin is at front of path
 export PATH=$HOME/bin:$PATH
