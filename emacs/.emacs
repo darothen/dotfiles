@@ -38,15 +38,15 @@
           better-defaults    ; Aesthetics and other tweaks
           bind-key           ; Alias for more efficiently binding custom keys
           color-theme        ; Color/theme chooser
-          idle-require       ; Delayed package loading
+          ; idle-require       ; Delayed package loading
           leuven-theme       ; Nice light white/blue theme
           magit              ; Tools for controlling git from Emacs
           markdown-mode      ; Major mode for editing Markdown files
           material-theme     ; Mixed theme from Google Material
           moe-theme          ; Dark theme
           monokai-theme      ; Classic slate/dark theme
-          ; org                ; Outline-based notes and task manager
-          ; org-ref            ; Integrated reference manager for Org mode
+          org                ; Outline-based notes and task manager
+          org-ref            ; Integrated reference manager for Org mode
           use-package))      ; Alias for loading packages
       (packages (remove-if 'package-installed-p packages)))
 (when packages
@@ -57,14 +57,14 @@
 ; to load, this forces them to be loaded later on only when emacs is idling.
 ; Helps to speed startup times
 (require 'idle-require)
-(dolist (feature
-         '(anaconda-mode
-           auto-complete
-           org
-           ox-latex
-           ox-md
-           ox-pandoc))
- (idle-require feature))
+;(dolist (feature
+;         '(anaconda-mode
+;           auto-complete
+;           org
+;           ox-latex
+;           ox-md
+;           ox-pandoc))
+; (idle-require feature))
 
 (setq idle-require-delay 5)
 (idle-require-mode 1)
