@@ -50,7 +50,7 @@
           use-package))      ; Alias for loading packages
       (packages (remove-if 'package-installed-p packages)))
 (when packages
-  (ignore-errors (package-refresh-contents)
+  (ignore-errors (unless package-archive-contents (package-refresh-contents))
                  (mapcar 'package-install packages))))
 
 ; Delayed loading - for packages which can be cumbersome and time-consuming
@@ -68,7 +68,6 @@
 
 (setq idle-require-delay 5)
 (idle-require-mode 1)
-
 
 ;;; Sane defaults
 
