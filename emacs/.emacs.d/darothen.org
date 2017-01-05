@@ -128,8 +128,7 @@ a few different major org files, each of which tries to logically group projects
 #+header: :tangle yes
 #+BEGIN_SRC emacs-lisp 
 (setq org-agenda-files
-      (append '("~/org/general.org"
-                "~/org/main.org"
+      (append '("~/org/main.org"
                 "~/org/marc.org"
                 "~/org/personal.org"
                 "~/org/thesis.org"
@@ -357,13 +356,17 @@ All of these should get dumped in [[file:~/org/refile.org][refile.org]] for revi
 
 * Refiling
 
-The point of refiling is to properly file away any new notes or tasks you may generate away from their appropriate location. All of my files contribute to the agenda, so I just allow those to be refile targets as well as any currently open files.
+The point of refiling is to properly file away any new notes or tasks you may generate away from their appropriate location. All of my files contribute to the agenda, so I just allow a subset of those to be refile targets as well as any currently open files.
 
 #+header: :tangle yes
 #+BEGIN_SRC emacs-lisp
-; Targets include this file and any file contributing to the agenda - up to 9 levels deep
-(setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                 (org-agenda-files :maxlevel . 9))))
+; Targets include this file and any file contributing to the agenda - up to 2 levels deep, but varies
+(setq org-refile-targets (quote ((nil :maxlevel . 2)
+                                 ("main.org" :maxlevel . 2)
+                                 ("notes.org" :maxlevel . 2)
+                                 ("personal.org" :maxlevel . 2)
+                                 ("postdoc.org" :maxlevel . 2)
+                                 ("papers.org" :maxlevel . 1))))
 
 ; Use full outline paths for refile targets - we file directly with IDO
 (setq org-refile-use-outline-path t)
@@ -386,7 +389,22 @@ The point of refiling is to properly file away any new notes or tasks you may ge
 (setq org-indirect-buffer-display 'current-window)
 #+END_SRC
 
-* TODO Agenda 
+By itself, this configuration yields a /ton/ of potential refile targets, so I have a function bellow which gest passed to =org-refile-target-verify-function= which excludes any heading with the tag "no_refile"
+ 
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+; Exclude "no_refile" tag from refile targets
+(defun dr/verify-refile-target ()
+  "Exclude 'no_refile' tag from refile targets"
+  (not (member (quote "no_refile") (org-get-tags-at)))
+)
+
+(setq org-refile-target-verify-function 'dr/verify-refile-target)
+#+END_SRC
+
+* INPROGRESS Agenda 
+
+
 
 ** Calendar Imports
   :PROPERTIES:
