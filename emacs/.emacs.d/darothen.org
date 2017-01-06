@@ -271,6 +271,26 @@ Finally - I don't actually remember what this does, but I'm keeping it for poste
  '(bind-key "i" 'org-agenda-clock-in org-agenda-mode-map))
 #+END_SRC
 
+** Clock Table
+
+   It's really nifty to have a quick summary table of all clocked activities. Org implements this functionality with [[http://orgmode.org/manual/The-clock-table.html][the clock table]], which can be custom-tweaked and tuned. To insert a dynamic clock table in to an org file, enter this block:
+
+#+header: :tangle no
+#+BEGIN_SRC emacs-lisp
+ #+BEGIN: clocktable :block thisweek :maxlevel 5 :scope agenda :fileskip0
+ #+END: clocktable
+#+END_SRC
+ 
+This indicates to include all of the timestamps from the past work week, in all the agenda files, up to the 5th heading level. But, it'll exclude any files which didn't contribute any time. The clock-table can then by dynamically updated by highlighting it and executing =org-dblock-update= or the keystrokes =C-u C-c C-x C-u=. Below are some custom tweaks to the format of things in my preferred clock table
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+;; format string used when creating CLOCKSUM lines and when generating a
+;; time duration (avoid showing days)
+(setq org-time-clocksum-format
+      '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
+#+END_SRC
+
 * Tasks and States
 
 I currently use a modification fo Bernt Hansen's task sequences, which make it very easy to implement a GTD-like system.
