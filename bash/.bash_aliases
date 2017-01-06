@@ -44,6 +44,6 @@ alias tf="tail -n 500 -f"
 alias em="emacs -nw"
 
 # Fast connect to known machines
-alias svante="ssh -Y darothen@svante.mit.edu"
+alias svante="ssh -Y darothen@svante-login.mit.edu"
 alias yellowstone="ssh -Y darothen@yellowstone.ucar.edu"
 alias legion="ssh -Y darothen@legion.mit.edu"
