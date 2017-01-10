@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 function usage {
-    echo "Usage: svante_tunnel <node> <port>"
+    echo "Usage: svante_tunnel <port>"
 }
 
-if [[ $# -lt 2 ]]; then
+if [[ $# -lt 1 ]]; then
     echo "Illegal number of parameters"
     echo ""
     echo $(usage)
@@ -12,7 +12,6 @@ if [[ $# -lt 2 ]]; then
     exit 1
 fi
 
-node=$1
-port=$2
+port=$1
 
-ssh -L $port:localhost:$port darothen@svante.mit.edu ssh -L $port:localhost:$port -N $node
+ssh -Y -N -L 8888:localhost:$port darothen@svante-login.mit.edu
