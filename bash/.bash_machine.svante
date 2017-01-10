@@ -1,9 +1,13 @@
 
-printf "\nCurrent machine status:"
-qstat -q
+printf "\nCurrent machine status:\n"
+inc_head=""
+for par in ddr fdr edr; do
+    sinfo --summarize -p $par $inc_head
+    inc_head="-h"
+done
 
-echo "Current running jobs:"
-JOBS=$(qstat -u $USER)
+printf "\nCurrent running jobs:\n"
+JOBS=$(squeue -u $USER)
 if [[ $? != 0 ]]; then
     echo $JOBS
 else
@@ -11,9 +15,8 @@ else
 fi
 
 # Compute and display quota usage 
-# usage=$(du -h --max-depth=0 $HOME | awk '{print $1;}')
 usage=$(cat $HOME/.home_use)
-total=$(df -h | grep "/home" | awk '{print $5" avail ("$6" full)";}')
+total=$(df -h | grep "/home" | awk '{print $4" avail ("$5" full)";}')
 printf  "\n$HOME - using $usage out of 300 GB; $total\n"
 
 # Set up path to custom modules, and load
@@ -34,6 +37,9 @@ export SCRATCH=/scratch
 
 # Set default editor to windowless emacs
 export EDITOR="temacs -nw"
+
+# Shell optoins
+shopt -s globstar
 
 # Add new line before returning prompt echo 
 echo 

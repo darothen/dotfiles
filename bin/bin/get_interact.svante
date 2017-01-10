@@ -1,16 +1,68 @@
-#!/bin/env bash
+#!/usr/bin/env bash
+#
+# Request an interactive job on SLURM
+# Daniel Rothenberg <darothen@mit.edu>
+# January 5, 2017
 
-# Default to one core
-n=1
-if [ "$#" -eq 1 ]; then
-    n=$1
-fi
+usage () {
+ 
+    cat << EOF 
+Spawn interactive SLURM job
 
+Usage: $0 [options ...]
+
+Options:
+    -h --help           Show this screen.
+    -j --job            Job name
+    -s --single-node    Only request tasks on a single node - shared memory.
+    -t --tasks=<n>      Number of tasks to request.
+    -p --partition=<p>  Partition to request [default: edr].
+
+EOF
+    exit 1
+}
+
+# Set some default options
+
+TASKS="-n 1"
+PARTITION="-p edr"
+JOB=""
+
+# Read command line arguments
+TEMP=$(getopt -o j:st:p: --long jobs:,single-node,tasks:,partition: -n 'test.sh' -- "$@")
+while true ; do
+    case "$1" in
+        -j|--job)
+            case "$2" in
+                "") JOB="" ; shift 2 ;;
+                *) JOB="-J $2" ; shift 2 ;;
+            esac ;;
+        -s|--single-node) NODES="-N 1" ; shift ;;
+        -t|--tasks)
+            case "$2" in
+                "") shift 2 ;;
+                *) TASKS="-n $2" ; shift 2 ;;
+            esac ;;
+        -p|--partition)
+            case "$2" in
+                "") shift 2 ;;
+                *) PARTITION="-p edr" ; shift 2 ;;
+            esac ;;
+        -h|--help) usage ;;
+        --) shift ; break ;;
+        *) break ;;
+    esac
+done
+
+# Run script
 echo ""
-echo "*********************************************"
-echo "Getting an interactive session with $n cores"
-echo "*********************************************"
+echo "************************************************"
+echo " Getting an interactive session..."
 echo ""
+echo "    srun $JOB $NODES $TASKS $PARTITION --pty /bin/bash"
 echo ""
 
-qsub -I -l nodes=1:sandy:ppn=$n
+srun $JOB $NODES $TASKS $PARTITION --pty /bin/bash
+
+echo "Job complete -> $(date)"
+exit 0
