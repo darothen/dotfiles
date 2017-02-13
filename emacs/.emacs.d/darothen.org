@@ -445,6 +445,43 @@ By itself, this configuration yields a /ton/ of potential refile targets, so I h
 
    - Archive completed tasks
 
+* Research Tools
+** Literature Notes
+
+    I like to keep short summaries and overviews of papers in a self-contained [[file:~/org/papers.org][papers.org]] file. A summary can be anything from a one-line snippet to a full set of notes on a paper, but the critical thing is that it should be easy to reference from somewhere else or access later on. 
+
+    Each paper is filed with a simple ~"[Author], [Year] - [Title]"~ stamp similar to the nomenclature I use to save files on disk. Previously, I included a tag indicating the publishing year but I'm experimenting with a special drawer that contains critical information, which may be more useful for finding things later on.
+
+*** Template
+
+    The following template sets up the information to be collected in the drawer for a given paper summary entry.
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-capture-templates 
+             '("p" "Paper" entry 
+               (file+headline "~/org/papers.org" "Paper Summaries")
+               "** %^{Author} et al, %^{Year} - %^{Title}
+%i
+   :INFO:
+   :AUTHOR: %\\1
+   :YEAR: %\\2
+   :TITLE: %\\3
+   :DATE_READ: [%<%Y-%m-%d %a>]
+   :CITATION: cite:%\\1%\\2
+   :CITEKEY: %\\1%\\2
+   :KEYWORDS:
+   :DOI:
+   :END:
+\n*** Summary
+
+%?
+"))
+
+(setq org-reverse-note-order t)
+#+END_SRC
+
+
 * Miscellaneous 
 
 This is a catch-all section for other configuration options and things that I want to keep a record of.
