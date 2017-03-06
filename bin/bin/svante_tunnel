@@ -14,4 +14,4 @@ fi
 
 port=$1
 
-ssh -Y -N -L 8888:localhost:$port darothen@svante-login.mit.edu
+ssh -Y -N -L $port:localhost:$port darothen@svante-login.mit.edu
