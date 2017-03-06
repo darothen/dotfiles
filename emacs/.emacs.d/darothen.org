@@ -80,44 +80,42 @@ If you don't, check out [[http://orgmode.org/][the official documentation]].
 #+END_SRC
 
 ** Org Files Listing
+*** TODO: Refactor this with newer notebook configuration!
+    I have a few different major org files, each of which tries to logically group projects, notes, and tasks. 
 
-   I have 
+    First, I have my personal files:
 
-a few different major org files, each of which tries to logically group projects, notes, and tasks. 
+ | Filename     | Description                                      |
+ |--------------+--------------------------------------------------|
+ | personal.org | Personal tasks, notes, and other things to track |
+ | private.gpg  | Encrypted/hidden personal information            |
 
-   First, I have my personal files:
+    Following this, I have a set of notebooks corresponding to various research projects and tasks, all under *research/*
 
-| Filename     | Description                                      |
-|--------------+--------------------------------------------------|
-| personal.org | Personal tasks, notes, and other things to track |
-| private.gpg  | Encrypted/hidden personal information            |
+ | Filename       | Description                                               |
+ |----------------+-----------------------------------------------------------|
+ | main.org       | Main hub for global project tasks and daily log           |
+ | general.org    | General computing, tools, and research notes              |
+ | thesis         | Research tasks, projects and notes from the end of my PhD |
+ | marc.org       | Administration for the MARC aerosol-climate model         |
+ | postdoc.org    | Notes, tasks, and initial post-doc research projects      |
+ | papers.org     | Snippets and notes on papers I've read                    |
+ | whats_this.org | Documentation on my research website tool                 |
 
-   Following this, I have a set of notebooks corresponding to various research projects and tasks, all under *research/*
+    I also have a few additional useful files which are useful buckets for things I want to import into the Org world. 
+    See [[#Calendars][the section on calendar synchronization]] for more details.
 
-| Filename       | Description                                               |
-|----------------+-----------------------------------------------------------|
-| main.org       | Main hub for global project tasks and daily log           |
-| general.org    | General computing, tools, and research notes              |
-| thesis         | Research tasks, projects and notes from the end of my PhD |
-| marc.org       | Administration for the MARC aerosol-climate model         |
-| postdoc.org    | Notes, tasks, and initial post-doc research projects      |
-| papers.org     | Snippets and notes on papers I've read                    |
-| whats_this.org | Documentation on my research website tool                 |
+ | Filename          | Description                       |
+ |-------------------+-----------------------------------|
+ | refile.org        | Capture task bucket               |
+ | cals/meetings.ics | Google Calendar - "Meetings"      |
+ | cals/misc.ics     | Google Calendar - "Miscellaneous" |
+ | cals/music.isc    | Google Calender - "Music"         |
 
-   I also have a few additional useful files which are useful buckets for things I want to import into the Org world. 
-   See [[#Calendars][the section on calendar synchronization]] for more details.
-
-| Filename          | Description                       |
-|-------------------+-----------------------------------|
-| refile.org        | Capture task bucket               |
-| cals/meetings.ics | Google Calendar - "Meetings"      |
-| cals/misc.ics     | Google Calendar - "Miscellaneous" |
-| cals/music.isc    | Google Calender - "Music"         |
-
-  I'm something of a fan of the "monolithic org file" approach to doing things, which is to keep lots of information in one file.
-  However, I do try to spin things off when they become unwieldy. 
-  For instance, *marc.org* was spun off from an earlier version of *phd.org* when it became clear that I would have a lot of tasks related to maintaining MARC that fell beyond the scope of my dissertation work.
-  Anytime a project evolves a life of its own, I think it's okay to spin off to another file.
+   I'm something of a fan of the "monolithic org file" approach to doing things, which is to keep lots of information in one file.
+   However, I do try to spin things off when they become unwieldy. 
+   For instance, *marc.org* was spun off from an earlier version of *phd.org* when it became clear that I would have a lot of tasks related to maintaining MARC that fell beyond the scope of my dissertation work.
+   Anytime a project evolves a life of its own, I think it's okay to spin off to another file.
 
 
 ** Agenda Setup
@@ -129,9 +127,8 @@ a few different major org files, each of which tries to logically group projects
 #+BEGIN_SRC emacs-lisp 
 (setq org-agenda-files
       (append '("~/org/main.org"
-                "~/org/marc.org"
+                "~/org/notebook.org"
                 "~/org/personal.org"
-                "~/org/thesis.org"
                 "~/org/postdoc.org")
               (file-expand-wildcards "~/org/cals/*.org")))
 #+END_SRC
@@ -578,6 +575,7 @@ This is a catch-all section for other configuration options and things that I wa
 #+END_SRC
 
 ** Org Ref
+
 
 #+header: :tangle yes
 #+BEGIN_SRC emacs-lisp

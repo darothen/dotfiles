@@ -38,7 +38,7 @@
           better-defaults    ; Aesthetics and other tweaks
           bind-key           ; Alias for more efficiently binding custom keys
           color-theme        ; Color/theme chooser
-          ; idle-require       ; Delayed package loading
+          idle-require       ; Delayed package loading
           leuven-theme       ; Nice light white/blue theme
           magit              ; Tools for controlling git from Emacs
           markdown-mode      ; Major mode for editing Markdown files
