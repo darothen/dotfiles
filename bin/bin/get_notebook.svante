@@ -2,25 +2,42 @@
 
 #SBATCH --partition=edr
 #SBATCH --nodes=1
-#SBATCH --tasks-per-node=4
-#SBATCH --job-name=jupyter_notebook
-#SBATCH --output jupyter_notebook.log
+#SBATCH --ntasks-per-node 12
+#SBATCH --exclusive
+#SBATCH --time 4:00:00
+#SBATCH --job-name jupyter_notebook
+#SBATCH --output jupyter_notebook.%j.log
 
 module load miniconda
-
-ip=$(host `uname -n` | cut -d ' ' -f 4)
-node=$(uname -n)
-port=$((10000+ $RANDOM % 20000))
-
-echo "Starting jupyter notebook on $node:$port"
-echo "*** Open a browser to http://$ip:$port ***"
-echo "http://$ip:$port" > ~/jupyter_address.txt
 
 # Fix bug with runtime directory being set incorrectly
 export XDG_RUNTIME_DIR=""
 
+#ip=$(host `uname -n` | cut -d ' ' -f 4)
+ip=$(hostname -i)
+node=$(uname -n)
+port=$((10000+ $RANDOM % 20000))
+
+#echo "Starting jupyter notebook on $node:$port"
+#echo "*** Open a browser to http://$ip:$port ***"
+#echo "http://$ip:$port" > ~/jupyter_address.txt
+
+echo -e "\n"
+echo    "  Paste ssh command in a terminal on local host (i.e., laptop)"
+echo    "  ------------------------------------------------------------"
+echo -e "  ssh -N -L $port:localhost:$port $USER@$SLURM_SUBMIT_HOST\n"
+
+echo    "  Open this address in a browser on local host; see token below"
+echo    "  ------------------------------------------------------------"
+echo -e "  localhost:$port \n"
+
 # Setup tunnel between computing and login node
-echo ssh -N -x -f -R $port:localhost:$port $SLURM_SUBMIT_HOST
+echo    "  Tunneling to login node"
+echo    "  ------------------------------------------------------------"
+echo -e "  ssh -N -x -f -R $port:localhost:$port $SLURM_SUBMIT_HOST \n"
 ssh -N -x -f -R $port:localhost:$port $SLURM_SUBMIT_HOST
 
-jupyter notebook --no-browser --port=$port --log-level="DEBUG"
+echo -e "Initializing ipcluster with $SLURM_NTASKS tasks\n"
+ipcluster start --daemonize --n=$SLURM_NTASKS
+jupyter-notebook --no-browser --port=$port --log-level="DEBUG"
+
