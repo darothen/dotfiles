@@ -2,7 +2,9 @@
   "atom-beautify":
     general:
       _analyticsUserId: "307c24f6-918a-4aee-998d-c313fcdb1fe6"
-  "autocomplete-python": {}
+  "autocomplete-python":
+    useKite: false
+    useSnippets: "required"
   build:
     notificationOnRefresh: true
   "build-make":
@@ -17,6 +19,7 @@
       "language-gfm"
       "linter-pep8"
       "minimap"
+      "linter-chktex"
     ]
     ignoredNames: [
       ".git"
@@ -31,6 +34,7 @@
       "*.nc"
       "__pycache__"
     ]
+    telemetryConsent: "no"
     themes: [
       "atom-dark-ui"
       "pubster-syntax"
@@ -39,7 +43,7 @@
     fontFamily: "Source Code Pro"
     fontSize: 13
     invisibles: {}
-    showInvisibles: true
+    showIndentGuide: true
     softWrap: true
     softWrapAtPreferredLineLength: true
     tabLength: 4
@@ -67,7 +71,7 @@
     errorPanelHeight: 22
     lintOnFlyInterval: 500
   "linter-chktex":
-    executablePath: "/usr/texbin/chktex"
+    executablePath: "/Library/TeX/texbin/chktex"
   "linter-eslint": {}
   "linter-jshint":
     lintInlineJavaScript: true
