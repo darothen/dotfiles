@@ -53,7 +53,7 @@
   jshint: {}
   "latex-plus":
     advancedEnabled: true
-    texBin: "/usr/texbin/"
+    texBin: "/Library/TeX/texbin/tex"
   latexer:
     parameters_to_search_citations_by: [
       "title"
@@ -115,6 +115,18 @@
     squashDirectoryNames: true
   welcome:
     showOnStartup: false
+  wordcount:
+    extensions: [
+      "md"
+      "markdown"
+      "readme"
+      "txt"
+      "rst"
+      "adoc"
+      "log"
+      "msg"
+      "tex"
+    ]
 ".fortran.free.source":
   editor:
     showIndentGuide: true
