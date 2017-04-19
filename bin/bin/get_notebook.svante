@@ -38,6 +38,6 @@ echo -e "  ssh -N -x -f -R $port:localhost:$port $SLURM_SUBMIT_HOST \n"
 ssh -N -x -f -R $port:localhost:$port $SLURM_SUBMIT_HOST
 
 echo -e "Initializing ipcluster with $SLURM_NTASKS tasks\n"
-ipcluster start --daemonize --n=$SLURM_NTASKS
+# ipcluster start --daemonize --n=$SLURM_NTASKS
 jupyter-notebook --no-browser --port=$port --log-level="DEBUG"
 

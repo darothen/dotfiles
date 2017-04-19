@@ -77,7 +77,7 @@ echo ""
 echo "    srun $JOB $NODE $NODES $TASKS $CPUS $PARTITION --pty /bin/bash"
 echo ""
 
-srun $JOB $NODE $NODES $TASKS $CPUS $PARTITION --pty /bin/bash
+srun $JOB $NODE $NODES $TASKS $CPUS $PARTITION --time="12:00:00" --pty /bin/bash
 
 echo "Job complete -> $(date)"
 exit 0

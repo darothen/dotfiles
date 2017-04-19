@@ -7,9 +7,9 @@ for par in ddr fdr edr; do
 done
 
 printf "\nCurrent running jobs:\n"
-JOBS=$(squeue -u $USER)
-if [[ $? != 0 ]]; then
-    echo $JOBS
+JOBS=$(squeue -u $USER --format='%.30j | %.8M | %.6C | %N')
+if [[ $JOBS != 0 ]]; then
+    echo "$JOBS"
 else
     echo "   none"
 fi
