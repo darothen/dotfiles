@@ -598,12 +598,15 @@ This is a catch-all section for other configuration options and things that I wa
 
 ** Babel
 
+   Two non-standard things here - I'm using [[https://github.com/gregsexton/ob-ipython][ob-ipython]] as an in-line Python manager (because it's awesome), and I've added support for inline plantuml, which is a bit fickle but a great way to quickly whip together control/flow charts.
+
 #+header: :tangle yes
 #+BEGIN_SRC emacs-lisp
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((latex . t)  
    (python . t)
+   (ipython .t)
    (sh . t)
    (plantuml . t)
  ))
