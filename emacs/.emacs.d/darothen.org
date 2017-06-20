@@ -538,6 +538,42 @@ This is a catch-all section for other configuration options and things that I wa
 (setq org-blank-before-new-entry (quote ((heading)
                                          (plain-list-item . auto))))
 #+END_SRC
+** ivy / swiper / counsel
+
+   As of [2017-06-20 Tue] I really decided I needed a better way to handle auto-completion to help me reference paper summaries, figures, etc. It seems like the top two contenders in this world are helm and ivy, with ivy being the "latest and greatest". So I went with that. The following setup is based on the basic overview recommended [[http://oremacs.com/swiper/][here]]
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(require 'ivy)
+(require 'counsel)
+(require 'swiper)
+(ivy-mode 1)
+
+(setq ivy-use-virtual-buffers t)
+(setq ivy-count-format "(%d/%d) ")
+
+; Keybindings
+;; Ivy-based interface to standard commands
+(global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+
+;; Ivy-based interface to shell and system tools
+(global-set-key (kbd "C-c g") 'counsel-git)
+(global-set-key (kbd "C-c j") 'counsel-git-grep)
+(global-set-key (kbd "C-c k") 'counsel-ag)
+(global-set-key (kbd "C-x l") 'counsel-locate)
+(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+
+;; Ivy-resume and other commands
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+
+#+END_SRC
 
 ** Encryption
 
