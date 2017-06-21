@@ -631,6 +631,24 @@ This is a catch-all section for other configuration options and things that I wa
   (lambda (fpath)
     (start-process "open" "*open*" "open" fpath)))
 #+END_SRC
+** org-download
+
+   [[https://github.com/abo-abo/org-download][org-download]] is a nifty little extension for dragging/dropping images into org-mode. Here, we universally set all files to be stored in /Users/daniel/org/figs.
+
+#+header: :tangle yes
+#+BEGIN_SRC emacs-lisp
+(defun load-org-download ()
+  (require 'org-download)
+)
+(add-hook 'org-mode-hook 'load-org-download)
+(setq-default org-download-image-dir "~/org/figs")
+; Change suffix to include a timestamp so we don't over-write files by accident
+(setq-default org-download-timestamp "_%m-%d-%Y")
+; Get rid of the #+DOWNLOADED: ... annotation
+; (setq-default org-download-annotate-function (lambda (_) ""))
+; Don't organize by heading level (just want a dump of all images)
+(setq-default org-download-heading-lvl nil)
+#+END_SRC
 
 ** Babel
 
