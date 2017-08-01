@@ -37,8 +37,14 @@ alias unmount=unmount_func
 export PYTHONPATH=$HOME/workspace/python_libs/:$PYTHONPATH
 
 # Fix unicode encoding on iterm2
-export LC_ALL=en_US.UTF-8  
+export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 # Manage Homebrew-installed casks which don't symlink into /usr/lib
  export LD_LIBRARY_PATH=/usr/local/opt/icu4c/lib:$LD_LIBRARY_PATH
+
+ # The next line updates PATH for the Google Cloud SDK.
+ if [ -f '/Users/daniel/Downloads/google-cloud-sdk/path.bash.inc' ]; then source '/Users/daniel/Downloads/google-cloud-sdk/path.bash.inc'; fi
+
+ # The next line enables shell command completion for gcloud.
+ if [ -f '/Users/daniel/Downloads/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/daniel/Downloads/google-cloud-sdk/completion.bash.inc'; fi
