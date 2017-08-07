@@ -38,6 +38,7 @@
           better-defaults    ; Aesthetics and other tweaks
           bind-key           ; Alias for more efficiently binding custom keys
           color-theme        ; Color/theme chooser
+          counsel            ; Smart autocomplete for ivy
           idle-require       ; Delayed package loading
           leuven-theme       ; Nice light white/blue theme
           magit              ; Tools for controlling git from Emacs
@@ -45,6 +46,7 @@
           material-theme     ; Mixed theme from Google Material
           moe-theme          ; Dark theme
           monokai-theme      ; Classic slate/dark theme
+          ob-ipython         ; IPython in-line mode
           org                ; Outline-based notes and task manager
           org-ref            ; Integrated reference manager for Org mode
           use-package))      ; Alias for loading packages
