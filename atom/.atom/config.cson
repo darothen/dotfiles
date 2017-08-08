@@ -18,7 +18,6 @@
       "linter-python-pyflakes"
       "language-gfm"
       "linter-pep8"
-      "minimap"
       "linter-chktex"
     ]
     ignoredNames: [
@@ -43,6 +42,7 @@
     fontFamily: "Source Code Pro"
     fontSize: 13
     invisibles: {}
+    preferredLineLength: 82
     showIndentGuide: true
     softWrap: true
     softWrapAtPreferredLineLength: true
@@ -94,11 +94,16 @@
     pandocRemoveReferences: false
     useGitHubStyle: true
   minimap:
-    absoluteMode: true
+    disablePythonDocLinks: true
+    displayCodeHighlights: false
     plugins:
-      "git-diff": true
+      "git-diff": false
       "git-diffDecorationsZIndex": 0
+  "minimap-git-diff":
+    useGutterDecoration: true
   "open-unsupported-files": {}
+  "rst-preview-pandoc":
+    pandocOpts: "-frst -thtml --webtex"
   "spell-check":
     grammars: [
       "text.tex.latex"
