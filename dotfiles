@@ -22,6 +22,7 @@ MACHINES = [
     "newton",      # Singapore Supercomputing Center
     "ubuntu",      # Home/personal Ubuntu config
     "midway",      # Midway cluster at UChicago, midway.rcc.uchicago.edu
+    "climacell",   # ClimaCell work MBP
     "default",     # Barebones, no-configuration
 ]
 
