@@ -14,12 +14,12 @@
     automaticallyUpdate: false
     disabledPackages: [
       "linter-python-pep8"
-      "markdown-preview"
       "linter-python-pyflakes"
       "language-gfm"
       "linter-pep8"
       "minimap"
       "linter-chktex"
+      "markdown-preview-plus"
     ]
     ignoredNames: [
       ".git"
@@ -41,10 +41,9 @@
     ]
   editor:
     fontFamily: "Source Code Pro"
-    fontSize: 13
+    fontSize: 12
     invisibles: {}
     showIndentGuide: true
-    softWrap: true
     softWrapAtPreferredLineLength: true
     tabLength: 4
     tabType: "soft"
@@ -68,7 +67,7 @@
     linux: {}
     win32: {}
   linter:
-    errorPanelHeight: 22
+    errorPanelHeight: 27
     lintOnFlyInterval: 500
   "linter-chktex":
     executablePath: "/Library/TeX/texbin/chktex"
@@ -99,6 +98,8 @@
       "git-diff": true
       "git-diffDecorationsZIndex": 0
   "open-unsupported-files": {}
+  "rst-preview-pandoc":
+    pandocOpts: "-frst -thtml --webtex"
   "spell-check":
     grammars: [
       "text.tex.latex"
