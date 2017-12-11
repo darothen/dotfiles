@@ -1,7 +1,6 @@
 channels:
-  - r
+  - conda-forge
   - defaults
-  - darothen
-
+  
 show_channel_urls: True
 always_yes: no
