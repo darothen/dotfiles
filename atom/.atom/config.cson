@@ -41,7 +41,7 @@
     ]
   editor:
     fontFamily: "Source Code Pro"
-    fontSize: 12
+    fontSize: 13
     invisibles: {}
     showIndentGuide: true
     softWrapAtPreferredLineLength: true
@@ -67,8 +67,9 @@
     linux: {}
     win32: {}
   linter:
-    errorPanelHeight: 27
+    errorPanelHeight: 22
     lintOnFlyInterval: 500
+    showErrorPanel: false
   "linter-chktex":
     executablePath: "/Library/TeX/texbin/chktex"
   "linter-eslint": {}
@@ -109,6 +110,7 @@
       "text.md"
     ]
   "svg-preview": {}
+  tablr: {}
   "todo-show": {}
   "tree-view":
     hideIgnoredNames: true
