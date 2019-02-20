@@ -72,3 +72,4 @@ export EDITOR="emacs -nw"
 
 # Be sure that home/bin is at front of path
 export PATH=$HOME/bin:$PATH
+

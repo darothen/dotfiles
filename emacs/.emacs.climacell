@@ -1,8 +1,8 @@
-;; Customized .emacs configuration file
+3;; Customized .emacs configuration file
 ;;
 ;; Re-organized on December 27, 2016
 ;; Daniel Rothenberg <darothen@mit.edu>
-;;
+;;4
 ;; Based heavily off of Norang and writequit.org (http://writequit.org/org/#orgheadline39)
 ;; Other useful sources:
 ;; - https://github.com/larstvei/dot-emacs
@@ -27,8 +27,8 @@
 (setq package-archives
   '(("gnu" . "http://elpa.gnu.org/packages/")
     ("marmalade" . "http://marmalade-repo.org/packages/")
-    ("melpa" . "http://melpa.org/packages/")
-    ("melpa-stable" . "https://stable.melpa.org/packages/")
+    ("melpa" . "http://melpa.milkbox.net/packages/")
+    ("melpa-stable" . "https://melpa-stable.milkbox.net/packages/")
     ("org" . "http://orgmode.org/elpa/")))
 
 ;; List the packages we want to install
@@ -48,6 +48,7 @@
           monokai-theme      ; Classic slate/dark theme
           ob-ipython         ; IPython in-line mode
           org                ; Outline-based notes and task manager
+          org-trello         ; Trello link for org-mode
           org-ref            ; Integrated reference manager for Org mode
           use-package))      ; Alias for loading packages
       (packages (remove-if 'package-installed-p packages)))
@@ -184,9 +185,11 @@
 ;;;
 ;;; Additional scripts to load
 ;;;
+
+;;; Load original darothen configuration
 (setq custom-file "~/.emacs.d/darothen.el")
 (load custom-file t)
 
-;;; Load ClimaCell configuration
+;;; Load ClimaCell configuration w/ overwrites
 (setq custom-file "~/.emacs.d/climacell.el")
 (load custom-file t)
