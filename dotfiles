@@ -128,3 +128,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print("Installing for machine {}".format(args.machine), end="\n")
     install(args.machine, args.overwrite, args.dry_run)
+
