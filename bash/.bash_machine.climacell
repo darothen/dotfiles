@@ -1,1 +1,39 @@
-.bash_machine
+
+# Set up conda using new methodology
+. /Users/daniel/anaconda/etc/profile.d/conda.sh
+
+# Use hub to make life way easier
+alias git=hub
+
+# Markdown alias -> MarkedApp
+marked_func() {
+    if [ $1 ]; then
+        open -a "Marked 2" $1;
+    else
+        open -a "Marked 2";
+    fi
+}
+alias md=marked_func
+# Fix unicode encoding on iterm2
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+# Manage Homebrew-installed casks which don't symlink into /usr/lib
+export LD_LIBRARY_PATH=/usr/local/opt/icu4c/lib:$LD_LIBRARY_PATH
+
+# Enable autoenv (installed via Homebrew)
+# source $(brew --prefix autoenv)/activate.sh
+
+# Google Cloud SDK
+# First, source the right autojump.sh
+# [[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
+
+# Now source the plugins
+GC_SDK=$HOME/software/google-cloud-sdk
+if [ -f "$GC_SDK/path.zsh.inc" ]; then source "$GC_SDK/path.zsh.inc"; fi
+if [ -f "$GC_SDK/completion.zsh.inc" ]; then source "$GC_SDK/completion.zsh.inc"; fi
+
+# NCL configuration
+# export NCARG_ROOT="/usr/local/ncl-6.4.0"
+# export PATH="${NCARG_ROOT}/bin:${PATH}"
+# export DYLD_FALLBACK_LIBRARY_PATH=$(dirname $(gfortran --print-file-name libgfortran.4.dylib)):$DYLD_FALLBACK_LIBRARY_PATH
