@@ -2,16 +2,6 @@
 # Make sure that all of HomeBrew's packages are linked before anything else
 export PATH=/usr/local/bin:$PATH
 
-# If Anaconda or miniconda is locally installed, then add it to
-# the path
-if [ -d $HOME/anaconda ]; then
-    export PATH=$PATH:$HOME/anaconda/bin
-    export QT_API=pyside
-fi
-if [ -d $HOME/miniconda ]; then
-    export PATH=$PATH:$HOME/miniconda/bin
-fi
-
 # Links to Dropbox folders, use quotes when accessing (cd "$DBPER")
 export DBPER=/Users/daniel/Dropbox\ \(Personal\)/
 export DBMIT=/Users/daniel/Dropbox\ \(MIT\)/
@@ -46,5 +36,17 @@ export LANG=en_US.UTF-8
 # Manage Homebrew-installed casks which don't symlink into /usr/lib
  export LD_LIBRARY_PATH=/usr/local/opt/icu4c/lib:$LD_LIBRARY_PATH
 
-# Add Conda stuff to path
-. /Users/daniel/anaconda/etc/profile.d/conda.sh
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/daniel/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/daniel/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/daniel/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/daniel/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
