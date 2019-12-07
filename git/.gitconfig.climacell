@@ -1,6 +1,6 @@
 [user]
 	name = Daniel Rothenberg
-	email = daniel@climacell.co
+	email = daniel@danielrothenberg.com
 [core]
 	editor = emacs -nw
 	excludesfile = /Users/daniel/.gitignore_global
@@ -69,11 +69,6 @@
 [mergetool "sourcetree"]
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	required = true
-	process = git-lfs filter-process
 [diff "jupyternotebook"]
 	command = git-nbdiffdriver diff
 [merge "jupyternotebook"]
