@@ -2,6 +2,8 @@
   "atom-beautify":
     general:
       _analyticsUserId: "307c24f6-918a-4aee-998d-c313fcdb1fe6"
+  "autocomplete-plus":
+    confirmCompletion: "tab always, enter when suggestion explicitly selected"
   "autocomplete-python":
     useKite: false
     useSnippets: "required"
@@ -19,6 +21,7 @@
       "linter-pep8"
       "linter-chktex"
       "markdown-preview-plus"
+      "atom-gpg"
     ]
     ignoredNames: [
       ".git"
@@ -35,14 +38,15 @@
     ]
     telemetryConsent: "no"
     themes: [
-      "atom-dark-ui"
-      "pubster-syntax"
+      "city-lights-ui"
+      "one-dark-syntax"
     ]
   editor:
     fontFamily: "Source Code Pro"
     fontSize: 13
     invisibles: {}
     preferredLineLength: 82
+    scrollPastEnd: true
     showIndentGuide: true
     softWrapAtPreferredLineLength: true
     tabLength: 4
@@ -50,6 +54,11 @@
   "exception-reporting":
     userId: "085506b3-d535-1c9d-741e-20c385bce7cb"
   jshint: {}
+  "julia-client":
+    firstBoot: false
+    uiOptions:
+      enableMenu: true
+      enableToolBar: true
   "latex-plus":
     advancedEnabled: true
     texBin: "/Library/TeX/texbin/tex"
@@ -115,10 +124,14 @@
   "svg-preview": {}
   tablr: {}
   "todo-show": {}
+  "tool-bar":
+    position: "Left"
   "tree-view":
     hideIgnoredNames: true
     hideVcsIgnoredFiles: true
     squashDirectoryNames: true
+  "uber-juno":
+    disable: true
   welcome:
     showOnStartup: false
   wordcount:
