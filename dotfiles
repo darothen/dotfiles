@@ -21,7 +21,7 @@ MACHINES = [
     "yellowstone", # NCAR Yellowstone Supercomputer
     "newton",      # Singapore Supercomputing Center
     "ubuntu",      # Home/personal Ubuntu config
-    "climacell",   # ClimaCell work MBPß
+    "climacell",   # ClimaCell work MBP
     "midway",      # Midway cluster at UChicago, midway.rcc.uchicago.edu
     "default",     # Barebones, no-configuration
 ]
