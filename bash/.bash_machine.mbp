@@ -8,7 +8,7 @@ export DBMIT=/Users/daniel/Dropbox\ \(MIT\)/
 export DBRESEARCH=$DBMIT/Research/
 
 # Use hub to make life way easier
-alias git=hub
+alias git=gh
 
 # Markdown alias -> MarkedApp
 marked_func() {
@@ -55,3 +55,6 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+# OPAM configuration
+. /Users/daniel/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true

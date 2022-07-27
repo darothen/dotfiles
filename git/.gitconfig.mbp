@@ -1,6 +1,6 @@
 [user]
 	name = darothen
-	email = darothen@mit.edu
+	email = daniel@danielrothenberg.com
 [core]
 	editor = emacs -nw
 	excludesfile = $HOME/.gitignore_global
@@ -75,14 +75,14 @@
 [merge "jupyternotebook"]
 	driver = git-nbmergedriver merge %O %A %B %L %P
 	name = jupyter notebook merge driver
-[difftool "nbdime"]
-	cmd = git-nbdifftool diff \"$LOCAL\" \"$REMOTE\"
-[mergetool "nbdime"]
-	cmd = git-nbmergetool merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+# [difftool "nbdime"]
+# 	cmd = git-nbdifftool diff \"$LOCAL\" \"$REMOTE\"
+# [mergetool "nbdime"]
+# 	cmd = git-nbmergetool merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
 [mergetool]
 	prompt = false
 [filter "lfs"]
-	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+	clean = git-lfs clean -- %f
