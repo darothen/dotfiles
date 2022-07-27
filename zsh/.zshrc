@@ -103,28 +103,3 @@ export LANG=en_US.UTF-8
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/daniel/software/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/daniel/software/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/daniel/software/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/daniel/software/google-cloud-sdk/completion.zsh.inc'; fi
-
-# OPAM configuration
-# test -r /Users/daniel/.opam/opam-init/init.zsh && . /Users/daniel/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/daniel/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/daniel/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/daniel/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/daniel/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
