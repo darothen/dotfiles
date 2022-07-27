@@ -1,8 +1,8 @@
-3;; Customized .emacs configuration file
+;; Customized .emacs configuration file
 ;;
 ;; Re-organized on December 27, 2016
 ;; Daniel Rothenberg <darothen@mit.edu>
-;;4
+;; 
 ;; Based heavily off of Norang and writequit.org (http://writequit.org/org/#orgheadline39)
 ;; Other useful sources:
 ;; - https://github.com/larstvei/dot-emacs
@@ -46,7 +46,8 @@
           material-theme     ; Mixed theme from Google Material
           moe-theme          ; Dark theme
           monokai-theme      ; Classic slate/dark theme
-          ob-ipython         ; IPython in-line mode
+          ; ob-ipython         ; IPython in-line mode
+          ob-shell           ; sh language for babel
           org                ; Outline-based notes and task manager
           org-trello         ; Trello link for org-mode
           org-ref            ; Integrated reference manager for Org mode

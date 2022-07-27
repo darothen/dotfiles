@@ -13,7 +13,7 @@ import re
 EXCLUDES = ["*~", ]
 EXCLUDES = r'|'.join([fnmatch.translate(x) for x in EXCLUDES])
 
-DOTFILES = ['atom', 'bash', 'bin', 'conda', 'emacs', 'git', 'test', 'tmux', ß'zsh']
+DOTFILES = ['atom', 'bash', 'bin', 'conda', 'emacs', 'git', 'test', 'tmux', 'zsh']
 MACHINES = [
     "mbp",         # Work MacbookPro/OSX config
     "legion",      # legion.mit.edu
@@ -21,7 +21,7 @@ MACHINES = [
     "yellowstone", # NCAR Yellowstone Supercomputer
     "newton",      # Singapore Supercomputing Center
     "ubuntu",      # Home/personal Ubuntu config
-    "climacell",   # ClimaCell work MBPß
+    "climacell",   # ClimaCell work MBP
     "midway",      # Midway cluster at UChicago, midway.rcc.uchicago.edu
     "default",     # Barebones, no-configuration
 ]
