@@ -1,5 +1,7 @@
 
-# Make sure that all of HomeBrew's packages are linked before anything else
+# Add Homebrew bins to PATH
+export PATH=$PATH:/opt/homebrew/bin
+# Make sure that all of Homebrew's packages are linked before anything else
 export PATH=/usr/local/bin:$PATH
 
 # Links to Dropbox folders, use quotes when accessing (cd "$DBPER")
