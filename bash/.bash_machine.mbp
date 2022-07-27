@@ -1,6 +1,6 @@
 
 # Add Homebrew bins to PATH
-export PATH=$PATH:/opt/homebrew/bin
+export PATH=/opt/homebrew/bin:/$PATH
 # Make sure that all of Homebrew's packages are linked before anything else
 export PATH=/usr/local/bin:$PATH
 
