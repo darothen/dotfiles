@@ -181,8 +181,27 @@
 (use-package winner
   :defer t)
 
+;; OCAML stuff (for Scientific OCAML book)
+(add-hook 'tuareg-mode-hook 'tuareg-imenu-set-imenu)
+(setq auto-mode-alist
+      (append '(("\\.ml[ily]?$" . tuareg-mode)
+                ("\\.topml$" . tuareg-mode))
+              auto-mode-alist))
+(autoload 'utop-setup-ocaml-buffer "utop" "Toplevel for OCaml" t)
+(add-hook 'tuareg-mode-hook 'utop-setup-ocaml-buffer)
+(add-hook 'tuareg-mode-hook 'merlin-mode)
+(setq merlin-use-auto-complete-mode t)
+(setq merlin-error-after-save nil)
+
+(setq opam-share (substring (shell-command-to-string "opam config var share") 0 -1))
+;(load-file (concat opam-share "/ocp-indent/ocp-indent.el"))
+
 ;;;
 ;;; Additional scripts to load
 ;;;
 (setq custom-file "~/.emacs.d/darothen.el")
 (load custom-file t)
+
+;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
+(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
+;; ## end of OPAM user-setup addition for emacs / base ## keep this line
