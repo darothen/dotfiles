@@ -3,22 +3,8 @@
 export PATH=/usr/local/bin:$PATH
 
 # Links to Dropbox folders, use quotes when accessing (cd "$DBPER")
-export DBPER=/Users/daniel/Dropbox\ \(Personal\)/
-export DBMIT=/Users/daniel/Dropbox\ \(MIT\)/
-export DBRESEARCH=$DBMIT/Research/
-
-# Use hub to make life way easier
-alias git=gh
-
-# Markdown alias -> MarkedApp
-marked_func() {
-    if [ $1 ]; then
-        open -a "Marked 2" $1;
-    else
-        open -a "Marked 2";
-    fi
-}
-alias md=marked_func
+export DROPBOX=/Users/daniel/Dropbox
+export DBRESEARCH=$DROPBOX/Research/
 
 # Unmount a network drive
 unmount_func() {
@@ -26,35 +12,10 @@ unmount_func() {
 }
 alias unmount=unmount_func
 
-# Add experimental libs directory to python path
-export PYTHONPATH=$HOME/workspace/python_libs/:$PYTHONPATH
-
 # Fix unicode encoding on iterm2
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-# Manage Homebrew-installed casks which don't symlink into /usr/lib
- export LD_LIBRARY_PATH=/usr/local/opt/icu4c/lib:$LD_LIBRARY_PATH
-
- # The next line updates PATH for the Google Cloud SDK.
-# if [ -f '/Users/daniel/Downloads/google-cloud-sdk/path.bash.inc' ]; then source '/Users/daniel/Downloads/google-cloud-sdk/path.bash.inc'; fi
-
  # The next line enables shell command completion for gcloud.
 # if [ -f '/Users/daniel/Downloads/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/daniel/Downloads/google-cloud-sdk/completion.bash.inc'; fi
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/daniel/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/daniel/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/daniel/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/daniel/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
-# OPAM configuration
-. /Users/daniel/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
