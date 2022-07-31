@@ -25,11 +25,10 @@
 
 ;; Name the package archives
 (setq package-archives
-  '(("gnu" . "http://elpa.gnu.org/packages/")
-    ("marmalade" . "http://marmalade-repo.org/packages/")
+  '(
+    ("elpa" . "https://elpa.gnu.org/packages/")
     ("melpa" . "http://melpa.org/packages/")
-    ("melpa-stable" . "https://stable.melpa.org/packages/")
-    ("org" . "http://orgmode.org/elpa/")))
+))
 
 ;; List the packages we want to install
 (let* ((packages
@@ -49,7 +48,7 @@
           ob-ipython         ; IPython in-line mode
           org                ; Outline-based notes and task manager
           org-ref            ; Integrated reference manager for Org mode
-          use-package))      ; Alias for loading packages
+        ))
       (packages (remove-if 'package-installed-p packages)))
 (when packages
   (ignore-errors (unless package-archive-contents (package-refresh-contents))
@@ -66,7 +65,7 @@
 ;           ox-latex
 ;           ox-md
 ;           ox-pandoc))
-; (idle-require feature))
+;(idle-require feature))
 
 (setq idle-require-delay 5)
 (idle-require-mode 1)
@@ -167,41 +166,8 @@
 ;; Show parentheses mode
 (show-paren-mode t)
 
-;; Undo tree mode, for visualizing undos/redos
-(use-package undo-tree
-  :diminish undo-tree-mode
-  :config
-  (progn
-    (global-undo-tree-mode)
-    (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)))
-
-;; Winner Mode - undo and redo window configuration
-;; Use C-c <left> and C-c <right> to switch b/t window configurations
-(use-package winner
-  :defer t)
-
-;; OCAML stuff (for Scientific OCAML book)
-(add-hook 'tuareg-mode-hook 'tuareg-imenu-set-imenu)
-(setq auto-mode-alist
-      (append '(("\\.ml[ily]?$" . tuareg-mode)
-                ("\\.topml$" . tuareg-mode))
-              auto-mode-alist))
-(autoload 'utop-setup-ocaml-buffer "utop" "Toplevel for OCaml" t)
-(add-hook 'tuareg-mode-hook 'utop-setup-ocaml-buffer)
-(add-hook 'tuareg-mode-hook 'merlin-mode)
-(setq merlin-use-auto-complete-mode t)
-(setq merlin-error-after-save nil)
-
-(setq opam-share (substring (shell-command-to-string "opam config var share") 0 -1))
-;(load-file (concat opam-share "/ocp-indent/ocp-indent.el"))
-
 ;;;
 ;;; Additional scripts to load
 ;;;
 (setq custom-file "~/.emacs.d/darothen.el")
 (load custom-file t)
-
-;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
-(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
-;; ## end of OPAM user-setup addition for emacs / base ## keep this line
