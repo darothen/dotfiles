@@ -16,6 +16,7 @@ EXCLUDES = r'|'.join([fnmatch.translate(x) for x in EXCLUDES])
 DOTFILES = ['bash', 'bin', 'conda', 'emacs', 'git', 'test', 'tmux', 'zsh']
 MACHINES = [
     "mbp",         # Work MacbookPro/OSX config
+    "roth-home",   # Home / office desktop
     "legion",      # legion.mit.edu
     "svante",      # svante.mit.edu
     "yellowstone", # NCAR Yellowstone Supercomputer
@@ -24,6 +25,9 @@ MACHINES = [
     "climacell",   # ClimaCell work MBP
     "midway",      # Midway cluster at UChicago, midway.rcc.uchicago.edu
     "default",     # Barebones, no-configuration
+]
+DEPRECATED_MACHINES = [
+    "legion", "svante", "yellowstone", "newton", "ubuntu", "climacell", "midway"
 ]
 
 
@@ -99,6 +103,8 @@ def install(machine, overwrite, dry):
     if machine is None:
         print("Not looking for machine-specific additional file.")
         machine = "default"
+    if machine in DEPRECATED_MACHINES:
+        raise ValueError(f"Machine '{machine}' is no longer supported for installs")
     exclude_machines = [m for m in MACHINES if m != machine]
 
     for dotfile in DOTFILES:

@@ -33,17 +33,12 @@ function virtualenv_info {
 
 # Determine which machine we're on for coloring
 path_color=$fg_bold[cyan];
+# Valid colors - red, yellow, purple, cyan, white, magenta, blue, ...
 case "$HOST" in
-    legion | l00*)
-        mach_color=$fg_bold[red];;
-    yslogin*)
-        mach_color=$fg_bold[yellow];;
-    svante*)
-        mach_color=$fg_bold[purple];;
-    newton*)
-        mach_color=$fg_bold[cyan];;
     *ubuntu*)
-        mach_color=$fg_bold[white];;
+        mach_color=$fg_bold[red];;
+    roth-home*)
+        mach_color=$fg_bold[cyan];;
     *)
         mach_color=$fg_bold[blue];;
 esac

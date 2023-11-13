@@ -173,7 +173,9 @@
   (progn
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)))
+    (setq undo-tree-visualizer-diff t)
+    (setq undo-tree-auto-save-history nil))
+  )
 
 ;; Winner Mode - undo and redo window configuration
 ;; Use C-c <left> and C-c <right> to switch b/t window configurations

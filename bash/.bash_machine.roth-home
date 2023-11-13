@@ -1,0 +1,10 @@
+## MOTD
+if [ -d /etc/update-motd.d/ ]; then
+    if [ -e .logo ]; then cat .logo; fi 
+
+    /etc/update-motd.d/00-header
+    /etc/update-motd.d/10-help-text
+    /etc/update-motd.d/50-motd-news
+    /etc/update-motd.d/85-fwupd
+fi
+
