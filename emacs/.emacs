@@ -17,7 +17,7 @@
 ;;;
 ;;; Package management / setup
 ;;;
-(require 'cl)
+(require 'cl-lib)
 (require 'package)
 
 ;; Fetch the list of available packages
@@ -26,9 +26,7 @@
 ;; Name the package archives
 (setq package-archives
   '(("gnu" . "http://elpa.gnu.org/packages/")
-    ("marmalade" . "http://marmalade-repo.org/packages/")
     ("melpa" . "http://melpa.org/packages/")
-    ("melpa-stable" . "https://stable.melpa.org/packages/")
     ("org" . "http://orgmode.org/elpa/")))
 
 ;; List the packages we want to install
@@ -49,8 +47,9 @@
           ob-ipython         ; IPython in-line mode
           org                ; Outline-based notes and task manager
           org-ref            ; Integrated reference manager for Org mode
+	  undo-tree          ; Overhaul of undo/redo system
           use-package))      ; Alias for loading packages
-      (packages (remove-if 'package-installed-p packages)))
+      (packages (cl-remove-if 'package-installed-p packages)))
 (when packages
   (ignore-errors (unless package-archive-contents (package-refresh-contents))
                  (mapcar 'package-install packages))))
