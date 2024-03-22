@@ -35,7 +35,10 @@
 	# Quickly get short git commit of HEAD
 	ver = describe --always --match v[0-9]*
 
-    ldiff = difftool -t latex
+        ldiff = difftool -t latex
+
+        # Difftastic alias
+        dft = difftool
 [color]
 	ui = auto
 	branch = auto
@@ -52,11 +55,14 @@
 	required = true
 
 [diff]
-	tool = diffmerge
+	tool = difftastic
+        external = difft
 [difftool]
 	prompt = false
 [difftool "diffmerge"]
 	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
+[difftool "difftastic"]
+        cmd = difft \"$LOCAL\" \"$REMOTE\"
 [difftool.latex]
     cmd = git-latexdiff \"$LOCAL\" \"$REMOTE\"
 [mergetool "diffmerge"]
@@ -70,6 +76,8 @@
 	trustExitCode = true
 [credential]
 	helper = osxkeychain
+	helper = 
+	helper = /usr/local/share/gcm-core/git-credential-manager
 [diff "jupyternotebook"]
 	command = git-nbdiffdriver diff
 [merge "jupyternotebook"]
@@ -86,3 +94,9 @@
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+[init]
+	defaultBranch = main
+[credential "https://dev.azure.com"]
+	useHttpPath = true
+[pager]
+        difftool = true
