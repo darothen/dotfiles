@@ -17,7 +17,7 @@
 ;;;
 ;;; Package management / setup
 ;;;
-(require 'cl-lib)
+(require 'cl)
 (require 'package)
 
 ;; Fetch the list of available packages
