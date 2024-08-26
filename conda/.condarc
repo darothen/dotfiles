@@ -1,6 +1,3 @@
-channels:
-  - conda-forge
-  - defaults
-  
-show_channel_urls: True
-always_yes: no
+always_yes: true
+show_channel_urls: true
+solver: libmamba
