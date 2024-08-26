@@ -1,6 +1,6 @@
 [user]
-	name = darothen
-	email = darothen@mit.edu
+	name = Daniel Rothenberg
+	email = daniel@danielrothenberg.com
 [core]
 	editor = emacs -nw
 	excludesfile = $HOME/.gitignore_global

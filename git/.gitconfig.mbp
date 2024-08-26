@@ -1,5 +1,5 @@
 [user]
-	name = darothen
+	name = Daniel Rothenberg
 	email = daniel@danielrothenberg.com
 [core]
 	editor = emacs -nw
@@ -35,10 +35,10 @@
 	# Quickly get short git commit of HEAD
 	ver = describe --always --match v[0-9]*
 
-        ldiff = difftool -t latex
+	ldiff = difftool -t latex
 
-        # Difftastic alias
-        dft = difftool
+	# Difftastic alias
+	dft = difftool
 [color]
 	ui = auto
 	branch = auto
@@ -56,7 +56,7 @@
 
 [diff]
 	tool = difftastic
-        external = difft
+	external = difft
 [difftool]
 	prompt = false
 [difftool "diffmerge"]

@@ -24,6 +24,7 @@ MACHINES = [
     "ubuntu",      # Home/personal Ubuntu config
     "climacell",   # ClimaCell work MBP
     "midway",      # Midway cluster at UChicago, midway.rcc.uchicago.edu
+    "oeai-gcp",    # Default Google Cloud Platform for OpenEarthAI
     "default",     # Barebones, no-configuration
 ]
 DEPRECATED_MACHINES = [
@@ -32,6 +33,7 @@ DEPRECATED_MACHINES = [
 
 
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
+
 parser = ArgumentParser(description=__doc__,
                         formatter_class=RawDescriptionHelpFormatter)
 parser.add_argument("machine", type=str, choices=MACHINES,
