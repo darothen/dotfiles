@@ -100,3 +100,8 @@
 	useHttpPath = true
 [pager]
         difftool = true
+[safe]
+	directory = /home/conda/staged-recipes
+	directory = /home/conda/staged-recipes
+[maintenance]
+	repo = /Users/daniel/workspace/bufr2parquet

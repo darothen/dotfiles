@@ -4,6 +4,9 @@ export PATH=/opt/homebrew/bin:/$PATH
 # Make sure that all of Homebrew's packages are linked before anything else
 export PATH=/usr/local/bin:$PATH
 
+# Add node manually to PATH
+export PATH=$PATH:/opt/homebrew/opt/node@20/bin
+
 # Links to Dropbox folders, use quotes when accessing (cd "$DBPER")
 export DROPBOX=/Users/daniel/Dropbox
 export DBRESEARCH=$DROPBOX/Research/
