@@ -1,0 +1,84 @@
+[user]
+	name = Daniel Rothenberg
+	email = daniel@danielrothenberg.com
+[core]
+	editor = emacs -nw
+	excludesfile = $HOME/.gitignore_global
+[merge]
+	tool = diffmerge
+[pull]
+	rebase = true
+[alias]
+	co = checkout
+	ci = commit
+	br = branch
+
+	# list files in repo
+	ls = ls-tree --full-tree -r HEAD
+
+	# verbose pull
+	pv = pull -v
+
+	# friendly statuses
+	st = status -sb
+
+	# Add all unstaged changes/removals and commit. Just need to pass message
+	# example: git ac 'My message'
+	ac = !git add -A && git commit -m
+	
+	# Pretty log
+	lg = log --decorate --stat --graph --pretty=format:'%C(yellow)%h%Creset (%ar - %Cred%an%Creset), %s%n'
+
+	# Pretty visual tree
+	tree = "log --oneline --decorate --all --graph"
+
+	# Quickly get short git commit of HEAD
+	ver = describe --always --match v[0-9]*
+
+	ldiff = difftool -t latex
+
+	# Difftastic alias
+	dft = difftool
+[color]
+	ui = auto
+	branch = auto
+	interactive = auto
+	diff = auto
+
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+	
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true
+
+[diff]
+	tool = difftastic
+	external = difft
+[difftool]
+	prompt = false
+[difftool "diffmerge"]
+	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
+[difftool "difftastic"]
+        cmd = difft \"$LOCAL\" \"$REMOTE\"
+[difftool.latex]
+    cmd = git-latexdiff \"$LOCAL\" \"$REMOTE\"
+[mergetool "diffmerge"]
+	trustExitCode = true
+	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
+[diff "jupyternotebook"]
+	command = git-nbdiffdriver diff
+[merge "jupyternotebook"]
+	driver = git-nbmergedriver merge %O %A %B %L %P
+	name = jupyter notebook merge driver
+[mergetool]
+	prompt = false
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+[init]
+	defaultBranch = main

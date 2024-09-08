@@ -25,6 +25,7 @@ MACHINES = [
     "climacell",   # ClimaCell work MBP
     "midway",      # Midway cluster at UChicago, midway.rcc.uchicago.edu
     "oeai-gcp",    # Default Google Cloud Platform for OpenEarthAI
+    "brightband",  # OEAI/Brightband work MBP
     "default",     # Barebones, no-configuration
 ]
 DEPRECATED_MACHINES = [
