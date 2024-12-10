@@ -95,8 +95,8 @@ def _get_files(dotfile):
     filepaths = []
     dotfile_pth = Path(__file__).parent / dotfile
     for root, _, files in os.walk(dotfile_pth):
-        root = Path(root)
-        files = [root / f for f in files]
+        # This will be the _relative_ path, e.g. bash/.bashrc
+        files = [Path(root) / f for f in files]
 
         # Filter the excluded files
         files = filter(lambda f: not re.match(EXCLUDES, str(f)), files)
@@ -129,8 +129,10 @@ def install(machine, overwrite, dry):
         print(files)
 
         for fn in files:
-            src = Path(os.path.abspath(os.path.join(dotfile, fn)))
-            dest = Path(os.path.join(HOME, fn))
+            # src = Path(os.path.abspath(os.path.join(dotfile, fn)))
+            src = Path(__file__).parent / fn
+            # dest = Path(os.path.join(HOME, fn))
+            dest = Path(HOME) / fn
 
             # Is this a machine-specific file?
             if dest.suffix == machine_suffix:
