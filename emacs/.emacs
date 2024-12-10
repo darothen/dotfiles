@@ -38,7 +38,7 @@
           bind-key           ; Alias for more efficiently binding custom keys
           color-theme        ; Color/theme chooser
           counsel            ; Smart autocomplete for ivy
-          idle-require       ; Delayed package loading
+          ; idle-require       ; Delayed package loading  ; COMMENTED OUT - 12/10/2024
           leuven-theme       ; Nice light white/blue theme
           magit              ; Tools for controlling git from Emacs
           markdown-mode      ; Major mode for editing Markdown files
@@ -57,7 +57,7 @@
 ; Delayed loading - for packages which can be cumbersome and time-consuming
 ; to load, this forces them to be loaded later on only when emacs is idling.
 ; Helps to speed startup times
-(require 'idle-require)
+;(require 'idle-require)  ; COMMENTED OUT - 12/10/2024
 ;(dolist (feature
 ;         '(anaconda-mode
 ;           auto-complete
@@ -68,7 +68,7 @@
 ;(idle-require feature))
 
 (setq idle-require-delay 5)
-(idle-require-mode 1)
+;(idle-require-mode 1)  ; COMMENTED OUT - 12/10/2024
 
 ;;; Sane defaults
 
