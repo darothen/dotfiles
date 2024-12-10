@@ -124,3 +124,5 @@ if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/mamba.sh" ]; then
 fi
 # <<< conda initialize <<<
 
+# Pixi completions
+eval "$(pixi completion --shell zsh)"
