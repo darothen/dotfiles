@@ -93,14 +93,16 @@ def _get_files(dotfile):
 
     """
     filepaths = []
-    dotfile_pth = Path(__file__).parent / dotfile
+    dotfiles_root_dir = Path(__file__).parent
+    dotfile_pth = dotfiles_root_dir / dotfile
     for root, _, files in os.walk(dotfile_pth):
-        # This will be the _relative_ path, e.g. bash/.bashrc
-        files = [Path(root) / f for f in files]
+        # Use the absolute path of the dotfile dir to safely list files, but
+        # report back the path of each file relative to the dotfiles repo subdir,
+        # since we've set this up to mirror how we want to install int othe home dir.
+        files = [(Path(root) / f).relative_to(dotfile_pth) for f in files]
 
         # Filter the excluded files
         files = filter(lambda f: not re.match(EXCLUDES, str(f)), files)
-        files = [Path(f) for f in files]
 
         filepaths.extend(files)
     return filepaths
@@ -129,9 +131,8 @@ def install(machine, overwrite, dry):
         print(files)
 
         for fn in files:
-            # src = Path(os.path.abspath(os.path.join(dotfile, fn)))
-            src = Path(__file__).parent / fn
-            # dest = Path(os.path.join(HOME, fn))
+            # Note that we need to inject the dotfile subdir back into the path
+            src = Path(__file__).parent / dotfile / fn
             dest = Path(HOME) / fn
 
             # Is this a machine-specific file?
