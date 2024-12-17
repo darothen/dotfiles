@@ -1,1 +1,6 @@
+
 # Nothing to start out
+
+# Add Pixi to path
+export PATH="/home/daniel/.pixi/bin:$PATH"
+eval "$(pixi completion --shell bash)"
