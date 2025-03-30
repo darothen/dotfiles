@@ -106,7 +106,6 @@
 [fetch]
 	prune = true
 	pruneTags = true
-	all = trustExitCode
 [help]
 	autocorrect = prompt
 [commit]
