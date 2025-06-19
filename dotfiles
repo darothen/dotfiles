@@ -21,11 +21,27 @@ logging.basicConfig(
 # Create a logger
 logger = logging.getLogger(__name__)
 
-#: Suffix patterns to ignore
+# Suffix patterns to ignore
 EXCLUDES = ["*~", ]
 EXCLUDES = r'|'.join([fnmatch.translate(x) for x in EXCLUDES])
 
+# Dotfile subdirectories to install
+# NOTE: These correspond to the subdirectories in the root of the dotfiles repo. We
+# use a particular layout to mirror how we want to install into the home directory,
+# where the subdirectory root is the "type" of dotfile (usually organized by application)
+# and layout of the subdirectory reflects how it will be symlinked into $HOME. So,
+# for example:
+#
+# 1) ./bash/.bashrc is a "bash" dotfile, and will be symlinked into $HOME/.bashrc
+# 2) ./emacs/.emacs.d/init.el is an "emacs" dotfile, and will be symlinked into $HOME/.emacs.d/init.el
 DOTFILES = ['.config', 'bash', 'bin', 'conda', 'emacs', 'git', 'test', 'tmux', 'zsh']
+
+# Machines with custom dotfile sets.
+# NOTE: These are a listing of special machine-specific dotfile variants that are contained
+# within this repo. A machine-specific dotfile variant will have a final extension suffix
+# corresponding to this machine. For example, if the "mbp" machine needs a custom ".bashrc" file,
+# then it will be named ".bashrc.mbp" and when the "mbp" token is passed to the CLI, it will
+# look for files with this extension in preference over the default ".bashrc" file.
 MACHINES = [
     "mbp",         # Work MacbookPro/OSX config
     "roth-home",   # Home / office desktop
