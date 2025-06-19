@@ -1,0 +1,9 @@
+# Background blurring
+background = 000000
+background-opacity = 0.8
+background-blur-radius = 15
+
+# Visual theme / font
+theme = "Dark Pastel"
+font-family = "Menlo"
+

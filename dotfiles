@@ -7,7 +7,6 @@ import fnmatch
 import logging
 import os
 import re
-
 from pathlib import Path
 
 # Basic configuration
@@ -23,7 +22,7 @@ logger = logging.getLogger(__name__)
 EXCLUDES = ["*~", ]
 EXCLUDES = r'|'.join([fnmatch.translate(x) for x in EXCLUDES])
 
-DOTFILES = ['bash', 'bin', 'conda', 'emacs', 'git', 'test', 'tmux', 'zsh']
+DOTFILES = ['.config', 'bash', 'bin', 'conda', 'emacs', 'git', 'test', 'tmux', 'zsh']
 MACHINES = [
     "mbp",         # Work MacbookPro/OSX config
     "roth-home",   # Home / office desktop
