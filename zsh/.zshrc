@@ -104,20 +104,9 @@ export LANG=en_US.UTF-8
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/daniel/mambaforge/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/daniel/mambaforge/etc/profile.d/conda.sh" ]; then
-        . "/Users/daniel/mambaforge/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/daniel/mambaforge/bin:$PATH"
-    fi
+# Fix for ghostty / tmux
+if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
+    export TERM=xterm-256color
 fi
-unset __conda_setup
-# <<< conda initialize <<<
-
 
 . "$HOME/.local/bin/env"
