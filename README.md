@@ -12,14 +12,15 @@ Should be as simple as cloning this repository and running my `dotfiles` script,
 git clone https://github.com/darothen/dotfiles.git ~
 cd ~/dotfiles
 ./dotfiles [-O/--overwrite] <machine>
+# or, be fancy and use the built-in uv shebang
+# uv run python dotfiles [-O/--overwrite] <machine>
 ```
 
 The optional argument `machine` lets you choose an "extra" file to be copied into your `$HOME` directory as `.bash_machine`. This is good if, say, you need to load modules or something else that are totally irrelevant for another machine.
 
 ## other installation
 
-If that doesn't work, clone the repository into your home directory
-and execute
+If that doesn't work, clone the repository into your home directory and execute
 
 ```bash
 for file in tools/dotfiles/bash/.*; do ln -s -f $file $(basename $file); done

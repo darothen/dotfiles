@@ -5,5 +5,4 @@ background-blur-radius = 15
 
 # Visual theme / font
 theme = "Dark Pastel"
-font-family = "Menlo"
-
+font-family = "JetBrains Mono"
