@@ -150,8 +150,7 @@
 
 ;; Column and line modes
 (column-number-mode 1)
-(setq linum-format "%d ")
-(global-linum-mode 1)
+(global-display-line-numbers-mode 1)
 (global-visual-line-mode)
 
 ;; Visualize empty lines
@@ -169,5 +168,6 @@
 ;;;
 ;;; Additional scripts to load
 ;;;
-(setq custom-file "~/.emacs.d/darothen.el")
-(load custom-file t)
+; DEPRECATED - but keeping for reference.
+; (setq custom-file "~/.emacs.d/darothen.el")
+; (load custom-file t)
