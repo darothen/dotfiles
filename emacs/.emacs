@@ -38,8 +38,8 @@
           bind-key           ; Alias for more efficiently binding custom keys
           color-theme        ; Color/theme chooser
           counsel            ; Smart autocomplete for ivy
+          doom-themes        ; Doom emacs themes
           ; idle-require       ; Delayed package loading  ; COMMENTED OUT - 12/10/2024
-          leuven-theme       ; Nice light white/blue theme
           magit              ; Tools for controlling git from Emacs
           markdown-mode      ; Major mode for editing Markdown files
           material-theme     ; Mixed theme from Google Material
@@ -118,18 +118,20 @@
 
 ;;; Visual Settings
 
-;; Set default theme to "Leuven" because it's awesome
-(load-theme 'leuven t)
+; Use Doom Emacs theme
+(use-package doom-themes
+  :ensure t
+  :custom
+  ;; Global settings (defaults)
+  (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
+  (doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  :config
+  (load-theme 'doom-dark+ t)
 
-;; Quick-cycle between themes
-; https://github.com/larstvei/dot-emacs
-(defun cycle-themes()
-  "Returns a function that lets you cycle your themes."
-  (lexical-let ((themes '#1=(leuven material . #1#)))
-    (lambda ()
-      (interactive)
-      ;; Rotates the theme cycle and changes the current theme.
-      (load-theme (car (setq themes (cdr themes))) t))))
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
 
 ;;; Misc
 
