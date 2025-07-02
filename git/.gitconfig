@@ -113,3 +113,5 @@
 [rerere]
 	enabled = true
 	autoupdate = true
+[credential]
+	helper = store

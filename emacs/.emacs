@@ -26,7 +26,7 @@
 ;; Name the package archives
 (setq package-archives
   '(
-    ("elpa" . "https://elpa.gnu.org/packages/")
+    ;; ("elpa" . "https://elpa.gnu.org/packages/")
     ("melpa" . "http://melpa.org/packages/")
 ))
 
@@ -48,6 +48,7 @@
           ob-ipython         ; IPython in-line mode
           org                ; Outline-based notes and task manager
           org-ref            ; Integrated reference manager for Org mode
+          use-package        ; Isolates package configuration
         ))
       (packages (remove-if 'package-installed-p packages)))
 (when packages
