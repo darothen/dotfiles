@@ -8,12 +8,12 @@
 #
 # Usage:         sudo ./script.sh <command> [arguments]
 #                Commands:
-#                  mount pd <disk_device> <mount_point> - Format and mount a persistent disk
-#                  mount ssd <disk_device> <mount_point> - Format and mount a local SSD
+#                  mount pd <disk_device> <mount_point> [--format] [--save] - Format and mount a persistent disk
+#                  mount ssd <disk_device> <mount_point> [--format] [--save] - Format and mount a local SSD
 #                  disks - List available disks that can be mounted
 #
-# Examples:      sudo ./script.sh mount pd /dev/sdb /mnt/data
-#                sudo ./script.sh mount ssd /dev/nvme0n1 /mnt/disks/ssd
+# Examples:      sudo ./script.sh mount pd /dev/sdb /mnt/data --format --save
+#                sudo ./script.sh mount ssd /dev/nvme0n1 /mnt/disks/ssd --format
 #                sudo ./script.sh disks
 #
 # Notes:         - Requires root privileges (sudo)
@@ -31,13 +31,13 @@ usage() {
     echo "Usage: $0 <command> [arguments]"
     echo ""
     echo "Commands:"
-    echo "  mount pd <disk_device> <mount_point>  - Format and mount a persistent disk"
-    echo "  mount ssd <disk_device> <mount_point> - Format and mount a local SSD"
+    echo "  mount pd <disk_device> <mount_point> [--format] [--save] - Format and mount a persistent disk"
+    echo "  mount ssd <disk_device> <mount_point> [--format] [--save] - Format and mount a local SSD"
     echo "  disks                                 - List available disks"
     echo ""
     echo "Examples:"
-    echo "  $0 mount pd /dev/sdb /mnt/data"
-    echo "  $0 mount ssd /dev/nvme0n1 /mnt/disks/ssd"
+    echo "  $0 mount pd /dev/sdb /mnt/data --format --save"
+    echo "  $0 mount ssd /dev/nvme0n1 /mnt/disks/ssd --format"
     echo "  $0 disks"
     exit 1
 }
@@ -116,10 +116,34 @@ provide_unmount_instructions() {
 
 # Function to mount a persistent disk
 mount_persistent_disk() {
-    # Check if correct number of arguments provided
+    local format_disk=false
+    local save_fstab=false
+
+    # Parse optional flags
+    while [[ "$#" -gt 0 ]]; do
+        case "$1" in
+            --format)
+                format_disk=true
+                shift
+                ;;
+            --save)
+                save_fstab=true
+                shift
+                ;;
+            -*)
+                echo "Unknown option: $1"
+                usage
+                ;;
+            *)
+                break # End of options
+                ;;
+        esac
+    done
+
+    # Check if correct number of arguments provided after flags
     if [ "$#" -ne 2 ]; then
-        echo "Usage: $0 mount pd <disk_device> <mount_point>"
-        echo "Example: $0 mount pd /dev/sdb /mnt/data"
+        echo "Usage: $0 mount pd <disk_device> <mount_point> [--format] [--save]"
+        echo "Example: $0 mount pd /dev/sdb /mnt/data --format --save"
         exit 1
     fi
 
@@ -158,51 +182,87 @@ mount_persistent_disk() {
         exit 1
     fi
 
-    # Format the disk with ext4 filesystem
-    echo "Formatting $DISK with ext4 filesystem..."
-    sudo mkfs.ext4 -m 0 -E lazy_itable_init=0,lazy_journal_init=0 "$DISK"
+    # Format the disk with ext4 filesystem if --format is provided
+    if [ "$format_disk" = true ]; then
+        echo "Formatting $DISK with ext4 filesystem..."
+        sudo mkfs.ext4 -m 0 -E lazy_itable_init=0,lazy_journal_init=0,discard "$DISK"
+    else
+        echo "Skipping disk formatting as --format flag was not provided."
+    fi
 
     # Get disk UUID
     UUID=$(sudo blkid -s UUID -o value "$DISK")
 
-    # Backup fstab
-    echo "Creating backup of $FSTAB at $FSTAB_BACKUP..."
-    sudo cp "$FSTAB" "$FSTAB_BACKUP"
+    # Add entry to fstab for persistent mounting if --save is provided
+    if [ "$save_fstab" = true ]; then
+        # Backup fstab
+        echo "Creating backup of $FSTAB at $FSTAB_BACKUP..."
+        sudo cp "$FSTAB" "$FSTAB_BACKUP"
 
-    # Verify backup was created
-    if [ ! -f "$FSTAB_BACKUP" ]; then
-        echo "Error: Failed to create fstab backup"
-        exit 1
+        # Verify backup was created
+        if [ ! -f "$FSTAB_BACKUP" ]; then
+            echo "Error: Failed to create fstab backup"
+            exit 1
+        fi
+
+        echo "Adding entry to $FSTAB..."
+        echo "UUID=$UUID $MOUNT_POINT ext4 discard,defaults,nofail 0 2" | sudo tee -a "$FSTAB"
+    else
+        echo "Skipping fstab entry creation as --save flag was not provided."
     fi
-
-    # Add entry to fstab for persistent mounting
-    echo "Adding entry to $FSTAB..."
-    echo "UUID=$UUID $MOUNT_POINT ext4 discard,defaults,nofail 0 2" | sudo tee -a "$FSTAB"
 
     # Mount the disk
     echo "Mounting the disk..."
-    sudo mount "$MOUNT_POINT"
+    sudo mount -o discard,defaults "$MOUNT_POINT"
 
     # Verify mount
     if mount | grep -q "$MOUNT_POINT"; then
         echo "Successfully mounted $DISK to $MOUNT_POINT"
-        echo "A backup of your original fstab was created at $FSTAB_BACKUP"
+        if [ "$save_fstab" = true ]; then
+            echo "A backup of your original fstab was created at $FSTAB_BACKUP"
+        fi
         df -h "$MOUNT_POINT"
     else
         echo "Error: Failed to mount disk"
-        # Restore fstab backup if mount fails
-        sudo cp "$FSTAB_BACKUP" "$FSTAB"
-        echo "Restored original fstab from backup due to mount failure"
+        # Restore fstab backup if mount fails and it was modified
+        if [ "$save_fstab" = true ] && [ -f "$FSTAB_BACKUP" ]; then
+            sudo cp "$FSTAB_BACKUP" "$FSTAB"
+            echo "Restored original fstab from backup due to mount failure"
+        fi
         exit 1
     fi
 }
 
 # Function to mount a local SSD
 mount_local_ssd() {
-    # Check if correct number of arguments provided
+    local format_disk=false
+    local save_fstab=false
+
+    # Parse optional flags
+    while [[ "$#" -gt 0 ]]; do
+        case "$1" in
+            --format)
+                format_disk=true
+                shift
+                ;;
+            --save)
+                save_fstab=true
+                shift
+                ;;
+            -*)
+                echo "Unknown option: $1"
+                usage
+                ;;
+            *)
+                break # End of options
+                ;;
+        esac
+    done
+
+    # Check if correct number of arguments provided after flags
     if [ "$#" -ne 2 ]; then
-        echo "Usage: $0 mount ssd <disk_device> <mount_point>"
-        echo "Example: $0 mount ssd /dev/nvme0n1 /mnt/disks/ssd"
+        echo "Usage: $0 mount ssd <disk_device> <mount_point> [--format] [--save]"
+        echo "Example: $0 mount ssd /dev/nvme0n1 /mnt/disks/ssd --format --save"
         exit 1
     fi
 
@@ -241,28 +301,36 @@ mount_local_ssd() {
         exit 1
     fi
 
-    # Format the disk with ext4 filesystem (optimized for SSD)
-    echo "Formatting $DISK with ext4 filesystem optimized for SSD..."
-    sudo mkfs.ext4 -F "$DISK"
+    # Format the disk with ext4 filesystem (optimized for SSD) if --format is provided
+    if [ "$format_disk" = true ]; then
+        echo "Formatting $DISK with ext4 filesystem optimized for SSD..."
+        sudo mkfs.ext4 -F "$DISK"
+    else
+        echo "Skipping disk formatting as --format flag was not provided."
+    fi
 
     # Get disk UUID
     UUID=$(sudo blkid -s UUID -o value "$DISK")
 
-    # Backup fstab
-    echo "Creating backup of $FSTAB at $FSTAB_BACKUP..."
-    sudo cp "$FSTAB" "$FSTAB_BACKUP"
+    # Add entry to fstab for persistent mounting with SSD-specific options if --save is provided
+    if [ "$save_fstab" = true ]; then
+        # Backup fstab
+        echo "Creating backup of $FSTAB at $FSTAB_BACKUP..."
+        sudo cp "$FSTAB" "$FSTAB_BACKUP"
 
-    # Verify backup was created
-    if [ ! -f "$FSTAB_BACKUP" ]; then
-        echo "Error: Failed to create fstab backup"
-        exit 1
+        # Verify backup was created
+        if [ ! -f "$FSTAB_BACKUP" ]; then
+            echo "Error: Failed to create fstab backup"
+            exit 1
+        fi
+
+        echo "Adding entry to $FSTAB..."
+        echo "UUID=$UUID $MOUNT_POINT ext4 discard,defaults,nofail 0 2" | sudo tee -a "$FSTAB"
+    else
+        echo "Skipping fstab entry creation as --save flag was not provided."
     fi
 
-    # Add entry to fstab for persistent mounting with SSD-specific options
-    echo "Adding entry to $FSTAB..."
-    echo "UUID=$UUID $MOUNT_POINT ext4 discard,defaults,nofail 0 2" | sudo tee -a "$FSTAB"
-
-    # Mount the disk
+    # Mount the SSD
     echo "Mounting the SSD..."
     sudo mount "$MOUNT_POINT"
 
@@ -273,13 +341,17 @@ mount_local_ssd() {
     # Verify mount
     if mount | grep -q "$MOUNT_POINT"; then
         echo "Successfully mounted SSD $DISK to $MOUNT_POINT"
-        echo "A backup of your original fstab was created at $FSTAB_BACKUP"
-        df -h "$MOUNT_POINT"
+        if [ "$save_fstab" = true ]; then
+            echo "A backup of your original fstab was created at $FSTAB_BACKUP"
+        fi
+       ß df -h "$MOUNT_POINT"
     else
         echo "Error: Failed to mount SSD"
-        # Restore fstab backup if mount fails
-        sudo cp "$FSTAB_BACKUP" "$FSTAB"
-        echo "Restored original fstab from backup due to mount failure"
+        # Restore fstab backup if mount fails and it was modified
+        if [ "$save_fstab" = true ] && [ -f "$FSTAB_BACKUP" ]; then
+            sudo cp "$FSTAB_BACKUP" "$FSTAB"
+            echo "Restored original fstab from backup due to mount failure"
+        fi
         exit 1
     fi
 }
@@ -322,11 +394,11 @@ list_disks() {
     fi
     echo ""
     
-    echo "To mount a persistent disk, use: $0 mount pd <disk_device> <mount_point>"
-    echo "Example: $0 mount pd /dev/sdb /mnt/data"
+    echo "To mount a persistent disk, use: $0 mount pd <disk_device> <mount_point> [--format] [--save]"
+    echo "Example: $0 mount pd /dev/sdb /mnt/data --format --save"
     echo ""
-    echo "To mount a local SSD, use: $0 mount ssd <disk_device> <mount_point>"
-    echo "Example: $0 mount ssd /dev/nvme0n1 /mnt/disks/ssd"
+    echo "To mount a local SSD, use: $0 mount ssd <disk_device> <mount_point> [--format] [--save]"
+    echo "Example: $0 mount ssd /dev/nvme0n1 /mnt/disks/ssd --format --save"
 }
 
 # Main script execution
