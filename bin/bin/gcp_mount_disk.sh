@@ -213,10 +213,11 @@ mount_persistent_disk() {
 
     # Mount the disk
     echo "Mounting the disk..."
-    sudo mount -o discard,defaults "$MOUNT_POINT"
+    sudo mount -o discard,defaults "$DISK" "$MOUNT_POINT"
 
     # Verify mount
-    if mount | grep -q "$MOUNT_POINT"; then
+    mount_result=$(`mount | grep -q "$MOUNT_POINT"`)
+    if [[ -n "$mount_result" ]]; then
         echo "Successfully mounted $DISK to $MOUNT_POINT"
         if [ "$save_fstab" = true ]; then
             echo "A backup of your original fstab was created at $FSTAB_BACKUP"
@@ -332,19 +333,20 @@ mount_local_ssd() {
 
     # Mount the SSD
     echo "Mounting the SSD..."
-    sudo mount "$MOUNT_POINT"
+    sudo mount "$DISK" "$MOUNT_POINT"
 
     # Configure read and write access to the device
     echo "Setting permissions..."
     sudo chmod a+w "$MOUNT_POINT"
 
     # Verify mount
-    if mount | grep -q "$MOUNT_POINT"; then
+    mount_result=$(`mount | grep -q "$MOUNT_POINT"`)
+    if [[ -n  "$mount_result" ]]; then
         echo "Successfully mounted SSD $DISK to $MOUNT_POINT"
         if [ "$save_fstab" = true ]; then
             echo "A backup of your original fstab was created at $FSTAB_BACKUP"
         fi
-       ß df -h "$MOUNT_POINT"
+        df -h "$MOUNT_POINT"
     else
         echo "Error: Failed to mount SSD"
         # Restore fstab backup if mount fails and it was modified
