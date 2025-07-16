@@ -73,6 +73,9 @@ export EDITOR="emacs -nw"
 # Be sure that home/bin is at front of path
 export PATH=$HOME/bin:$PATH
 
+# Set nicer history formatting
+export HISTTIMEFORMAT="%F %T | "
+
 # SSH agent for forwarding
 if [ ! -S ~/.ssh/ssh_auth_sock ]; then
   eval `ssh-agent`
