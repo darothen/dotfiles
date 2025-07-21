@@ -44,6 +44,10 @@ case "$HOST" in
     *)
         mach_color=$fg_bold[blue];;
 esac
+# More generally, detect if we're on GCP
+if sudo dmidecode -s system-product-name | grep -q "Google Compute Engine"; then
+   mach_color=$fg_bold[white]$bg[red];
+fi
 
 PROMPT='%{$fg[blue]%}[%{$fg[red]%}%t%{$fg[blue]%}] '
 PROMPT+='%{$fg_bold[white]%}%n '
