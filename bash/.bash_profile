@@ -84,6 +84,4 @@ fi
 export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 ssh-add -l > /dev/null || ssh-add ~/.ssh/google_compute_engine
 
-
-
 . "$HOME/.local/bin/env"

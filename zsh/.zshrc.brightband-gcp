@@ -117,11 +117,11 @@ if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
     export TERM=xterm-256color
 fi
 
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/daniel/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
-
 # Set pipx default path
 export PATH="$PATH:/Users/daniel/.local/bin"
+
+# Export locally installed tools local uvx
+. "$HOME/.local/bin/env"
+
+# Export NGC CLI from NVIDIA
+export PATH="$PATH:/home/daniel/software/ngc-cli"
