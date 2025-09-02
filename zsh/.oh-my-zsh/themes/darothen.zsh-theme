@@ -46,7 +46,7 @@ case "$HOST" in
 esac
 # More generally, detect if we're on GCP
 # Only run dmidecode on Linux systems where it's available
-if [[ "$OSTYPE" == "linux-gnu"* ]] && command -v dmidecode >/dev/null 2>&1; then
+if [[ "$OSTYPE" == "linux-gnu"* ]] && command -v _dmidecode >/dev/null 2>&1; then
     if sudo dmidecode -s system-product-name 2>/dev/null | grep -q "Google Compute Engine"; then
         mach_color=$fg_bold[white]$bg[red];
     fi

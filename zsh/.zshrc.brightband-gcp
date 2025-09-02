@@ -1,3 +1,7 @@
+# Load compinits
+autoload -U +X bashcompinit && bashcompinit
+autoload -U +X compinit && compinit
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -106,7 +110,6 @@ export LANG=en_US.UTF-8
 
 # Pixi completions
 eval "$(pixi completion --shell zsh)"
-autoload -U compinit; compinit
 
 # Google Cloud completions
 # source /usr/share/google-cloud-sdk/path.zsh.inc
