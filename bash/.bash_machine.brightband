@@ -7,3 +7,36 @@ export PATH=/usr/local/bin:$PATH
 # Fix unicode encoding on iterm2
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
+
+# Custom aliases
+
+# eza aliases
+# Check if eza is installed and if it supports color, otherwise use default ls
+if command -v eza > /dev/null 2>&1; then
+    if eza --color=always > /dev/null 2>&1; then
+        COLOR_OPTION="--color=always"
+    else
+        COLOR_OPTION=""
+    fi
+else
+    # Fallback to ls if eza is not installed
+    echo "eza is not installed, using default 'ls' aliases"
+    alias ls='ls'
+    alias l='ls -lF'
+    alias ll='ls -lthF'
+    alias la='ls -laF'
+    alias lr='ls -ltrhF'
+    alias lsd='ls -lF | grep --color=never "^d"'
+fi
+
+# Define eza aliases if eza is installed and supports color
+if command -v eza > /dev/null 2>&1; then
+    alias ls="eza ${COLOR_OPTION}"
+    alias l="eza -lF ${COLOR_OPTION}"
+    # ll: long listing, sort by time (modified), human-readable sizes, classify
+    alias ll="eza -l --sort=modified -h -F ${COLOR_OPTION}"
+    alias la="eza -laF ${COLOR_OPTION}"
+    # lr: long listing, sort by time (modified) reversed, human-readable sizes, classify
+    alias lr="eza -l --sort=modified --reverse -h -F ${COLOR_OPTION}"
+    alias lsd="eza --long --classify --only-dirs ${COLOR_OPTION}"
+fi
