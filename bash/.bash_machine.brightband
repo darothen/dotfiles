@@ -33,10 +33,8 @@ fi
 if command -v eza > /dev/null 2>&1; then
     alias ls="eza ${COLOR_OPTION}"
     alias l="eza -lF ${COLOR_OPTION}"
-    # ll: long listing, sort by time (modified), human-readable sizes, classify
-    alias ll="eza -l --sort=modified -h -F ${COLOR_OPTION}"
+    alias ll="eza -l --sort=modified --reverse -h -F ${COLOR_OPTION}"
     alias la="eza -laF ${COLOR_OPTION}"
-    # lr: long listing, sort by time (modified) reversed, human-readable sizes, classify
-    alias lr="eza -l --sort=modified --reverse -h -F ${COLOR_OPTION}"
+    alias lr="eza -l --sort=modified -h -F ${COLOR_OPTION}"
     alias lsd="eza --long --classify --only-dirs ${COLOR_OPTION}"
 fi
