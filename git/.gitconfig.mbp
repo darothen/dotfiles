@@ -71,9 +71,6 @@
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
 [credential]
 	helper = osxkeychain
 	helper = 
@@ -83,10 +80,6 @@
 [merge "jupyternotebook"]
 	driver = git-nbmergedriver merge %O %A %B %L %P
 	name = jupyter notebook merge driver
-# [difftool "nbdime"]
-# 	cmd = git-nbdifftool diff \"$LOCAL\" \"$REMOTE\"
-# [mergetool "nbdime"]
-# 	cmd = git-nbmergetool merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
 [mergetool]
 	prompt = false
 [filter "lfs"]
@@ -96,12 +89,32 @@
 	clean = git-lfs clean -- %f
 [init]
 	defaultBranch = main
-[credential "https://dev.azure.com"]
-	useHttpPath = true
-[pager]
-        difftool = true
-[safe]
-	directory = /home/conda/staged-recipes
-	directory = /home/conda/staged-recipes
-[maintenance]
-	repo = /Users/daniel/workspace/bufr2parquet
+
+# "Clearly Better" configurations from 
+# https://blog.gitbutler.com/how-git-core-devs-configure-git/
+[column]
+	ui = auto
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
+[diff]
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
+[push]
+	default = simple
+	autoSetupRemote = true
+	followTags = true
+[fetch]
+	prune = true
+	pruneTags = true
+	all = trustExitCode
+[help]
+	autocorrect = prompt
+[commit]
+	verbose = true
+[rerere]
+	enabled = true
+	autoupdate = true

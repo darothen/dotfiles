@@ -2,9 +2,8 @@
 # requires-python = ">=3.12"
 # dependencies = []
 # ///
-""" Install dotfiles, optionally for a specific machine.
+"""Install dotfiles, optionally for a specific machine."""
 
-"""
 import errno
 import fnmatch
 import logging
@@ -15,15 +14,17 @@ from pathlib import Path
 # Basic configuration
 logging.basicConfig(
     level=logging.INFO,  # Set the minimum logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-    format='%(asctime)s | %(funcName)s | %(levelname)s | %(message)s'  # Define the log message format
+    format="%(asctime)s | %(funcName)s | %(levelname)s | %(message)s",  # Define the log message format
 )
 
 # Create a logger
 logger = logging.getLogger(__name__)
 
 # Suffix patterns to ignore
-EXCLUDES = ["*~", ]
-EXCLUDES = r'|'.join([fnmatch.translate(x) for x in EXCLUDES])
+EXCLUDES = [
+    "*~",
+]
+EXCLUDES = r"|".join([fnmatch.translate(x) for x in EXCLUDES])
 
 # Dotfile subdirectories to install
 # NOTE: These correspond to the subdirectories in the root of the dotfiles repo. We
@@ -34,7 +35,7 @@ EXCLUDES = r'|'.join([fnmatch.translate(x) for x in EXCLUDES])
 #
 # 1) ./bash/.bashrc is a "bash" dotfile, and will be symlinked into $HOME/.bashrc
 # 2) ./emacs/.emacs.d/init.el is an "emacs" dotfile, and will be symlinked into $HOME/.emacs.d/init.el
-DOTFILES = ['.config', 'bash', 'bin', 'conda', 'emacs', 'git', 'test', 'tmux', 'zsh']
+DOTFILES = [".config", "bash", "bin", "conda", "emacs", "git", "test", "tmux", "zsh"]
 
 # Machines with custom dotfile sets.
 # NOTE: These are a listing of special machine-specific dotfile variants that are contained
@@ -43,39 +44,55 @@ DOTFILES = ['.config', 'bash', 'bin', 'conda', 'emacs', 'git', 'test', 'tmux', '
 # then it will be named ".bashrc.mbp" and when the "mbp" token is passed to the CLI, it will
 # look for files with this extension in preference over the default ".bashrc" file.
 MACHINES = [
-    "mbp",         # Work MacbookPro/OSX config
-    "roth-home",   # Home / office desktop
-    "legion",      # legion.mit.edu
-    "svante",      # svante.mit.edu
-    "yellowstone", # NCAR Yellowstone Supercomputer
-    "newton",      # Singapore Supercomputing Center
-    "ubuntu",      # Home/personal Ubuntu config
-    "climacell",   # ClimaCell work MBP
-    "midway",      # Midway cluster at UChicago, midway.rcc.uchicago.edu
-    "brightband-gcp",    # Default Google Cloud Platform for Brightband
+    "mbp",  # Work MacbookPro/OSX config
+    "roth-home",  # Home / office desktop
+    "legion",  # legion.mit.edu
+    "svante",  # svante.mit.edu
+    "yellowstone",  # NCAR Yellowstone Supercomputer
+    "newton",  # Singapore Supercomputing Center
+    "ubuntu",  # Home/personal Ubuntu config
+    "climacell",  # ClimaCell work MBP
+    "midway",  # Midway cluster at UChicago, midway.rcc.uchicago.edu
+    "brightband-gcp",  # Default Google Cloud Platform for Brightband
     "brightband",  # OEAI/Brightband work MBP
-    "default",     # Barebones, no-configuration
+    "default",  # Barebones, no-configuration
 ]
 DEPRECATED_MACHINES = [
-    "legion", "svante", "yellowstone", "newton", "ubuntu", "climacell", "midway"
+    "legion",
+    "svante",
+    "yellowstone",
+    "newton",
+    "ubuntu",
+    "climacell",
+    "midway",
 ]
 
 
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
-parser = ArgumentParser(description=__doc__,
-                        formatter_class=RawDescriptionHelpFormatter)
-parser.add_argument("machine", type=str, choices=MACHINES,
-                    help="Name of machine for installation of bash scripts")
-parser.add_argument("-O", "--overwrite", action='store_true',
-                    help="Overwrite any pre-existing dotfiles")
-parser.add_argument("-n", "--dry-run", action='store_true',
-                    help="Indicate changes to be made without actually running them")
+parser = ArgumentParser(
+    description=__doc__, formatter_class=RawDescriptionHelpFormatter
+)
+parser.add_argument(
+    "machine",
+    type=str,
+    choices=MACHINES,
+    help="Name of machine for installation of bash scripts",
+)
+parser.add_argument(
+    "-O", "--overwrite", action="store_true", help="Overwrite any pre-existing dotfiles"
+)
+parser.add_argument(
+    "-n",
+    "--dry-run",
+    action="store_true",
+    help="Indicate changes to be made without actually running them",
+)
 
 
 def link(path_to_target, path_to_symlink, overwrite=False, dry=True):
-    """ Convenience function for symlinking; takes care of
-    printing information and overwriting files if necessary. """
+    """Convenience function for symlinking; takes care of
+    printing information and overwriting files if necessary."""
 
     link_str_fmt = "{mode:s} {symlink:s} -> {target:s}"
 
@@ -84,29 +101,36 @@ def link(path_to_target, path_to_symlink, overwrite=False, dry=True):
     root_dir = os.path.split(path_to_symlink)[0]
     if not os.path.exists(root_dir):
         logger.info("Creating directory at %s", root_dir)
-        if not dry: os.makedirs(root_dir)
+        if not dry:
+            os.makedirs(root_dir)
 
     try:
-        if not dry: os.symlink(path_to_target, path_to_symlink)
+        if not dry:
+            os.symlink(path_to_target, path_to_symlink)
     except OSError as e:
-        if (e.errno == errno.EEXIST) and overwrite:  # File already exists, and we want to over-write
+        if (
+            e.errno == errno.EEXIST
+        ) and overwrite:  # File already exists, and we want to over-write
             os.remove(path_to_symlink)
-            if not dry: os.symlink(path_to_target, path_to_symlink)
+            if not dry:
+                os.symlink(path_to_target, path_to_symlink)
             MODE = "Overwriting"
-        elif (e.errno == errno.EEXIST):
+        elif e.errno == errno.EEXIST:
             MODE = "Ignoring"
-    link_str = link_str_fmt.format(mode=MODE, target=str(path_to_target), symlink=str(path_to_symlink))
+    link_str = link_str_fmt.format(
+        mode=MODE, target=str(path_to_target), symlink=str(path_to_symlink)
+    )
     logger.debug(link_str)
 
 
 def _strip_root(fn):
-    """ Strip the root directory from a filepath """
+    """Strip the root directory from a filepath"""
     fn = fn.lstrip(os.sep)  # Get rid of leading /
-    return fn[fn.index(os.sep)+1:]
+    return fn[fn.index(os.sep) + 1 :]
 
 
 def _get_files(dotfile):
-    """ Walk a dotfile path and get all the files (potentially) in
+    """Walk a dotfile path and get all the files (potentially) in
     subdirectories) tthat will be linked, except for excluded files.
 
     """
@@ -127,8 +151,7 @@ def _get_files(dotfile):
 
 
 def install(machine, overwrite, dry):
-
-    HOME = os.environ['HOME']
+    HOME = os.environ["HOME"]
     DOT_DIR = os.getcwd()
 
     if machine is None:
@@ -137,14 +160,14 @@ def install(machine, overwrite, dry):
     if machine in DEPRECATED_MACHINES:
         raise ValueError(f"Machine '{machine}' is no longer supported for installs")
     exclude_machines = [m for m in MACHINES if m != machine]
-    machine_suffix = '.' + machine
+    machine_suffix = "." + machine
 
     for dotfile in DOTFILES:
         logger.info("Processing == %s ==", dotfile)
 
         files = _get_files(dotfile)
         for m in exclude_machines:
-            exclude_machine_suffix = '.' + m
+            exclude_machine_suffix = "." + m
             files = [f for f in files if f.suffix != exclude_machine_suffix]
         logger.info("   Found %s dotfiles: %r", len(files), files)
 
@@ -162,7 +185,6 @@ def install(machine, overwrite, dry):
 
 
 if __name__ == "__main__":
-
     args = parser.parse_args()
     logger.info("Installing dotfiles for machine %s", args.machine)
     install(args.machine, args.overwrite, args.dry_run)
