@@ -171,6 +171,14 @@ def install(machine, overwrite, dry):
             files = [f for f in files if f.suffix != exclude_machine_suffix]
         logger.info("   Found %s dotfiles: %r", len(files), files)
 
+        # Build a set of machine-specific files (without the machine suffix)
+        # so we can skip generic versions when a machine-specific one exists
+        machine_specific_base_names = set()
+        for fn in files:
+            if fn.suffix == machine_suffix:
+                # This is a machine-specific file; record its base name
+                machine_specific_base_names.add(fn.with_suffix(""))
+
         for fn in files:
             # Note that we need to inject the dotfile subdir back into the path
             target = Path(__file__).parent / dotfile / fn
@@ -179,6 +187,11 @@ def install(machine, overwrite, dry):
             # Is this a machine-specific file?
             if symlink.suffix == machine_suffix:
                 symlink = symlink.with_suffix("")
+            else:
+                # This is a generic file; skip it if a machine-specific version exists
+                if fn in machine_specific_base_names:
+                    logger.info(">> Skipping %s (machine-specific version exists)", fn)
+                    continue
 
             logger.info(">> ln %s -> %s", symlink, target)
             link(target, symlink, overwrite, dry)
