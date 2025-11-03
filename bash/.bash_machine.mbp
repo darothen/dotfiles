@@ -26,19 +26,20 @@ export LANG=en_US.UTF-8
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/daniel/mambaforge/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/daniel/mambaforge/etc/profile.d/conda.sh" ]; then
-        . "/Users/daniel/mambaforge/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/daniel/mambaforge/bin:$PATH"
-    fi
-fi
-unset __conda_setup
+# Oct 27, 2025 - disable
+# __conda_setup="$('/Users/daniel/mambaforge/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/Users/daniel/mambaforge/etc/profile.d/conda.sh" ]; then
+#         . "/Users/daniel/mambaforge/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/Users/daniel/mambaforge/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
 
-if [ -f "/Users/daniel/mambaforge/etc/profile.d/mamba.sh" ]; then
-    . "/Users/daniel/mambaforge/etc/profile.d/mamba.sh"
-fi
+# if [ -f "/Users/daniel/mambaforge/etc/profile.d/mamba.sh" ]; then
+#     . "/Users/daniel/mambaforge/etc/profile.d/mamba.sh"
+# fi
 # <<< conda initialize <<<

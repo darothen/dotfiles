@@ -20,15 +20,15 @@
 (require 'cl)
 (require 'package)
 
-;; Fetch the list of available packages
-(package-initialize)
-
 ;; Name the package archives
 (setq package-archives
   '(
-    ;; ("elpa" . "https://elpa.gnu.org/packages/")
+    ("elpa" . "https://elpa.gnu.org/packages/")
     ("melpa" . "http://melpa.org/packages/")
 ))
+
+;; Fetch the list of available packages
+(package-initialize)
 
 ;; List the packages we want to install
 (let* ((packages
@@ -54,6 +54,10 @@
 (when packages
   (ignore-errors (unless package-archive-contents (package-refresh-contents))
                  (mapcar 'package-install packages))))
+
+;; Make sure packages are downloaded and installed before they are run
+;; also frees you from having to put :ensure t after installing EVERY PACKAGE.
+(setq use-package-always-ensure t)
 
 ; Delayed loading - for packages which can be cumbersome and time-consuming
 ; to load, this forces them to be loaded later on only when emacs is idling.
