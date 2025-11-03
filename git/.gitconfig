@@ -35,7 +35,8 @@
 	# Quickly get short git commit of HEAD
 	ver = describe --always --match v[0-9]*
 
-    ldiff = difftool -t latex
+        # LaTeX diffs
+        ldiff = difftool -t latex
 [color]
 	ui = auto
 	branch = auto
@@ -69,9 +70,10 @@
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
 [filter "lfs"]
-	clean = git lfs clean %f
-	smudge = git lfs smudge %f
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge --skip -- %f
 	required = true
+	process = git-lfs filter-process --skip
 [diff "jupyternotebook"]
 	command = git-nbdiffdriver diff
 [merge "jupyternotebook"]
