@@ -136,3 +136,9 @@ source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completi
 # <<< conda initialize <<<
 
 export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
+
+# Setup fzf shell integrations
+source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+source /opt/homebrew/opt/fzf/shell/completion.zsh
+
+echo "Loaded zsh config!\n"
