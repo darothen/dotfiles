@@ -45,10 +45,13 @@ case "$HOST" in
         mach_color=$fg_bold[blue];;
 esac
 # More generally, detect if we're on GCP
-# Only run dmidecode on Linux systems where it's available
-if [[ "$OSTYPE" == "linux-gnu"* ]] && command -v _dmidecode >/dev/null 2>&1; then
-    if sudo dmidecode -s system-product-name 2>/dev/null | grep -q "Google Compute Engine"; then
-        mach_color=$fg_bold[white]$bg[red];
+# Check for GCP without requiring sudo by reading DMI data directly
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # Check /sys/class/dmi/id/product_name which doesn't require root
+    if [ -f /sys/class/dmi/id/product_name ]; then
+        if grep -q "Google Compute Engine" /sys/class/dmi/id/product_name 2>/dev/null; then
+            mach_color=$fg_bold[white]$bg[red];
+        fi
     fi
 fi
 

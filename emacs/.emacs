@@ -25,6 +25,7 @@
   '(
     ("elpa" . "https://elpa.gnu.org/packages/")
     ("melpa" . "http://melpa.org/packages/")
+    ;; ("melpa-stable", "https://stable.melpa.org/packages/")
 ))
 
 ;; Fetch the list of available packages
@@ -78,7 +79,7 @@
 ;;; Sane defaults
 
 ;; Loads of better default options
-(require 'better-defaults)
+;; (require 'better-defaults)
 
 ;; Function for determining if in terminal or not
 (defun is-in-terminal()
@@ -178,3 +179,16 @@
 ; DEPRECATED - but keeping for reference.
 ; (setq custom-file "~/.emacs.d/darothen.el")
 ; (load custom-file t)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(doom-themes color-theme cmake-mode use-package better-defaults auto-complete anaconda-mode)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
