@@ -1,4 +1,3 @@
-# If Anaconda or miniconda is locally installed, then add it to
-# the path
 
-export EDITOR='emacs'
+export EDITOR="emacs -nw"
+
