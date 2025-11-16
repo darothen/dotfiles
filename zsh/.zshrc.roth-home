@@ -105,6 +105,10 @@ export LANG=en_US.UTF-8
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# Set up autocompletions
+autoload -U compinit
+compinit
+
 # Source machine-specific configuration after oh-my-zsh to ensure aliases aren't overwritten
 [ -r "$HOME/.bash_machine" ] && [ -f "$HOME/.bash_machine" ] && source "$HOME/.bash_machine"
 
@@ -125,3 +129,9 @@ if [ -f '/home/daniel/software/google-cloud-sdk/completion.zsh.inc' ]; then . '/
 
 # Export pixi
 export PATH="/home/daniel/.pixi/bin:$PATH"
+
+# If jujutsu is installed, set completions
+if [ -f "/usr/bin/local/jj" ]; then
+   source <(jj util completion zsh)
+   # source <(COMPLETE=zsh jj)
+fi
