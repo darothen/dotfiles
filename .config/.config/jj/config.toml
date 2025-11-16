@@ -5,5 +5,5 @@ name = "Daniel Rothenberg"
 email = "daniel@danielrothenberg.com"
 
 [ui]
-editor = "emacs -new"
+editor = "emacs -nw"
 pager = "less -FRX"
