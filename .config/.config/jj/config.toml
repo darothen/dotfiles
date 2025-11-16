@@ -1,0 +1,9 @@
+#:schema https://jj-vcs.github.io/jj/latest/config-schema.json
+
+[user]
+name = "Daniel Rothenberg"
+email = "daniel@danielrothenberg.com"
+
+[ui]
+editor = "emacs -new"
+pager = "less -FRX"
