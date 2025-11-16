@@ -131,7 +131,7 @@ if [ -f '/home/daniel/software/google-cloud-sdk/completion.zsh.inc' ]; then . '/
 export PATH="/home/daniel/.pixi/bin:$PATH"
 
 # If jujutsu is installed, set completions
-if [ -f "/usr/bin/local/jj" ]; then
-   source <(jj util completion zsh)
-   # source <(COMPLETE=zsh jj)
+if [ -f "/usr/local/bin/jj" ]; then
+   # source <(jj util completion zsh)
+   source <(COMPLETE=zsh jj)
 fi
