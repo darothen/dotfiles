@@ -1,0 +1,36 @@
+{
+  "alwaysThinkingEnabled": true,
+
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "matcher": "Bash|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/daniel/.claude/permission-alert.sh"
+          }
+        ]
+      }
+    ]
+  },
+
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(npm run :*)",
+      "Bash(pytest :*)",
+      "Bash(python -m pytest :*)",
+      "Bash(ls :*)",
+      "Edit(~/workspace/**/*.ts)",
+      "Edit(~/workspace/**/*.py)",
+      "Edit(~/workspace/**/*.js)",
+      "Edit(~/workspace/**/*.json)",
+      "Edit(~/workspace/**/*.yaml)",
+      "Edit(~/workspace/**/*.yml)",
+      "Edit(~/workspace/**/*.md)"
+    ]
+  }
+}

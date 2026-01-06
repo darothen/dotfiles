@@ -36,7 +36,7 @@ EXCLUDES = r"|".join([fnmatch.translate(x) for x in EXCLUDES])
 #
 # 1) ./bash/.bashrc is a "bash" dotfile, and will be symlinked into $HOME/.bashrc
 # 2) ./emacs/.emacs.d/init.el is an "emacs" dotfile, and will be symlinked into $HOME/.emacs.d/init.el
-DOTFILES = [".config", "bash", "bin", "conda", "emacs", "git", "test", "tmux", "zsh"]
+DOTFILES = [".config", "bash", "bin", "claude", "conda", "emacs", "git", "test", "tmux", "zsh"]
 
 # Machines with custom dotfile sets.
 # NOTE: These are a listing of special machine-specific dotfile variants that are contained

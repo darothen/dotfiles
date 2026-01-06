@@ -1,0 +1,6 @@
+{
+  // Default Claude Code configuration
+  // This file represents the vanilla Claude Code installation with no customizations.
+  // For machine-specific configurations, create settings.json.<machine> files.
+  // See: https://code.claude.com/docs
+}
