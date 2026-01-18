@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Receive permission request details from Claude Code
+input=$(cat)
+
+# Extract tool name and message from the input
+tool_name=$(echo "$input" | jq -r '.tool_name // "Unknown"')
+message=$(echo "$input" | jq -r '.message // "Permission required"')
+
+# Send macOS notification
+osascript <<EOF
+display notification "$message" with title "Claude Code Permission Required" subtitle "Tool: $tool_name"
+EOF
+
+# Exit successfully to allow the permission prompt to proceed normally
+exit 0

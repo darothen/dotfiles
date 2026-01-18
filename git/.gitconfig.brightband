@@ -103,7 +103,7 @@
 [fetch]
 	prune = true
 	pruneTags = true
-	all = trustExitCode
+	all = false
 [help]
 	autocorrect = prompt
 [commit]
