@@ -14,3 +14,6 @@ export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PAT
 
 # Add uv to path
 source "$HOME/.local/bin/env"
+
+# Add cargo/rust to path
+. "$HOME/.cargo/env"

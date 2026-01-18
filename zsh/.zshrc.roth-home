@@ -135,3 +135,6 @@ if [ -f "/usr/local/bin/jj" ]; then
    # source <(jj util completion zsh)
    source <(COMPLETE=zsh jj)
 fi
+
+# Add alias for Claude Code
+alias claude="/home/daniel/.claude/local/claude"
