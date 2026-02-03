@@ -1,3 +1,38 @@
+# Safe file sourcing with error handling
+# NOTE: We also inline the safe_* functions in our .zshrc files, but this makes
+# sure they're accessible from the bash shell, too.
+safe_source() {
+    local file="$1"
+    local description="${2:-configuration file}"
+
+    if [[ -f "$file" ]]; then
+        if [[ -r "$file" ]]; then
+            source "$file"
+        else
+            echo "Warning: $description exists but is not readable: $file" >&2
+        fi
+    else
+        echo "Warning: $description not found: $file" >&2
+    fi
+}
+
+# Safe PATH addition with directory validation
+safe_add_path() {
+    local dir="$1"
+    local position="${2:-append}"  # append or prepend
+    local silent="${3:-false}"      # suppress warnings
+
+    if [[ -d "$dir" ]]; then
+        if [[ "$position" == "prepend" ]]; then
+            export PATH="$dir:$PATH"
+        else
+            export PATH="$PATH:$dir"
+        fi
+    elif [[ "$silent" != "true" ]]; then
+        echo "Warning: Directory not found, skipping PATH addition: $dir" >&2
+    fi
+}
+
 # Determine size of a file or total size of a directory
 function fs() {
     if du -b /dev/null > /dev/null 2>&1; then

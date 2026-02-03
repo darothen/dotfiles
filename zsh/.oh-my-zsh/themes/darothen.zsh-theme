@@ -55,6 +55,21 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     fi
 fi
 
+# Set path color to magenta for GCP machines
+IS_GCP_MACHINE=false
+
+# Also check if DMI detected GCP (indicated by white-on-red mach_color)
+if [[ "$OSTYPE" == "linux-gnu"* ]] && [ -f /sys/class/dmi/id/product_name ]; then
+    if grep -q "Google Compute Engine" /sys/class/dmi/id/product_name 2>/dev/null; then
+        IS_GCP_MACHINE=true
+    fi
+fi
+
+# Apply magenta path color for GCP machines only
+if [[ "$IS_GCP_MACHINE" == "true" ]]; then
+    path_color=$fg_bold[magenta];
+fi
+
 PROMPT='%{$fg[blue]%}[%{$fg[red]%}%t%{$fg[blue]%}] '
 PROMPT+='%{$fg_bold[white]%}%n '
 PROMPT+='%{$reset_color%}%{$fg[red]%}at '

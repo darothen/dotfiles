@@ -1,3 +1,9 @@
+# Interim / backup files
+*.backup
+
+# Claude
+.claude/
+
 # OS-X stuff
 .DS_Store
 

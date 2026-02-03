@@ -167,6 +167,27 @@ def install(machine, overwrite, dry):
         logger.info("Processing == %s ==", dotfile)
 
         files = _get_files(dotfile)
+
+        # Special handling for zsh directory
+        if dotfile == "zsh":
+            # For zsh, ALWAYS link the base .zshrc and NEVER link machine-specific variants
+            logger.info("   Special handling for zsh directory")
+            for fn in files:
+                target = Path(__file__).parent / dotfile / fn
+                symlink = Path(HOME) / fn
+
+                # Only link the base .zshrc file, skip all .zshrc.* files
+                if fn.name == ".zshrc":
+                    logger.info(">> ln %s -> %s", symlink, target)
+                    link(target, symlink, overwrite, dry)
+                elif fn.name.startswith(".zshrc."):
+                    logger.info(">> Skipping %s (machine-specific, not linked)", fn.name)
+                else:
+                    # Link other zsh files normally (like .zprofile, etc.)
+                    logger.info(">> ln %s -> %s", symlink, target)
+                    link(target, symlink, overwrite, dry)
+            continue  # Skip the normal processing for zsh
+
         for m in exclude_machines:
             exclude_machine_suffix = "." + m
             files = [f for f in files if f.suffix != exclude_machine_suffix]
