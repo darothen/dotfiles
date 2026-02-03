@@ -1,20 +1,4 @@
 {
-  "alwaysThinkingEnabled": true,
-
-  "hooks": {
-    "PermissionRequest": [
-      {
-        "matcher": "Bash|Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/daniel/.claude/permission-alert.sh"
-          }
-        ]
-      }
-    ]
-  },
-
   "permissions": {
     "allow": [
       "Bash(git status)",
@@ -32,5 +16,19 @@
       "Edit(~/workspace/**/*.yml)",
       "Edit(~/workspace/**/*.md)"
     ]
-  }
+  },
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "matcher": "Bash|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/daniel/.claude/permission-alert.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "alwaysThinkingEnabled": true
 }
