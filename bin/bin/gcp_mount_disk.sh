@@ -118,8 +118,9 @@ provide_unmount_instructions() {
 mount_persistent_disk() {
     local format_disk=false
     local save_fstab=false
+    local positional=()
 
-    # Parse optional flags
+    # Parse all arguments (positional and flags can be in any order)
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
             --format)
@@ -135,21 +136,22 @@ mount_persistent_disk() {
                 usage
                 ;;
             *)
-                break # End of options
+                positional+=("$1")
+                shift
                 ;;
         esac
     done
 
-    # Check if correct number of arguments provided after flags
-    if [ "$#" -ne 2 ]; then
+    # Check if correct number of positional arguments provided
+    if [ "${#positional[@]}" -ne 2 ]; then
         echo "Usage: $0 mount pd <disk_device> <mount_point> [--format] [--save]"
         echo "Example: $0 mount pd /dev/sdb /mnt/data --format --save"
         exit 1
     fi
 
-    # Assign command line arguments to variables
-    DISK="$1"
-    MOUNT_POINT="$2"
+    # Assign positional arguments to variables
+    DISK="${positional[0]}"
+    MOUNT_POINT="${positional[1]}"
     FSTAB="/etc/fstab"
     FSTAB_BACKUP="/etc/fstab.backup.$(date +%Y%m%d_%H%M%S)"
 
@@ -216,8 +218,7 @@ mount_persistent_disk() {
     sudo mount -o discard,defaults "$DISK" "$MOUNT_POINT"
 
     # Verify mount
-    mount_result=$(`mount | grep -q "$MOUNT_POINT"`)
-    if [[ -n "$mount_result" ]]; then
+    if mount | grep -q "$MOUNT_POINT"; then
         echo "Successfully mounted $DISK to $MOUNT_POINT"
         if [ "$save_fstab" = true ]; then
             echo "A backup of your original fstab was created at $FSTAB_BACKUP"
@@ -238,8 +239,9 @@ mount_persistent_disk() {
 mount_local_ssd() {
     local format_disk=false
     local save_fstab=false
+    local positional=()
 
-    # Parse optional flags
+    # Parse all arguments (positional and flags can be in any order)
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
             --format)
@@ -255,21 +257,22 @@ mount_local_ssd() {
                 usage
                 ;;
             *)
-                break # End of options
+                positional+=("$1")
+                shift
                 ;;
         esac
     done
 
-    # Check if correct number of arguments provided after flags
-    if [ "$#" -ne 2 ]; then
+    # Check if correct number of positional arguments provided
+    if [ "${#positional[@]}" -ne 2 ]; then
         echo "Usage: $0 mount ssd <disk_device> <mount_point> [--format] [--save]"
         echo "Example: $0 mount ssd /dev/nvme0n1 /mnt/disks/ssd --format --save"
         exit 1
     fi
 
-    # Assign command line arguments to variables
-    DISK="$1"
-    MOUNT_POINT="$2"
+    # Assign positional arguments to variables
+    DISK="${positional[0]}"
+    MOUNT_POINT="${positional[1]}"
     FSTAB="/etc/fstab"
     FSTAB_BACKUP="/etc/fstab.backup.$(date +%Y%m%d_%H%M%S)"
 
@@ -340,8 +343,7 @@ mount_local_ssd() {
     sudo chmod a+w "$MOUNT_POINT"
 
     # Verify mount
-    mount_result=$(`mount | grep -q "$MOUNT_POINT"`)
-    if [[ -n  "$mount_result" ]]; then
+    if mount | grep -q "$MOUNT_POINT"; then
         echo "Successfully mounted SSD $DISK to $MOUNT_POINT"
         if [ "$save_fstab" = true ]; then
             echo "A backup of your original fstab was created at $FSTAB_BACKUP"
