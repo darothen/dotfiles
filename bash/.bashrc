@@ -3,5 +3,3 @@ if [[ "$-" != *i* ]]; then
     return
 fi
 source ~/.bash_profile;
-
-. "$HOME/.cargo/env"

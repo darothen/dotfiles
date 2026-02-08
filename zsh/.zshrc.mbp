@@ -24,6 +24,12 @@ safe_add_path "/opt/homebrew/opt/openjdk@11/bin" "prepend" false
 safe_source "/opt/homebrew/opt/fzf/shell/key-bindings.zsh" "fzf key bindings"
 safe_source "/opt/homebrew/opt/fzf/shell/completion.zsh" "fzf completion"
 
+# Add openjdk to path
+export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
+
+# Add rust / cargo to path
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+
 # jj (Jujutsu) completions
 if command -v jj &> /dev/null; then
     source <(COMPLETE=zsh jj)
@@ -31,5 +37,3 @@ fi
 
 # pipx / local bin
 safe_add_path "$HOME/.local/bin" "append" false
-
-# NOTE: Conda/Mambaforge disabled as of Oct 27, 2025
