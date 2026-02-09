@@ -170,18 +170,22 @@ def install(machine, overwrite, dry):
 
         # Special handling for zsh directory
         if dotfile == "zsh":
-            # For zsh, ALWAYS link the base .zshrc and NEVER link machine-specific variants
             logger.info("   Special handling for zsh directory")
             for fn in files:
                 target = Path(__file__).parent / dotfile / fn
                 symlink = Path(HOME) / fn
 
-                # Only link the base .zshrc file, skip all .zshrc.* files
+                # Always link the base .zshrc file
                 if fn.name == ".zshrc":
                     logger.info(">> ln %s -> %s", symlink, target)
                     link(target, symlink, overwrite, dry)
+                # Link machine-specific .zshrc.MACHINE to ~/.zshrc.machine
+                elif fn.name == f".zshrc.{machine}":
+                    symlink = Path(HOME) / ".zshrc.machine"
+                    logger.info(">> ln %s -> %s (machine-specific)", symlink, target)
+                    link(target, symlink, overwrite, dry)
                 elif fn.name.startswith(".zshrc."):
-                    logger.info(">> Skipping %s (machine-specific, not linked)", fn.name)
+                    logger.info(">> Skipping %s (different machine)", fn.name)
                 else:
                     # Link other zsh files normally (like .zprofile, etc.)
                     logger.info(">> ln %s -> %s", symlink, target)

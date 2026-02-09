@@ -168,61 +168,10 @@ fi
 # ============================================================================
 # Machine-Specific Configuration
 # ============================================================================
-# Detect current machine and source machine-specific config from dotfiles
+# Source machine-specific configuration from ~/.zshrc.machine symlink
+# This file is created by the dotfiles installer based on the machine argument
 
-# Determine dotfiles directory (where this script is symlinked from)
-# Resolve the symlink to find the actual dotfiles location
-if [[ -L "$HOME/.zshrc" ]]; then
-    DOTFILES_ZSH_DIR="$(dirname "$(readlink "$HOME/.zshrc")")"
-else
-    # Fallback to hardcoded path if .zshrc is not a symlink
-    DOTFILES_ZSH_DIR="$HOME/software/dotfiles/zsh"
-fi
-
-# Try to detect machine from hostname
-DETECTED_MACHINE=""
-
-# On macOS, also try ComputerName which is more reliable
-HOSTNAME_TO_CHECK="$HOST"
-if [[ "$PLATFORM" == "mac" ]] && command -v scutil &> /dev/null; then
-    COMPUTER_NAME=$(scutil --get ComputerName 2>/dev/null)
-    if [[ -n "$COMPUTER_NAME" ]]; then
-        HOSTNAME_TO_CHECK="$COMPUTER_NAME"
-    fi
-fi
-
-case "$HOSTNAME_TO_CHECK" in
-    *brightband-gcp*)
-        DETECTED_MACHINE="brightband-gcp";;
-    *brightband*)
-        DETECTED_MACHINE="brightband";;
-    *mbp* | *MacBook*)
-        DETECTED_MACHINE="mbp";;
-    *roth-home*)
-        DETECTED_MACHINE="roth-home";;
-    *climacell*)
-        DETECTED_MACHINE="climacell";;
-esac
-
-# Fallback: detect machine from .bash_machine symlink if hostname detection failed
-if [[ -z "$DETECTED_MACHINE" ]] && [[ -L "$HOME/.bash_machine" ]]; then
-    BASH_MACHINE_TARGET=$(readlink "$HOME/.bash_machine")
-    # Extract machine name from .bash_machine.MACHINE symlink
-    DETECTED_MACHINE="${BASH_MACHINE_TARGET##*.bash_machine.}"
-fi
-
-# Source machine-specific configuration if it exists
-if [[ -n "$DETECTED_MACHINE" ]]; then
-    MACHINE_ZSHRC="$DOTFILES_ZSH_DIR/.zshrc.$DETECTED_MACHINE"
-    if [[ -f "$MACHINE_ZSHRC" ]]; then
-        source "$MACHINE_ZSHRC"
-    else
-        echo "Warning: Machine-specific config not found: $MACHINE_ZSHRC" >&2
-    fi
-else
-    echo "Warning: Could not detect machine from hostname: $HOST" >&2
-    echo "Skipping machine-specific configuration." >&2
-fi
+safe_source "$HOME/.zshrc.machine" "machine-specific zsh config"
 
 # ============================================================================
 # End of Base Configuration
