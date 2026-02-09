@@ -1,0 +1,204 @@
+# Claude Code Configuration
+# This file allows you to customize Claude's behavior for this project
+# Modify any section as needed to nudge Claude in specific directions
+
+# ==============================================================================
+# BEHAVIOR CUSTOMIZATION
+# ==============================================================================
+
+behavior:
+  # Control Claude's communication style
+  communication:
+    verbosity: balanced  # Options: concise, balanced, detailed
+    use_emojis: false
+    explanation_depth: medium  # Options: minimal, medium, comprehensive
+
+  # Code generation preferences
+  coding_style:
+    prefer_functional: false
+    prefer_oop: false
+    max_function_length: null  # Set a number to enforce limits
+    add_comments: only_when_needed  # Options: always, only_when_needed, minimal, never
+    add_type_hints: true  # Language-specific (Python, TypeScript, etc.)
+    add_error_handling: balanced  # Options: minimal, balanced, comprehensive
+
+  # Testing approach
+  testing:
+    auto_run_tests: false  # Automatically run tests after code changes
+    test_framework: null  # e.g., "pytest", "jest", "vitest" - auto-detect if null
+    write_tests_by_default: false
+
+  # Git behavior
+  git:
+    auto_commit: false
+    commit_message_style: conventional  # Options: conventional, descriptive, concise
+    include_coauthor: true
+
+# ==============================================================================
+# TASK PREFERENCES
+# ==============================================================================
+
+tasks:
+  # How Claude should approach tasks
+  planning:
+    always_plan_first: false  # Force planning mode for all non-trivial tasks
+    ask_before_major_changes: true
+
+  implementation:
+    prefer_incremental: true  # Make small, focused changes
+    avoid_over_engineering: true
+    keep_existing_patterns: true  # Match existing codebase style
+
+# ==============================================================================
+# PROJECT-SPECIFIC CONTEXT
+# ==============================================================================
+
+project:
+  # Define your project type and conventions
+  type: null  # e.g., "web_app", "api", "library", "cli", "data_science"
+  language: null  # Primary language, e.g., "python", "typescript", "rust"
+  framework: null  # e.g., "react", "django", "fastapi", "nextjs"
+
+  # Key conventions to follow
+  conventions:
+    - "Use 2 spaces for indentation"
+    # - "Prefer async/await over promises"
+    # - "Use named exports only"
+    # - "Follow PEP 8 style guide"
+
+  # Important context about your codebase
+  architecture:
+    # - "src/components contains React components"
+    # - "All API calls go through src/api/client.ts"
+    # - "Use the existing logger in src/utils/logger.ts"
+
+  # Files or patterns to avoid modifying
+  protected_paths:
+    # - "vendor/"
+    # - "*.generated.ts"
+    # - "migrations/"
+
+# ==============================================================================
+# CUSTOM PROMPTS / BEHAVIOR NUDGES
+# ==============================================================================
+
+prompts:
+  # Add custom instructions that prepend to interactions
+  system_instructions: |
+
+
+  # Context that's relevant for specific file types
+  file_type_instructions:
+    # python: |
+    #   Always use type hints and docstrings following Google style.
+    # typescript: |
+    #   Prefer interfaces over types. Use strict null checks.
+    # rust: |
+    #   Follow Rust API guidelines. Prefer explicit error handling.
+
+# ==============================================================================
+# HOOKS
+# ==============================================================================
+# Hooks are shell commands that run in response to events
+# Use them to enforce checks, run formatters, or integrate with tools
+
+hooks:
+  # Runs before any tool is invoked
+  # pre_tool: |
+  #   echo "About to run tool"
+
+  # Runs after any tool completes
+  # post_tool: |
+  #   echo "Tool completed"
+
+  # Runs before reading a file
+  # pre_read: |
+  #   echo "Reading: $FILE_PATH"
+
+  # Runs after editing a file
+  post_edit: |
+    # Example: Auto-format Python files after editing
+    if [[ "$FILE_PATH" == *.py ]]; then
+      command -v black >/dev/null && black "$FILE_PATH" 2>/dev/null || true
+    fi
+    # Example: Auto-format TypeScript/JavaScript files
+    if [[ "$FILE_PATH" == *.ts ]] || [[ "$FILE_PATH" == *.tsx ]] || [[ "$FILE_PATH" == *.js ]]; then
+      command -v prettier >/dev/null && prettier --write "$FILE_PATH" 2>/dev/null || true
+    fi
+
+  # Runs after writing a new file
+  # post_write: |
+  #   echo "Created new file: $FILE_PATH"
+
+  # Runs when user submits a prompt
+  # user_prompt_submit: |
+  #   echo "User asked: $USER_PROMPT"
+
+  # Runs before committing (useful for linting, testing)
+  # pre_commit: |
+  #   npm run lint
+  #   npm test
+
+# ==============================================================================
+# MODEL PREFERENCES
+# ==============================================================================
+
+model:
+  # Default model for main operations
+  default: sonnet  # Options: opus, sonnet, haiku
+
+  # Model overrides for specific operations
+  # agents:
+  #   explore: haiku  # Use faster model for exploration
+  #   plan: sonnet
+
+# ==============================================================================
+# TOOL SETTINGS
+# ==============================================================================
+
+tools:
+  # Bash command settings
+  bash:
+    default_timeout: 120000  # milliseconds
+    allowed_commands: []  # Empty = all allowed. Add specific commands to restrict
+
+  # Web access settings
+  web:
+    enable_search: true
+    enable_fetch: true
+
+  # Task/Agent settings
+  agents:
+    max_turns: null  # null = use default limits
+    enable_background: true
+
+# ==============================================================================
+# NOTES
+# ==============================================================================
+#
+# To apply changes:
+# - Most changes take effect immediately for new prompts
+# - Some settings may require restarting Claude Code
+#
+# Common customization patterns:
+#
+# 1. Enforce code style:
+#    - Use post_edit hooks to run formatters
+#    - Add conventions under project.conventions
+#
+# 2. Control verbosity:
+#    - Adjust behavior.communication.verbosity
+#    - Set behavior.communication.explanation_depth
+#
+# 3. Project-specific guidance:
+#    - Fill in project.type, language, framework
+#    - Add architecture notes
+#    - Use prompts.system_instructions for persistent context
+#
+# 4. Integrate with tools:
+#    - Use hooks to run linters, formatters, tests
+#    - Set up pre_commit hook for quality gates
+#
+# 5. Speed up operations:
+#    - Use haiku model for exploration tasks
+#    - Enable background agents for long-running tasks
