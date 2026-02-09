@@ -61,7 +61,7 @@ project:
 
   # Key conventions to follow
   conventions:
-    - "Use 2 spaces for indentation"
+    - "Use 4 spaces for indentation in Python code"
     # - "Prefer async/await over promises"
     # - "Use named exports only"
     # - "Follow PEP 8 style guide"
@@ -84,8 +84,7 @@ project:
 
 prompts:
   # Add custom instructions that prepend to interactions
-  system_instructions: |
-
+  # system_instructions: |
 
   # Context that's relevant for specific file types
   file_type_instructions:
@@ -103,28 +102,28 @@ prompts:
 # Use them to enforce checks, run formatters, or integrate with tools
 
 hooks:
-  # Runs before any tool is invoked
-  # pre_tool: |
-  #   echo "About to run tool"
+  Runs before any tool is invoked
+  pre_tool: |
+    echo "About to run tool"
 
-  # Runs after any tool completes
-  # post_tool: |
-  #   echo "Tool completed"
+  Runs after any tool completes
+  post_tool: |
+    echo "Tool completed"
 
-  # Runs before reading a file
-  # pre_read: |
-  #   echo "Reading: $FILE_PATH"
+  Runs before reading a file
+  pre_read: |
+    echo "Reading: $FILE_PATH"
 
   # Runs after editing a file
-  post_edit: |
-    # Example: Auto-format Python files after editing
-    if [[ "$FILE_PATH" == *.py ]]; then
-      command -v black >/dev/null && black "$FILE_PATH" 2>/dev/null || true
-    fi
-    # Example: Auto-format TypeScript/JavaScript files
-    if [[ "$FILE_PATH" == *.ts ]] || [[ "$FILE_PATH" == *.tsx ]] || [[ "$FILE_PATH" == *.js ]]; then
-      command -v prettier >/dev/null && prettier --write "$FILE_PATH" 2>/dev/null || true
-    fi
+  # post_edit: |
+  #   # Example: Auto-format Python files after editing
+  #   if [[ "$FILE_PATH" == *.py ]]; then
+  #     command -v black >/dev/null && black "$FILE_PATH" 2>/dev/null || true
+  #   fi
+  #   # Example: Auto-format TypeScript/JavaScript files
+  #   if [[ "$FILE_PATH" == *.ts ]] || [[ "$FILE_PATH" == *.tsx ]] || [[ "$FILE_PATH" == *.js ]]; then
+  #     command -v prettier >/dev/null && prettier --write "$FILE_PATH" 2>/dev/null || true
+  #   fi
 
   # Runs after writing a new file
   # post_write: |
