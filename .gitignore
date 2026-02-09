@@ -1,8 +1,8 @@
 # Interim / backup files
 *.backup
 
-# Claude
-.claude/
+# Claude - local workspace config
+/.claude/
 
 # OS-X stuff
 .DS_Store
