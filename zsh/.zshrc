@@ -171,7 +171,13 @@ fi
 # Detect current machine and source machine-specific config from dotfiles
 
 # Determine dotfiles directory (where this script is symlinked from)
-DOTFILES_ZSH_DIR="$HOME/software/dotfiles/zsh"
+# Resolve the symlink to find the actual dotfiles location
+if [[ -L "$HOME/.zshrc" ]]; then
+    DOTFILES_ZSH_DIR="$(dirname "$(readlink "$HOME/.zshrc")")"
+else
+    # Fallback to hardcoded path if .zshrc is not a symlink
+    DOTFILES_ZSH_DIR="$HOME/software/dotfiles/zsh"
+fi
 
 # Try to detect machine from hostname
 DETECTED_MACHINE=""
