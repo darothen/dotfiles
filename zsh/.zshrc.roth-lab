@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+# Machine-specific ZSH configuration for: roth-home (Linux home server)
+# This file is sourced by the base .zshrc - do NOT source base here
+
+# ============================================================================
+# Machine-Specific Configuration: roth-home
+# ============================================================================
+
+# Set up autocompletions
+autoload -U compinit && compinit
+
+# Local bin environment
+safe_source "$HOME/.local/bin/env" "local bin environment"
+

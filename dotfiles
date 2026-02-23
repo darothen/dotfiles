@@ -46,6 +46,7 @@ DOTFILES = [".config", "bash", "bin", "claude", "conda", "emacs", "git", "test",
 # look for files with this extension in preference over the default ".bashrc" file.
 MACHINES = [
     "mbp",  # Work MacbookPro/OSX config
+    "roth-lab", # Homelab Ubuntu Server
     "roth-home",  # Home / office desktop
     "legion",  # legion.mit.edu
     "svante",  # svante.mit.edu
