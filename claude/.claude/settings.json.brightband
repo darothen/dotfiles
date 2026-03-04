@@ -1,20 +1,89 @@
 {
   "permissions": {
     "allow": [
+      // ── Git (read-only) ──────────────────────────────────────────────────────
       "Bash(git status)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
-      "Bash(npm run :*)",
-      "Bash(pytest :*)",
-      "Bash(python -m pytest :*)",
-      "Bash(ls :*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git fetch:*)",
+      // ── Git (write) ──────────────────────────────────────────────────────────
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git stash:*)",
+      // ── Python: uv ───────────────────────────────────────────────────────────
+      "Bash(uv run:*)",
+      "Bash(uv sync)",
+      "Bash(uv sync:*)",
+      "Bash(uv pip:*)",
+      "Bash(uvx:*)",
+      // ── Python: pixi ─────────────────────────────────────────────────────────
+      "Bash(pixi run:*)",
+      "Bash(pixi install)",
+      // ── Python: linting / typing ──────────────────────────────────────────────
+      "Bash(ruff:*)",
+      "Bash(mypy:*)",
+      "Bash(pre-commit run:*)",
+      // ── Testing ──────────────────────────────────────────────────────────────
+      "Bash(pytest:*)",
+      "Bash(python -m pytest:*)",
+      // ── Build / task runners ─────────────────────────────────────────────────
+      "Bash(make:*)",
+      "Bash(just:*)",
+      "Bash(npm run:*)",
+      // ── Shell: filesystem inspection + manipulation ───────────────────────────
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(pwd)",
+      // ── Shell: text / data utilities ─────────────────────────────────────────
+      "Bash(echo:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(wc:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(cut:*)",
+      "Bash(awk:*)",
+      "Bash(sed:*)",
+      "Bash(jq:*)",
+      // ── Shell: environment / process inspection ───────────────────────────────
+      "Bash(which:*)",
+      "Bash(env)",
+      "Bash(printenv:*)",
+      "Bash(ps:*)",
+      // ── Edit: workspace files ─────────────────────────────────────────────────
       "Edit(~/workspace/**/*.ts)",
       "Edit(~/workspace/**/*.py)",
       "Edit(~/workspace/**/*.js)",
       "Edit(~/workspace/**/*.json)",
       "Edit(~/workspace/**/*.yaml)",
       "Edit(~/workspace/**/*.yml)",
-      "Edit(~/workspace/**/*.md)"
+      "Edit(~/workspace/**/*.md)",
+      "Edit(~/workspace/**/*.toml)",
+      "Edit(~/workspace/**/*.sh)",
+      // ── Edit: dotfiles ────────────────────────────────────────────────────────
+      "Edit(~/software/dotfiles/**)",
+      // ── Write: workspace + dotfiles (new file creation) ──────────────────────
+      "Write(~/workspace/**)",
+      "Write(~/software/dotfiles/**)"
+    ],
+    "deny": [
+      // Destructive git operations
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -f:*)",
+      // Destructive filesystem operations
+      "Bash(rm -rf:*)",
+      // Privilege escalation
+      "Bash(sudo:*)"
     ]
   },
   "hooks": {
@@ -25,6 +94,28 @@
           {
             "type": "command",
             "command": "/Users/daniel/.claude/permission-alert.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/daniel/.claude/post-edit.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/daniel/.claude/task-complete.sh"
           }
         ]
       }

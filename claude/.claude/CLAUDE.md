@@ -80,6 +80,37 @@ Use Conventional Commits format:
 
 Keep commit messages concise and descriptive. Focus on the "what" and "why", not the "how".
 
+## Git Push and PR Workflow
+
+After committing, do not push or open PRs automatically — wait to be asked, or confirm with the user first.
+
+### Pushing
+
+- **New branch**: `git push -u origin <branch-name>`
+- **Existing branch**: `git push`
+- Never force-push to `main`/`master`
+
+### Pull Requests
+
+Use the `gh` CLI for all GitHub operations (issues, PRs, checks, releases):
+
+```bash
+gh pr create --title "feat: short description under 70 chars" --body "$(cat <<'EOF'
+## Summary
+- Bullet point summary of changes
+
+## Test plan
+- [ ] Describe how to verify the changes
+
+🤖 Generated with [Claude Code](https://claude.ai/claude-code)
+EOF
+)"
+```
+
+- Title: Conventional Commits prefix + short description (≤70 chars total)
+- Always run from the feature branch, targeting `main`/`master`
+- Use `gh pr view`, `gh issue list`, `gh run list` etc. for GitHub inspection tasks
+
 ## Dependency Management
 
 Before adding any new dependency:

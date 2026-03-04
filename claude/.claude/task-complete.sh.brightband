@@ -1,0 +1,4 @@
+#!/bin/bash
+# Send a macOS notification when Claude Code finishes a task (Stop hook).
+osascript -e 'display notification "Ready for input" with title "Claude Code" subtitle "Task complete"'
+exit 0
