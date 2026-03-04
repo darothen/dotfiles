@@ -15,8 +15,8 @@ This directory contains your Claude Code configuration. Use `config.yaml` to cus
 ```yaml
 behavior:
   communication:
-    verbosity: concise
-    explanation_depth: minimal
+    verbosity: balanced
+    explanation_depth: medium
 ```
 
 ### Enforce Specific Code Style

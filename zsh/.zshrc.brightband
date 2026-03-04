@@ -28,3 +28,6 @@ safe_add_path "$HOME/.local/bin" "append" false
 # fzf shell integrations
 safe_source "/opt/homebrew/opt/fzf/shell/key-bindings.zsh" "fzf key bindings"
 safe_source "/opt/homebrew/opt/fzf/shell/completion.zsh" "fzf completion"
+
+# cargo / rust crates to PATH
+safe_add_path "$HOME/.cargo/bin" "append" false
