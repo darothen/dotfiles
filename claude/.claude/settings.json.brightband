@@ -70,9 +70,16 @@
       "Edit(~/workspace/**/*.sh)",
       // ── Edit: dotfiles ────────────────────────────────────────────────────────
       "Edit(~/software/dotfiles/**)",
+      // ── Edit: Obsidian vault ──────────────────────────────────────────────────
+      "Edit(~/Documents/workspace/daily/**)",
+      "Edit(~/Documents/workspace/weekly/**)",
+      "Edit(~/Documents/workspace/notes/**)",
       // ── Write: workspace + dotfiles (new file creation) ──────────────────────
       "Write(~/workspace/**)",
-      "Write(~/software/dotfiles/**)"
+      "Write(~/software/dotfiles/**)",
+      // ── Write: Obsidian vault (new notes) ────────────────────────────────────
+      "Write(~/Documents/workspace/daily/**)",
+      "Write(~/Documents/workspace/notes/**)"
     ],
     "deny": [
       // Destructive git operations

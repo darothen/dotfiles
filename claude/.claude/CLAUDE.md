@@ -178,6 +178,49 @@ All code must:
 
 Be pragmatic: Follow the existing code style even if it differs slightly from these defaults.
 
+## Obsidian Vault Notes
+
+The Obsidian knowledge base lives at `~/Documents/workspace/`. Record session notes
+proactively — don't wait to be asked unless the session is trivial.
+
+### Daily Log
+
+At the end of any meaningful session, append a concise one-liner to today's daily note:
+
+- **Path**: `~/Documents/workspace/daily/YYYY/YYYY-MM-DD.md`
+- **Insert** new bullet(s) under the `## Notes` heading, immediately before `# Activity Summary`
+- **Format**: `- Brief description of what was accomplished`
+- **If the file doesn't exist**: create it by copying `~/Documents/workspace/templates/daily_log.md`,
+  replacing all Templater expressions (`<% ... %>`) with today's literal dates and correct nav links
+
+```
+# Daily Log
+
+## Notes
+
+- existing item
+- ← insert new bullets here
+
+# Activity Summary     ← NEVER touch anything from here down
+```
+
+### Long-Form Notes
+
+For significant tools, configurations, or topics worked on, create or update a note in `notes/`:
+
+- **Path**: `~/Documents/workspace/notes/<Descriptive Title>.md`
+- Check for an existing note on the topic before creating; update in place if found
+- **Frontmatter**: `created: YYYY-MM-DD` and `tags: []`
+- Freeform markdown body — use headers, bullets, and code blocks as appropriate
+
+### When to Record
+
+- **Check in proactively** during a session: after completing a significant task or milestone,
+  briefly ask "Want me to log this to your daily note?" before continuing
+- **Summarize at session end** without being asked: write the daily log entry and offer to
+  create/update a long-form note for any substantial topic covered
+- **Immediately** when explicitly asked (e.g., "add a note about this", "log this")
+
 ## Continuous Learning
 
 Record learnings from interactions to improve future sessions:
