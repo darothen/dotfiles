@@ -189,7 +189,8 @@ At the end of any meaningful session, append a concise one-liner to today's dail
 
 - **Path**: `~/Documents/workspace/daily/YYYY/YYYY-MM-DD.md`
 - **Insert** new bullet(s) under the `## Notes` heading, immediately before `# Activity Summary`
-- **Format**: `- Brief description of what was accomplished`
+- **Format**: `- Brief description of what was accomplished` — if a long-form note was created or
+  updated as part of the session, link to it inline: `- Brief description → [[Note Title]]`
 - **If the file doesn't exist**: create it by copying `~/Documents/workspace/templates/daily_log.md`,
   replacing all Templater expressions (`<% ... %>`) with today's literal dates and correct nav links
 
