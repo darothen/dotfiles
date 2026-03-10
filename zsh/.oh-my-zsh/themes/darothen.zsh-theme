@@ -39,6 +39,8 @@ case "$HOST" in
         mach_color=$fg_bold[red];;
     roth-home*)
         mach_color=$fg_bold[cyan];;
+    roth-lab*)
+        mach_color=$fg_bold[black]$bg[white];;
     bb-* | brightband-*)
         mach_color=$fg_bold[white]$bg[red];;
     *)
