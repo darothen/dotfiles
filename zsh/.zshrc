@@ -176,3 +176,5 @@ safe_source "$HOME/.zshrc.machine" "machine-specific zsh config"
 # ============================================================================
 # End of Base Configuration
 # ============================================================================
+
+. "$HOME/.local/bin/env"

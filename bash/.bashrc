@@ -3,3 +3,5 @@ if [[ "$-" != *i* ]]; then
     return
 fi
 source ~/.bash_profile;
+
+. "$HOME/.local/bin/env"
