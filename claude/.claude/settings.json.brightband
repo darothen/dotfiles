@@ -61,13 +61,13 @@
       "Edit(~/workspace/**/*.toml)",
       "Edit(~/workspace/**/*.sh)",
       "Edit(~/software/dotfiles/**)",
-      "Edit(~/Documents/workspace/daily/**)",
-      "Edit(~/Documents/workspace/weekly/**)",
-      "Edit(~/Documents/workspace/notes/**)",
+      "Edit(~/Documents/workspace/**)",
       "Write(~/workspace/**)",
       "Write(~/software/dotfiles/**)",
-      "Write(~/Documents/workspace/daily/**)",
-      "Write(~/Documents/workspace/notes/**)"
+      "Write(~/Documents/workspace/**)"
+    ],
+    "additionalDirectories": [
+      "~/Documents/workspace"
     ],
     "deny": [
       "Bash(git push --force:*)",
