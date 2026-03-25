@@ -1,45 +1,39 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "permissions": {
     "allow": [
-      // ── Git (read-only) ──────────────────────────────────────────────────────
       "Bash(git status)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
       "Bash(git show:*)",
       "Bash(git branch:*)",
       "Bash(git fetch:*)",
-      // ── Git (write) ──────────────────────────────────────────────────────────
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git stash:*)",
-      // ── Python: uv ───────────────────────────────────────────────────────────
       "Bash(uv run:*)",
       "Bash(uv sync)",
       "Bash(uv sync:*)",
       "Bash(uv pip:*)",
       "Bash(uvx:*)",
-      // ── Python: pixi ─────────────────────────────────────────────────────────
       "Bash(pixi run:*)",
       "Bash(pixi install)",
-      // ── Python: linting / typing ──────────────────────────────────────────────
       "Bash(ruff:*)",
       "Bash(mypy:*)",
       "Bash(pre-commit run:*)",
-      // ── Testing ──────────────────────────────────────────────────────────────
       "Bash(pytest:*)",
       "Bash(python -m pytest:*)",
-      // ── Build / task runners ─────────────────────────────────────────────────
       "Bash(make:*)",
       "Bash(just:*)",
       "Bash(npm run:*)",
-      // ── Shell: filesystem inspection + manipulation ───────────────────────────
       "Bash(ls:*)",
       "Bash(find:*)",
       "Bash(mkdir:*)",
       "Bash(cp:*)",
       "Bash(mv:*)",
       "Bash(pwd)",
-      // ── Shell: text / data utilities ─────────────────────────────────────────
       "Bash(echo:*)",
       "Bash(cat:*)",
       "Bash(head:*)",
@@ -53,12 +47,10 @@
       "Bash(awk:*)",
       "Bash(sed:*)",
       "Bash(jq:*)",
-      // ── Shell: environment / process inspection ───────────────────────────────
       "Bash(which:*)",
       "Bash(env)",
       "Bash(printenv:*)",
       "Bash(ps:*)",
-      // ── Edit: workspace files ─────────────────────────────────────────────────
       "Edit(~/workspace/**/*.ts)",
       "Edit(~/workspace/**/*.py)",
       "Edit(~/workspace/**/*.js)",
@@ -68,28 +60,21 @@
       "Edit(~/workspace/**/*.md)",
       "Edit(~/workspace/**/*.toml)",
       "Edit(~/workspace/**/*.sh)",
-      // ── Edit: dotfiles ────────────────────────────────────────────────────────
       "Edit(~/software/dotfiles/**)",
-      // ── Edit: Obsidian vault ──────────────────────────────────────────────────
       "Edit(~/Documents/workspace/daily/**)",
       "Edit(~/Documents/workspace/weekly/**)",
       "Edit(~/Documents/workspace/notes/**)",
-      // ── Write: workspace + dotfiles (new file creation) ──────────────────────
       "Write(~/workspace/**)",
       "Write(~/software/dotfiles/**)",
-      // ── Write: Obsidian vault (new notes) ────────────────────────────────────
       "Write(~/Documents/workspace/daily/**)",
       "Write(~/Documents/workspace/notes/**)"
     ],
     "deny": [
-      // Destructive git operations
       "Bash(git push --force:*)",
       "Bash(git push -f:*)",
       "Bash(git reset --hard:*)",
       "Bash(git clean -f:*)",
-      // Destructive filesystem operations
       "Bash(rm -rf:*)",
-      // Privilege escalation
       "Bash(sudo:*)"
     ]
   },
@@ -132,6 +117,5 @@
     "type": "command",
     "command": "cwd=$(cat | jq -r '.workspace.current_dir'); dir=\"${cwd/#$HOME/~}\"; git_part=\"\"; if git -C \"$cwd\" rev-parse --git-dir >/dev/null 2>&1; then branch=$(git -C \"$cwd\" symbolic-ref --short HEAD 2>/dev/null || git -C \"$cwd\" rev-parse --short HEAD 2>/dev/null); dirty=\"\"; git -C \"$cwd\" diff --quiet 2>/dev/null && git -C \"$cwd\" diff --cached --quiet 2>/dev/null || dirty=\" *\"; git_part=\"  ${branch}${dirty}\"; fi; printf '%s%s  %s' \"$dir\" \"$git_part\" \"$(date +%H:%M)\""
   },
-  "alwaysThinkingEnabled": true,
-  "model": "opus"
+  "alwaysThinkingEnabled": true
 }

@@ -7,3 +7,10 @@ background-blur-radius = 15
 theme = "Dark Pastel"
 font-family = "JetBrains Mono"
 keybind = shift+enter=text:\x1b\r
+
+# Scrollback
+scrollback-limit = 50000
+
+# Splits
+unfocused-split-opacity = 0.7
+split-divider-color = #3e4451

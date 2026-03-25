@@ -31,3 +31,10 @@ safe_source "/opt/homebrew/opt/fzf/shell/completion.zsh" "fzf completion"
 
 # cargo / rust crates to PATH
 safe_add_path "$HOME/.cargo/bin" "append" false
+
+# Disable cmux Claude hook injection when not running inside a cmux panel.
+# cmux injects SessionStart/Stop hooks via its claude wrapper, but they fail
+# when CMUX_SURFACE_ID is set without a live cmux socket (e.g. plain tmux).
+if [[ -z "$CMUX_SURFACE_ID" ]]; then
+    export CMUX_CLAUDE_HOOKS_DISABLED=1
+fi

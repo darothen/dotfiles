@@ -125,6 +125,15 @@ Before adding any new dependency:
    - uv: Run `uv sync` after editing `pyproject.toml`
    - pixi: Run `pixi install` after editing `pixi.toml`
 
+## Search Tools
+
+Prefer modern search tools over legacy Unix tools:
+
+- **Use `rg` (ripgrep) instead of `grep`** for searching file contents — it's faster, respects `.gitignore`, and has better defaults
+- Example: `rg "pattern" src/` instead of `grep -r "pattern" src/`
+- Use `rg --type py "pattern"` to filter by file type
+- Use `rg -l "pattern"` to list matching files only
+
 ## Tool Ecosystem
 
 ### Justfile
@@ -207,15 +216,27 @@ At the end of any meaningful session, append a concise one-liner to today's dail
 
 ### Long-Form Notes
 
-For significant tools, configurations, or topics worked on, create or update a note in `notes/`:
+For significant tools, configurations, research findings, or topics worked on, create or update
+a note in `notes/`:
 
 - **Path**: `~/Documents/workspace/notes/<Descriptive Title>.md`
 - Check for an existing note on the topic before creating; update in place if found
 - **Frontmatter**: `created: YYYY-MM-DD` and `tags: []`
 - Freeform markdown body — use headers, bullets, and code blocks as appropriate
 
+**Working notes from coding sessions** — any analysis, survey, design document, or reference
+material produced during a session should be saved to `notes/` in addition to wherever it lands
+in the project repo. The Obsidian vault is the canonical long-term home; the project copy is
+the working artifact.
+
+- After writing a doc to a project (e.g. `docs/something.md`), immediately mirror it to
+  `~/Documents/workspace/notes/<Descriptive Title>.md` with appropriate frontmatter
+- Link the note from the daily log so it's reachable from any day's context
+
 ### When to Record
 
+- **Working notes**: Always mirror to Obsidian immediately after writing any substantive
+  document to a project repo (analysis, design docs, survey reports, testing notes, etc.)
 - **Check in proactively** during a session: after completing a significant task or milestone,
   briefly ask "Want me to log this to your daily note?" before continuing
 - **Summarize at session end** without being asked: write the daily log entry and offer to
