@@ -189,8 +189,11 @@ Be pragmatic: Follow the existing code style even if it differs slightly from th
 
 ## Obsidian Vault Notes
 
-The Obsidian knowledge base lives at `~/Documents/workspace/`. Record session notes
-proactively — don't wait to be asked unless the session is trivial.
+The Obsidian knowledge base lives at `~/Documents/workspace/`. **Before any Obsidian
+operation, check whether `~/Documents/workspace/` exists.** If it does not (e.g., running
+on a remote machine), skip all Obsidian logging silently — do not attempt to create the
+directory or fall back to any substitute. Record session notes proactively — don't wait to
+be asked unless the session is trivial.
 
 ### Daily Log
 
