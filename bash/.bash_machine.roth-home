@@ -17,3 +17,6 @@ source "$HOME/.local/bin/env"
 
 # Add cargo/rust to path
 . "$HOME/.cargo/env"
+
+# Add claude to path
+export PATH=~/.local/bin/claude${PATH:+:${PATH}}

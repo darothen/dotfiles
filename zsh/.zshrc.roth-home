@@ -25,4 +25,4 @@ if [[ -f "/usr/local/bin/jj" ]]; then
 fi
 
 # Claude Code alias
-alias claude="$HOME/.claude/local/claude"
+# alias claude="$HOME/.claude/local/claude"
