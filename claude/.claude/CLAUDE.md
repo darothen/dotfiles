@@ -236,6 +236,35 @@ the working artifact.
   `~/Documents/workspace/notes/<Descriptive Title>.md` with appropriate frontmatter
 - Link the note from the daily log so it's reachable from any day's context
 
+### Project Directories
+
+For long-running, multi-session work with durable artifacts, the vault has a top-level
+`projects/` folder. Each project gets its own subdirectory:
+
+- **Path**: `~/Documents/workspace/projects/<Project Name>/`
+- **Use when**: Work spans multiple sessions, has ongoing design decisions, tracked plans,
+  or accumulated technical context that is specific to that project and not general knowledge
+
+**What goes in a project directory** (not in `notes/`):
+- Project plans and roadmaps (`plan.md`)
+- Design decision logs (`decisions.md` or per-decision files)
+- Memory/context docs for resuming work across sessions (`context.md`)
+- Data inventories, schema notes, or format references specific to that project
+- Any artifact that belongs to *this project* rather than being reusable general knowledge
+
+**What stays in `notes/`** (not in a project directory):
+- General technical knowledge (tool usage, language patterns, architecture concepts)
+- Cross-project reference material
+- Findings that would be useful outside the context of a single project
+
+**Detecting project context**: Before writing Obsidian artifacts, assess whether the session
+is part of a recognized long-running project:
+1. Check `~/Documents/workspace/projects/` for an existing matching directory
+2. If the work is clearly scoped to a multi-session project (e.g. PREPBUFR processing,
+   a specific library rewrite), write project-specific docs there
+3. General/reusable knowledge still goes to `notes/` even during project sessions
+4. Link project artifacts from the daily log using the project subdirectory path
+
 ### When to Record
 
 - **Working notes**: Always mirror to Obsidian immediately after writing any substantive

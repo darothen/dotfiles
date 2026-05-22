@@ -173,8 +173,10 @@ fi
 
 safe_source "$HOME/.zshrc.machine" "machine-specific zsh config"
 
+if [[ -f "$HOME/.local/bin/env" ]]; then
+    . "$HOME/.local/bin/env"
+fi
+
 # ============================================================================
 # End of Base Configuration
 # ============================================================================
-
-. "$HOME/.local/bin/env"

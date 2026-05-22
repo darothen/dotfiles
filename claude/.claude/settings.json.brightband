@@ -51,6 +51,35 @@
       "Bash(env)",
       "Bash(printenv:*)",
       "Bash(ps:*)",
+      "Bash(python3:*)",
+      "Bash(test:*)",
+      "Bash(date:*)",
+      "Bash(gh:*)",
+      "Bash(td:*)",
+      "mcp__claude_ai_Google_Calendar__list_events",
+      "mcp__claude_ai_Google_Calendar__list_calendars",
+      "mcp__claude_ai_Google_Drive__read_file_content",
+      "mcp__claude_ai_Google_Drive__download_file_content",
+      "mcp__claude_ai_Google_Drive__get_file_metadata",
+      "mcp__claude_ai_Google_Drive__search_files",
+      "mcp__claude_ai_Linear__list_issues",
+      "mcp__claude_ai_Linear__get_issue",
+      "mcp__claude_ai_Linear__list_projects",
+      "mcp__claude_ai_Linear__list_teams",
+      "mcp__4d16d17e-d63b-41fc-a9f1-686597d2df74__list_events",
+      "mcp__4d16d17e-d63b-41fc-a9f1-686597d2df74__list_calendars",
+      "mcp__4d16d17e-d63b-41fc-a9f1-686597d2df74__get_event",
+      "mcp__157537cf-1d31-4772-bdad-8e1f4ea7b1c0__read_file_content",
+      "mcp__157537cf-1d31-4772-bdad-8e1f4ea7b1c0__get_file_metadata",
+      "mcp__157537cf-1d31-4772-bdad-8e1f4ea7b1c0__search_files",
+      "mcp__67ebd9e3-c60a-4b7e-ae9d-6c1ac29b804f__list_issues",
+      "mcp__67ebd9e3-c60a-4b7e-ae9d-6c1ac29b804f__get_issue",
+      "mcp__67ebd9e3-c60a-4b7e-ae9d-6c1ac29b804f__list_comments",
+      "mcp__67ebd9e3-c60a-4b7e-ae9d-6c1ac29b804f__list_projects",
+      "mcp__67ebd9e3-c60a-4b7e-ae9d-6c1ac29b804f__list_teams",
+      "mcp__ffb67181-0a18-4d4e-b8ec-876c58467fad__search_threads",
+      "mcp__ffb67181-0a18-4d4e-b8ec-876c58467fad__get_thread",
+      "mcp__ffb67181-0a18-4d4e-b8ec-876c58467fad__list_labels",
       "Edit(~/workspace/**/*.ts)",
       "Edit(~/workspace/**/*.py)",
       "Edit(~/workspace/**/*.js)",
@@ -117,5 +146,27 @@
     "type": "command",
     "command": "cwd=$(cat | jq -r '.workspace.current_dir'); dir=\"${cwd/#$HOME/~}\"; git_part=\"\"; if git -C \"$cwd\" rev-parse --git-dir >/dev/null 2>&1; then branch=$(git -C \"$cwd\" symbolic-ref --short HEAD 2>/dev/null || git -C \"$cwd\" rev-parse --short HEAD 2>/dev/null); dirty=\"\"; git -C \"$cwd\" diff --quiet 2>/dev/null && git -C \"$cwd\" diff --cached --quiet 2>/dev/null || dirty=\" *\"; git_part=\"  ${branch}${dirty}\"; fi; printf '%s%s  %s' \"$dir\" \"$git_part\" \"$(date +%H:%M)\""
   },
-  "alwaysThinkingEnabled": true
+  "enabledPlugins": {
+    "duckdb-skills@duckdb-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "duckdb-skills": {
+      "source": {
+        "source": "github",
+        "repo": "duckdb/duckdb-skills"
+      }
+    }
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "xhigh",
+  "verbose": true,
+  "preferredNotifChannel": "ghostty",
+  "mcpServers": {
+    "zotero": {
+      "command": "/Users/daniel/.local/bin/zotero-mcp",
+      "env": {
+        "ZOTERO_LOCAL": "true"
+      }
+    }
+  }
 }
