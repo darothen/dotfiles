@@ -37,7 +37,11 @@ alias path='echo -e ${PATH//:/\\n}'
 alias now='date +"%T"'
 alias nowtime=now
 alias nowdate='date +"%d-%m-%Y"'
-alias grep="grep --color=auto"
+if command -v rg &> /dev/null; then
+    alias grep='rg'
+else
+    alias grep='grep --color=auto'
+fi
 alias tf="tail -n 500 -f"
 
 # Editors and utilities
@@ -47,3 +51,31 @@ alias em="emacs -nw"
 alias svante="ssh -Y darothen@svante-login.mit.edu"
 alias yellowstone="ssh -Y darothen@yellowstone.ucar.edu"
 alias legion="ssh -Y darothen@legion.mit.edu"
+
+# Google Cloud SDK quick aliases
+
+# Authentication
+alias glogin="gcloud auth login"
+alias gapplogin="gcloud auth application-default login"
+alias glogout="gcloud auth revoke"
+# Configuration
+alias gconfig="gcloud config list"
+alias gconfigs="gcloud config configurations list"
+alias gsetconfig="gcloud config configurations activate"
+
+# Compute instances
+alias gclist="gcloud compute instances list"
+alias gcstart="gcloud compute instances start"
+alias gcstop="gcloud compute instances stop"
+alias gcreset="gcloud compute instances reset"
+alias gcdescribe="gcloud compute instances describe"
+alias gcssh="gcloud compute ssh"
+alias gcscp="gcloud compute scp"
+
+# Storage operations
+alias gsls="gcloud storage ls"
+alias gscp="gcloud storage cp"
+alias gsmv="gcloud storage mv"
+alias gsrm="gcloud storage rm"
+alias gsmb="gcloud storage buckets create"
+alias gsrb="gcloud storage buckets delete"
