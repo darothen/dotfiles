@@ -181,5 +181,4 @@ fi
 # End of Base Configuration
 # ============================================================================
 
-# opencode
-export PATH=/home/daniel/.opencode/bin:$PATH
+export PATH="/Users/daniel/.pixi/bin:$PATH"

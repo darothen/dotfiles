@@ -158,9 +158,13 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "xhigh",
+  "effortLevel": "medium",
+  "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
   "verbose": true,
   "preferredNotifChannel": "ghostty",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
   "mcpServers": {
     "zotero": {
       "command": "/Users/daniel/.local/bin/zotero-mcp",
@@ -168,5 +172,6 @@
         "ZOTERO_LOCAL": "true"
       }
     }
-  }
+  },
+  "model": "opus[1m]"
 }
