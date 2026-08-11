@@ -54,11 +54,12 @@ Collect:
 - Learnings: gotchas, surprising behavior, constraints discovered, corrected assumptions
 - Anything left unfinished, blocked, or deliberately deferred
 
-For loop or scheduled runs, cover only work since the previous digest. Check the digest
-repo (see Step 3) for recent entries from this machine:
+For loop or scheduled runs, cover only work since the previous digest. Query the digest
+repo directly — no clone needed for a read:
 
 ```bash
-ls -t "$DIGEST_REPO/work-logs/$(date +%Y)"/*.md 2>/dev/null | head -3
+gh api "repos/brightbandtech/daniel-misc/contents/work-logs/$(date +%Y)" \
+  --jq '.[].name' 2>/dev/null | tail -5
 ```
 
 If a prior digest covers part of this work, reference it by filename rather than
@@ -66,41 +67,36 @@ repeating it.
 
 ---
 
-## Step 3 — Locate the digest repo
+## Step 3 — Decide the destination
 
 Digests are published to **`brightbandtech/daniel-misc`** (private, default branch
-`main`) under `work-logs/`. This repo is cloned during machine initialization, so it
-should already be present on any remote host.
+`main`) under `work-logs/`.
 
-Resolve its path in this order:
+**Do not assume a working copy exists.** No machine is expected to have this repo
+checked out — Step 6 clones it into a temp directory, publishes, and throws the clone
+away. The repo is a publishing target, not a workspace.
 
-1. `$DIGEST_REPO` if set
-2. First hit from the usual parents:
+**Path within the repo:** `work-logs/YYYY/YYYY-MM-DD Topic Name.md`
 
-```bash
-for d in ~/software/daniel-misc ~/src/daniel-misc ~/daniel-misc ~/work/daniel-misc; do
-  test -d "$d/.git" && export DIGEST_REPO="$d" && break
-done
-echo "${DIGEST_REPO:-not found}"
-```
+One digest per file, always — never append to or edit an existing digest. Each run of
+this skill produces exactly one new file.
 
-3. If absent, clone it: `gh repo clone brightbandtech/daniel-misc ~/software/daniel-misc`
+The topic names the work, not the session: `2026-08-11 PREPBUFR Decoder Rewrite.md`,
+not `2026-08-11 Session 3.md`. Write it as a human-readable title in Title Case; it
+matches the vault's note-naming convention and often becomes the literature note title
+verbatim. Spaces in the filename are intentional for that reason — **quote every path
+in every shell command that touches it.**
 
-If the repo cannot be found *and* cannot be cloned (no network, no credentials), fall
-back to `~/agent-digests/` and say so loudly in the final report — an unpublished digest
-is invisible to the local ingest agent.
+If that filename is already taken, append the hostname (`2026-08-11 PREPBUFR Decoder
+Rewrite (gcp-a100).md`), and only then a numeric suffix. Two machines running the same
+loop on the same day is the expected collision, and the hostname is the useful
+disambiguator.
 
-**Path within the repo:** `work-logs/YYYY/YYYY-MM-DD-<kebab-slug>.md`
+Because many machines write to this one repo, the `machine:` frontmatter field is
+load-bearing — always fill it with the real hostname.
 
-The slug names the work, not the session — `2026-08-11-prepbufr-decoder-rewrite.md`,
-not `2026-08-11-session-3.md`. If that filename is taken, append `-2`, `-3`, … rather
-than overwriting; a same-day second digest on the same topic is a different digest.
-
-Because several machines and loops write to this one repo, the `machine:` frontmatter
-field is load-bearing — always fill it with the real hostname.
-
-Do **not** create an index or manifest file. Concurrent writers would conflict on it,
-and the local agent gets a better answer from `git log` (Step 6).
+A running index lives at `work-logs/_INDEX.md` — the leading underscore sorts it to the
+top of the directory listing. Step 6 appends one line to it per digest.
 
 ---
 
@@ -203,41 +199,107 @@ wc -w <path-to-digest>
 
 ## Step 6 — Publish to the digest repo
 
-Commit and push the digest. Only ever stage the digest file itself — the repo may hold
-unrelated work in progress, and a scheduled agent must never sweep that into a commit.
+### 6a. Keep a durable copy first
 
-`work-logs/` does not exist in the repo yet — the first digest creates it, so `mkdir -p`
-before writing the file.
+Before touching git, write the digest to a path that survives temp-directory cleanup:
 
 ```bash
-cd "$DIGEST_REPO"
-git pull -q                                  # start from current main
-mkdir -p "work-logs/$(date +%Y)"
-# ...write the digest file here...
-git add "work-logs/<YYYY>/<filename>.md"
-git commit -q -m "log: <YYYY-MM-DD> <short topic> (<hostname>)"
+mkdir -p "${CLAUDE_DIGEST_DIR:-$HOME/agent-digests}"
 ```
 
-**Pushing is a race.** Several machines and loops publish to this one repo, so a
-rejected push is expected, not exceptional. Rebase and retry:
+Everything below happens in a throwaway clone. If publishing fails, this copy is the
+only thing standing between the session's work and oblivion — write it first, always.
+
+### 6b. Clone into a temp directory
 
 ```bash
+WORKDIR="$(mktemp -d)"
+gh repo clone brightbandtech/daniel-misc "$WORKDIR/daniel-misc" -- --filter=blob:none -q
+cd "$WORKDIR/daniel-misc"
+```
+
+`--filter=blob:none` gives a blobless clone: full history, ~9 MB, a few seconds. Use it
+rather than `--depth=1` — a shallow clone makes `push` and `pull --rebase` unreliable,
+which is exactly what Step 6d depends on.
+
+This requires `gh` to be authenticated with `repo` scope. If the clone fails, stop and
+skip to the failure report — do not attempt to work around missing credentials.
+
+### 6c. Write the digest and update the index
+
+```bash
+mkdir -p "work-logs/$(date +%Y)"
+# ...write "work-logs/<YYYY>/<YYYY-MM-DD Topic Name>.md" here...
+```
+
+Append one line to `work-logs/_INDEX.md`, newest at the bottom:
+
+```markdown
+- `2026-08-11` — [PREPBUFR Decoder Rewrite](<2026/2026-08-11 PREPBUFR Decoder Rewrite.md>) — `gcp-a100` — one-line summary of the outcome
+```
+
+Note the angle brackets around the link target: filenames contain spaces, and
+`[text](<path with spaces>)` is the form that both GitHub and Obsidian resolve. A bare
+space in a Markdown link silently breaks it.
+
+If `_INDEX.md` does not exist, create it with an `# Work Log Index` heading, a one-line
+explanation, and the first entry. Do not re-sort existing lines — see 6d.
+
+**Also create `work-logs/.gitattributes` on first run**, containing:
+
+```
+_INDEX.md merge=union
+```
+
+This is what makes a shared index safe. Without it, two agents appending different lines
+to `_INDEX.md` produce a rebase conflict every time they overlap. With it, git keeps both
+sides automatically and the push just succeeds.
+
+The one gap: `.gitattributes` must already be committed for the union driver to apply, so
+if two agents race on the very first digest ever written, that one can still conflict.
+After the first successful publish the protection is in place permanently.
+
+### 6d. Commit and push
+
+Stage only the digest and the index — never `git add -A`, and never commit unrelated
+files that happen to be in the clone.
+
+```bash
+git add "work-logs/<YYYY>/<filename>.md" work-logs/_INDEX.md work-logs/.gitattributes
+git commit -q -m "log: <YYYY-MM-DD> <short topic> (<hostname>)"
+
 for i in 1 2 3; do
   git push && break
-  git pull --rebase --autostash && sleep $((i * 3))
+  git pull --rebase && sleep $((i * 3))
 done
 ```
 
-Rebasing is safe here because each digest is a new file — two agents publishing at once
-touch disjoint paths and cannot textually conflict. If a rebase *does* conflict, stop
-and report rather than resolving it; that means something unexpected is in the repo.
+**Pushing is a race** — many machines publish here, so a rejected push is routine, not
+exceptional. The digest file itself can never conflict (unique path per run), and
+`merge=union` handles the index, so the retry loop should resolve cleanly.
 
-**If the push ultimately fails**, leave the commit in place and report the failure
-plainly with the local path. The digest still exists on disk and can be pushed later —
-never delete it, and never claim it was published when it wasn't.
+Union merge can leave index lines slightly out of date order after a concurrent append.
+That is fine and expected — do not "fix" it by re-sorting, which would rewrite lines
+other agents are appending to and reintroduce the conflicts the union driver just
+eliminated. Lines carry their own date prefix; sort at read time.
 
-Push failure is the one outcome most likely to go unnoticed in an unattended loop, so
-state it in the first line of the report, not as a footnote.
+If a rebase conflicts anyway, stop and report rather than resolving it — that means
+something unexpected is in the repo.
+
+### 6e. Clean up
+
+On success, remove the temp clone:
+
+```bash
+rm -rf "$WORKDIR"
+```
+
+**On failure, do not remove it.** Report the failure plainly, with both the durable copy
+from 6a and the temp clone path so the commit can be pushed later:
+
+Push failure is the outcome most likely to go unnoticed in an unattended loop, so it
+belongs in the first line of the report, never as a footnote. Never claim a digest was
+published when it wasn't.
 
 ---
 
@@ -245,7 +307,7 @@ state it in the first line of the report, not as a footnote.
 
 ```
 Work digest published:
-  work-logs/<YYYY>/<filename>.md  (<N> words)
+  work-logs/<YYYY>/<YYYY-MM-DD Topic Name>.md  (<N> words)
   <commit sha> pushed to brightbandtech/daniel-misc
 
 Topic: <title>
@@ -255,9 +317,9 @@ Covers: <N commits, N PRs, ...>
 If the push failed, lead with that instead:
 
 ```
-Work digest written but NOT PUSHED (<reason>):
-  <absolute local path>  (<N> words)
-  Commit <sha> is staged locally in <repo path> — retry with: git -C <repo> push
+Work digest written but NOT PUBLISHED (<reason>):
+  Durable copy:  <path from 6a>  (<N> words)
+  Pending commit: <sha> in <temp clone path>  (retry: git -C <path> push)
 ```
 
 ---
@@ -266,21 +328,21 @@ Work digest written but NOT PUSHED (<reason>):
 
 For the local agent, on the machine with the Obsidian vault. Ask it to:
 
-> Pull `daniel-misc` and fold any new `work-logs/` digests into my daily log and
-> literature notes.
+> Pull the latest `work-logs` from daniel-misc and fold any new digests into my daily
+> log and literature notes.
 
-New digests are found from git history rather than a manifest — no index file to
-conflict over, and it works no matter which machine wrote them:
+Read `work-logs/_INDEX.md` for the human-readable list. To find what has *not* been
+ingested yet, use git history rather than the index — it is authoritative about what
+arrived when, regardless of which machine wrote it:
 
 ```bash
-cd "$DIGEST_REPO" && git pull
-# digests added since the last local ingest
-git log --since="3 days ago" --name-only --diff-filter=A --pretty=format: -- work-logs/ | sort -u
+git log --since="7 days ago" --name-only --diff-filter=A --pretty=format: -- work-logs/ \
+  | rg -v '_INDEX|gitattributes' | sort -u
 ```
 
 Each digest's `Ingest Hints` block carries the suggested daily-log bullet, note title,
 destination, and tags — the local agent should verify those against the vault (the
 remote agent was guessing) and then follow the `log-work` conventions to write them.
 
-Digests are never deleted after ingest. The repo is the durable record; the vault is the
-curated one.
+Digests are never deleted or edited after ingest. The repo is the durable append-only
+record; the vault is the curated one.
