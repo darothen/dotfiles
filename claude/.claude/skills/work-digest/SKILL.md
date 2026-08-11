@@ -6,7 +6,9 @@ description: This skill should be used when the user types "/work-digest", asks 
   portable 1-2 page Markdown summary of completed work. Use this instead of "log-work"
   whenever the Obsidian vault at ~/Documents/workspace/ is unavailable (remote host, CI
   runner, cloud sandbox, MCP server down). Produces a single self-contained file that a
-  local agent later folds into the daily log and a literature note.
+  local agent later folds into the daily log and a literature note. The digest is
+  published to the brightbandtech/daniel-misc repo under work-logs/, which is cloned on
+  every machine during initialization.
 ---
 
 # Work Digest
@@ -52,10 +54,11 @@ Collect:
 - Learnings: gotchas, surprising behavior, constraints discovered, corrected assumptions
 - Anything left unfinished, blocked, or deliberately deferred
 
-For loop or scheduled runs, cover only work since the previous digest. Check for one:
+For loop or scheduled runs, cover only work since the previous digest. Check the digest
+repo (see Step 3) for recent entries from this machine:
 
 ```bash
-ls -t "${CLAUDE_DIGEST_DIR:-$HOME/agent-digests}"/*.md 2>/dev/null | head -3
+ls -t "$DIGEST_REPO/work-logs/$(date +%Y)"/*.md 2>/dev/null | head -3
 ```
 
 If a prior digest covers part of this work, reference it by filename rather than
@@ -63,21 +66,41 @@ repeating it.
 
 ---
 
-## Step 3 — Choose the output path
+## Step 3 — Locate the digest repo
 
-Resolve in this order:
+Digests are published to **`brightbandtech/daniel-misc`** (private, default branch
+`main`) under `work-logs/`. This repo is cloned during machine initialization, so it
+should already be present on any remote host.
 
-1. A path the user specified in the request
-2. `$CLAUDE_DIGEST_DIR` if set
-3. `<repo-root>/.agent-digests/` if the repo already has that directory
-4. `~/agent-digests/` (create it)
+Resolve its path in this order:
 
-Filename: `YYYY-MM-DD-<kebab-slug>.md`, where the slug names the work, not the session —
-`2026-08-11-prepbufr-decoder-rewrite.md`, not `2026-08-11-session-3.md`. If a file with
-that name exists, append `-2`, `-3`, … rather than overwriting.
+1. `$DIGEST_REPO` if set
+2. First hit from the usual parents:
 
-If the directory sits inside a git repo, make sure it is ignored (`.gitignore` or
-`.git/info/exclude`) unless the user wants digests committed.
+```bash
+for d in ~/software/daniel-misc ~/src/daniel-misc ~/daniel-misc ~/work/daniel-misc; do
+  test -d "$d/.git" && export DIGEST_REPO="$d" && break
+done
+echo "${DIGEST_REPO:-not found}"
+```
+
+3. If absent, clone it: `gh repo clone brightbandtech/daniel-misc ~/software/daniel-misc`
+
+If the repo cannot be found *and* cannot be cloned (no network, no credentials), fall
+back to `~/agent-digests/` and say so loudly in the final report — an unpublished digest
+is invisible to the local ingest agent.
+
+**Path within the repo:** `work-logs/YYYY/YYYY-MM-DD-<kebab-slug>.md`
+
+The slug names the work, not the session — `2026-08-11-prepbufr-decoder-rewrite.md`,
+not `2026-08-11-session-3.md`. If that filename is taken, append `-2`, `-3`, … rather
+than overwriting; a same-day second digest on the same topic is a different digest.
+
+Because several machines and loops write to this one repo, the `machine:` frontmatter
+field is load-bearing — always fill it with the real hostname.
+
+Do **not** create an index or manifest file. Concurrent writers would conflict on it,
+and the local agent gets a better answer from `git log` (Step 6).
 
 ---
 
@@ -167,7 +190,7 @@ costs it a search.
 
 ---
 
-## Step 5 — Verify and report
+## Step 5 — Verify
 
 Re-read the written file once as if you had no context. If any sentence would be
 unintelligible to that reader, rewrite it.
@@ -176,18 +199,88 @@ unintelligible to that reader, rewrite it.
 wc -w <path-to-digest>
 ```
 
-Then report:
+---
+
+## Step 6 — Publish to the digest repo
+
+Commit and push the digest. Only ever stage the digest file itself — the repo may hold
+unrelated work in progress, and a scheduled agent must never sweep that into a commit.
+
+`work-logs/` does not exist in the repo yet — the first digest creates it, so `mkdir -p`
+before writing the file.
+
+```bash
+cd "$DIGEST_REPO"
+git pull -q                                  # start from current main
+mkdir -p "work-logs/$(date +%Y)"
+# ...write the digest file here...
+git add "work-logs/<YYYY>/<filename>.md"
+git commit -q -m "log: <YYYY-MM-DD> <short topic> (<hostname>)"
+```
+
+**Pushing is a race.** Several machines and loops publish to this one repo, so a
+rejected push is expected, not exceptional. Rebase and retry:
+
+```bash
+for i in 1 2 3; do
+  git push && break
+  git pull --rebase --autostash && sleep $((i * 3))
+done
+```
+
+Rebasing is safe here because each digest is a new file — two agents publishing at once
+touch disjoint paths and cannot textually conflict. If a rebase *does* conflict, stop
+and report rather than resolving it; that means something unexpected is in the repo.
+
+**If the push ultimately fails**, leave the commit in place and report the failure
+plainly with the local path. The digest still exists on disk and can be pushed later —
+never delete it, and never claim it was published when it wasn't.
+
+Push failure is the one outcome most likely to go unnoticed in an unattended loop, so
+state it in the first line of the report, not as a footnote.
+
+---
+
+## Step 7 — Report
 
 ```
-Work digest written:
-  <absolute path>  (<N> words)
+Work digest published:
+  work-logs/<YYYY>/<filename>.md  (<N> words)
+  <commit sha> pushed to brightbandtech/daniel-misc
 
 Topic: <title>
 Covers: <N commits, N PRs, ...>
-
-To ingest locally:
-  "Read <path> and fold it into today's daily log and a literature note."
 ```
 
-If the digest was written to a remote machine, remind the user how to retrieve it
-(`scp`, `gh` artifact, shared volume) — a digest the user cannot reach is worthless.
+If the push failed, lead with that instead:
+
+```
+Work digest written but NOT PUSHED (<reason>):
+  <absolute local path>  (<N> words)
+  Commit <sha> is staged locally in <repo path> — retry with: git -C <repo> push
+```
+
+---
+
+## Ingesting locally
+
+For the local agent, on the machine with the Obsidian vault. Ask it to:
+
+> Pull `daniel-misc` and fold any new `work-logs/` digests into my daily log and
+> literature notes.
+
+New digests are found from git history rather than a manifest — no index file to
+conflict over, and it works no matter which machine wrote them:
+
+```bash
+cd "$DIGEST_REPO" && git pull
+# digests added since the last local ingest
+git log --since="3 days ago" --name-only --diff-filter=A --pretty=format: -- work-logs/ | sort -u
+```
+
+Each digest's `Ingest Hints` block carries the suggested daily-log bullet, note title,
+destination, and tags — the local agent should verify those against the vault (the
+remote agent was guessing) and then follow the `log-work` conventions to write them.
+
+Digests are never deleted after ingest. The repo is the durable record; the vault is the
+curated one.
