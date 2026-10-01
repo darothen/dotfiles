@@ -111,9 +111,9 @@ echo "Configuring zsh for platform $PLATFORM on host $HOST...\n"
 
 # Platform-specific plugins
 if [[ "$PLATFORM" == "mac" ]]; then
-    plugins=(fzf gcloud git github macos python ssh uv)
+    plugins=(fzf gcloud git gh macos python ssh uv)
 else
-    plugins=(fzf gcloud git github python ssh uv)
+    plugins=(fzf gcloud git gh python ssh uv)
 fi
 
 # Source bash configuration files with safety checks
