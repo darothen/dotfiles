@@ -24,10 +24,8 @@
       "Bash(mypy:*)",
       "Bash(pre-commit run:*)",
       "Bash(pytest:*)",
-      "Bash(python -m pytest:*)",
       "Bash(make:*)",
       "Bash(just:*)",
-      "Bash(npm run:*)",
       "Bash(ls:*)",
       "Bash(find:*)",
       "Bash(mkdir:*)",
@@ -48,10 +46,8 @@
       "Bash(sed:*)",
       "Bash(jq:*)",
       "Bash(which:*)",
-      "Bash(env)",
       "Bash(printenv:*)",
       "Bash(ps:*)",
-      "Bash(python3:*)",
       "Bash(test:*)",
       "Bash(date:*)",
       "Bash(gh:*)",
@@ -165,6 +161,34 @@
   "preferredNotifChannel": "ghostty",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
+  "autoMode": {
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: assume private unless the remote host and repo name indicate otherwise, or a visibility check in the transcript shows public — not queryable here (no git remote configured for this repo)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: None configured",
+      "**Default / protected branches**: not queryable here (no git remotes, default branch unknown)",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Source control**: The trusted repo only (/Users/daniel/Documents/workspace) — no remotes are configured, so no additional orgs or hosts",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment (hyphen/underscore/dot-delimited — e.g. matches `prod-db`, not `producer`)",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development, plus Obsidian knowledge-base curation (literature notes, topic synthesis) at ~/Documents/workspace/ per ~/.claude/CLAUDE.md and the kb skill",
+      "**Trusted repo**: The git repository at /Users/daniel/Documents/workspace (its working directory) — no remotes are configured, so no additional hosts are trusted",
+      "**Org-specific CLIs**: None configured — project-local tooling observed includes pixi, uv, uvx, ruff, just, gh (per ~/.claude/CLAUDE.md conventions), and td/parqeye/glogin/gscp/gsls seen in usage but not documented",
+      "routine under ~/Documents/workspace/ prefix: Obsidian vault operations (daily logs, literature notes, topic notes, project directories) as described in ~/.claude/CLAUDE.md and the kb skill"
+    ]
+  },
   "mcpServers": {
     "zotero": {
       "command": "/Users/daniel/.local/bin/zotero-mcp",
@@ -173,5 +197,5 @@
       }
     }
   },
-  "model": "opus[1m]"
+  "model": "sonnet"
 }
