@@ -52,7 +52,9 @@ session:
 
 `daily-log` (morning) and `daily-summary` (EOD) both run this. Digests are append-only
 history in `daniel-misc`; there is no "mark as ingested" step in that repo, so the vault
-itself is the record: a digest is ingested if its title appears in a vault note.
+is the record. The fast, exact record is the ledger `~/Documents/workspace/.work-digests-seen`
+(one digest filename per line, e.g. `2026-08-11 Some Title.md`); the fuzzy fallback is
+searching the vault (step 2) for digests that predate the ledger or were folded in by hand.
 
 1. **List recent digests** from the index — a 14-day window, not just today, so a missed
    run or a late-night VM push is still caught:
@@ -62,6 +64,8 @@ itself is the record: a digest is ingested if its title appears in a vault note.
    ```
    Keep lines whose `YYYY-MM-DD` is within the last 14 days. Each line is
    `` - `DATE` — [Title](<YYYY/filename.md>) — `machine` — summary ``.
+   **Drop any whose filename (the link target's basename) is already in the ledger** —
+   those are done. Only the remainder go through steps 2–6.
 2. **Dedup against the vault**, not just today's note. A digest may have been folded in
    by hand under different wording, so a title match alone gives false "not ingested"
    results. Fetch the digest first (step 3), then treat it as already ingested if **any**
@@ -92,7 +96,11 @@ itself is the record: a digest is ingested if its title appears in a vault note.
    that doesn't mention the digest's outcome, append one sentence (from the digest's
    Outcomes & Status) to the end of the callout. Never rewrite existing summary text, and
    leave empty summaries alone — `daily-summary` will pick the digest up when it runs.
-6. **Report** each digest: title, machine, date, and where it landed. If `gh` fails or
+6. **Record in the ledger.** Once a digest is ingested, or confirmed already ingested by
+   hand, append its filename as a new line to `.work-digests-seen`. Do this only after the
+   vault writes succeed; if a write failed or was deferred, leave it out so the next run
+   retries.
+7. **Report** each digest: title, machine, date, and where it landed. If `gh` fails or
    nothing is new, skip silently — digests are a bonus signal, not a requirement.
 
 ---
