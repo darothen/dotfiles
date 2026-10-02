@@ -190,10 +190,18 @@ Be pragmatic: Follow the existing code style even if it differs slightly from th
 ## Obsidian Vault Notes
 
 The Obsidian knowledge base lives at `~/Documents/workspace/`. **Before any Obsidian
-operation, check whether `~/Documents/workspace/` exists.** If it does not (e.g., running
-on a remote machine), skip all Obsidian logging silently — do not attempt to create the
-directory or fall back to any substitute. Record session notes proactively — don't wait to
-be asked unless the session is trivial.
+operation, check whether `~/Documents/workspace/` exists.** Record session notes
+proactively — don't wait to be asked unless the session is trivial.
+
+**If the vault does not exist (remote VM, CI, cloud sandbox)**, do not create the directory
+or write Obsidian notes. Instead, at the end of any session that did meaningful work (code
+merged, a bug root-caused, a benchmark or analysis finished, a design decision made), run the
+`work-digest` skill. It publishes a 1–2 page Markdown digest to
+`brightbandtech/daniel-misc` under `work-logs/`, and the local machine folds it into the
+vault the next morning (`daily-log`) or at EOD (`daily-summary`). This is the only path by
+which remote work reaches the vault — skipping it silently means the work is lost. Skip it
+only for trivial sessions. If `work-digest` is not installed on this machine, say so in your
+final message rather than dropping the notes.
 
 ### Daily Log
 

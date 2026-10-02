@@ -6,9 +6,10 @@ description: This skill should be used when the user types "/work-digest", asks 
   portable 1-2 page Markdown summary of completed work. Use this instead of "log-work"
   whenever the Obsidian vault at ~/Documents/workspace/ is unavailable (remote host, CI
   runner, cloud sandbox, MCP server down). Produces a single self-contained file that a
-  local agent later folds into the daily log and a literature note. The digest is
-  published to the brightbandtech/daniel-misc repo under work-logs/, which is cloned on
-  every machine during initialization.
+  local agent later folds into the daily log and a literature note. Run it at the end of
+  every non-trivial session on a machine without the vault. The digest is published to
+  the brightbandtech/daniel-misc repo under work-logs/ via a throwaway temp clone (no
+  permanent checkout is expected on any machine).
 ---
 
 # Work Digest

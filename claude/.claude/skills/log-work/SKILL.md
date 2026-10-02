@@ -48,10 +48,52 @@ session:
 4. If multiple digests arrive for the same day, process each independently — they may
    route to different notes/projects.
 
-Digests are append-only history in `daniel-misc`; there is no "mark as ingested" step in
-that repo. Idempotency is the caller's responsibility (the `daily-summary` skill checks
-today's daily note for an existing bullet linking the digest's title before invoking this
-mode — see that skill's work-digest step).
+### Finding un-ingested digests (shared procedure)
+
+`daily-log` (morning) and `daily-summary` (EOD) both run this. Digests are append-only
+history in `daniel-misc`; there is no "mark as ingested" step in that repo, so the vault
+itself is the record: a digest is ingested if its title appears in a vault note.
+
+1. **List recent digests** from the index — a 14-day window, not just today, so a missed
+   run or a late-night VM push is still caught:
+   ```bash
+   gh api repos/brightbandtech/daniel-misc/contents/work-logs/_INDEX.md --jq '.content' \
+     | base64 -d | rg '^- `20' | sort
+   ```
+   Keep lines whose `YYYY-MM-DD` is within the last 14 days. Each line is
+   `` - `DATE` — [Title](<YYYY/filename.md>) — `machine` — summary ``.
+2. **Dedup against the vault**, not just today's note. A digest may have been folded in
+   by hand under different wording, so a title match alone gives false "not ingested"
+   results. Fetch the digest first (step 3), then treat it as already ingested if **any**
+   of these hit:
+   ```bash
+   V=~/Documents/workspace
+   # a) its title appears anywhere
+   rg -l -F "<Title>" $V/daily $V/notes $V/projects
+   # b) the daily note for the digest's own date cites one of its PR URLs/numbers
+   rg -l -F "<pull/NNN or #NNN from Key Results>" $V/daily/<YYY>/<DATE>.md
+   ```
+   If (a) and (b) both miss but the date's note has a bullet on the same project/topic,
+   or a note with a `## <DATE>` section covering the same work exists, do a quick content
+   spot-check (two or three distinctive facts from Key Results/Learnings) before
+   ingesting. When a digest was ingested by hand, say so in the report and skip it —
+   don't duplicate content.
+3. **Fetch** each remaining digest (URL-encode the filename; the year comes from the path
+   in the index line, never hardcode it):
+   ```bash
+   gh api "repos/brightbandtech/daniel-misc/contents/work-logs/<path>" \
+     --jq '.content' | base64 -d
+   ```
+4. **Ingest into the digest's own date**, oldest first. The daily-note bullet goes in the
+   note for the digest's `DATE` (`daily/YYYY/DATE.md`), under `## Notes`, so history
+   stays accurate. If that note doesn't exist, use today's note and prefix the bullet
+   with `(DATE, <machine>)`.
+5. **Backfill the Summary.** If that day's note already has a filled `## Summary` callout
+   that doesn't mention the digest's outcome, append one sentence (from the digest's
+   Outcomes & Status) to the end of the callout. Never rewrite existing summary text, and
+   leave empty summaries alone — `daily-summary` will pick the digest up when it runs.
+6. **Report** each digest: title, machine, date, and where it landed. If `gh` fails or
+   nothing is new, skip silently — digests are a bonus signal, not a requirement.
 
 ---
 
