@@ -10,7 +10,7 @@ description: >
   PRs and reviews, and Todoist completions to build a concise, human-sounding summary. Always
   use this skill when Daniel wants to prepare for standup or recap his day. Designed for
   Claude Code.
-compatibility: "Requires MCP servers (gmail, linear) and gh, td CLIs. See references/setup.md."
+compatibility: "Requires MCP servers (gmail, google-drive, linear) and gh, td CLIs. See references/setup.md."
 ---
 
 # Daily Summary Skill
@@ -65,6 +65,21 @@ From the plaintext body, extract:
    `[Daniel Rothenberg]` or `[Daniel]`. Strip the assignee prefix; keep the action text.
    Cap at 5 items.
 
+**2b. Linked meeting docs (notes taken in Google Docs).** For every meeting block in today's
+log whose heading links a Google Doc (`### HH:MM – [Title](https://docs.google.com/...)`),
+read the doc with the **google-drive** MCP, find today's dated section (same heading rules as
+`daily-log` § Action Item Detection), and collect Daniel-assigned items from it: contains
+`@Daniel`, `@daniel`, `@DR`, `[Daniel]`, `[Daniel Rothenberg]`, a Docs assignee chip for
+daniel@brightband.com, or is prefixed `Daniel →` / `Daniel:`. Merge these with the Gemini
+items for the same meeting, dropping near-duplicates (Gemini often paraphrases the doc).
+This runs even for meetings with no Gemini email.
+
+**Action items are tasks.** Each one goes through **Task import**
+(`~/.claude/skills/task-triage/SKILL.md` § Task import) — skip anything already a `TODO`
+in the vault — and is written as a Tasks-plugin task so it lands in the Inbox section of `tasks/GTD.md` (status `[ ]` = Inbox):
+`- [ ] TODO <verb-first action text> [↗](<doc-url or Gemini thread url>) ➕ YYYY-MM-DD`.
+Don't add priority, dates or tags — that's triage, which Daniel does.
+
 **Update the meeting block in the daily log** — for each matched meeting, append after
 any existing content in that block (but before the next `###` heading):
 
@@ -72,10 +87,11 @@ any existing content in that block (but before the next `###` heading):
 **Today:** <1–2 sentence summary of what was discussed>
 
 **Action items:**
-- [ ] <action item text>
+- [ ] TODO <action item text> [↗](<source-url>) ➕ YYYY-MM-DD
 ```
 
-Omit the **Action items:** block entirely if no items are assigned to Daniel.
+Omit the **Action items:** block entirely if no items are assigned to Daniel. If a doc-only
+meeting has action items but no Gemini summary, write just the **Action items:** block.
 
 **Skip** any meeting block that already contains `**Today:**` (idempotent — don't
 overwrite if this step already ran or was done manually).
@@ -95,7 +111,8 @@ for meeting_title, summary, action_items in matched_meetings:
     # Build the block to append
     today_block = f"\n**Today:** {summary}"
     if action_items:
-        items = "\n".join(f"- [ ] {a}" for a in action_items)
+        # action_items: list of (text, source_url), already deduped via Task import
+        items = "\n".join(f"- [ ] TODO {a} [↗]({url}) ➕ {today.isoformat()}" for a, url in action_items)
         today_block += f"\n\n**Action items:**\n{items}"
 
     # Match the meeting section: from the ### heading to the next ### or ##
@@ -195,12 +212,21 @@ content = re.sub(
     rf'\g<1>{callout}\n',
     content, flags=re.DOTALL
 )
+
+# Tick the template's EOD reminder in ## Tasks (plain checkbox, not a TODO task)
+content = content.replace("- [ ] EOD: run `/daily-summary`", "- [x] EOD: run `/daily-summary`", 1)
 path.write_text(content)
 ```
 
 ### 10. Present to Daniel
 Show the summary in a copyable block, and separately list which (if any) remote work
 digests were ingested in Step 3 and where each landed in the vault.
+
+Then one line on the task inbox: how many `TODO`s were imported from meetings today, and
+the current count from `python3 ~/.claude/skills/task-triage/scripts/vault_tasks.py inbox --count`.
+If today's `# Notes` has bare `- [ ]` checkboxes (`vault_tasks.py bare`, filtered to today's
+file), list them and offer to promote them to `TODO`s — capture should use the keyword, but
+this catches slips.
 
 ---
 

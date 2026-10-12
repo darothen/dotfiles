@@ -97,11 +97,14 @@ Fetch the next page if `nextPageToken` is present. Apply the event filter (see
     action items from the prior occurrence. See ## Action Item Detection below.
     - **Open from last time** (all relevant open items): list under the meeting block as
       `**Open from last time:**` bullets.
-    - **Focus list** (Daniel-assigned only): only collect items explicitly assigned to Daniel
-      into `meeting_action_items`. An item is Daniel-assigned if it contains `@Daniel`,
-      `@daniel`, `@DR`, `[Daniel]`, `[Daniel Rothenberg]`, or is prefixed `Daniel →` / `Daniel:`.
-      For each qualifying item, store as a tuple `(doc_url, meeting_title, action_text)` so
-      the Focus entry can link to the source doc.
+    - **Inbox backstop** (Daniel-assigned only): items explicitly assigned to Daniel (contains
+      `@Daniel`, `@daniel`, `@DR`, `[Daniel]`, `[Daniel Rothenberg]`, or is prefixed
+      `Daniel →` / `Daniel:`) are real tasks and belong in the task inbox, not Focus. Normally
+      `daily-summary` imported them at EOD on the meeting day; this catches any it missed.
+      For each, apply **Task import** (`~/.claude/skills/task-triage/SKILL.md` § Task import):
+      if it isn't already a `TODO` in the vault, render it in **Open from last time** as
+      `- [ ] TODO <text> [↗](<doc_url>) ➕ <today>` instead of a bare checkbox. Count these
+      as `meeting_tasks_imported`.
 - If the doc is unavailable or empty, leave the summary line blank and skip follow-up detection.
 
 ### 5. Fetch open Linear issues
@@ -201,13 +204,8 @@ carry_lines = [f"- [ ] [↻] {item}" for item in carryover]
 if carry_lines:
     sections += ["### Carry-over", *carry_lines, ""]
 
-# meeting_action_items is a list of (doc_url, meeting_title, action_text)
-meeting_lines = [
-    f"- [ ] [Meeting] [{action_text}]({doc_url}) ({meeting_title})"
-    for doc_url, meeting_title, action_text in meeting_action_items
-]
-if meeting_lines:
-    sections += ["### Meetings", *meeting_lines, ""]
+# Meeting action items are not listed here: they are Inbox-status TODO tasks that
+# surface in tasks/GTD.md.
 
 if linear_issues:
     sections += ["### Linear", *[f"- [ ] {issue}" for issue in linear_issues], ""]
@@ -247,12 +245,19 @@ path.write_text(content)
 Section headings `## Focus` and `## Meetings` exist in the template as empty blocks.
 If they're unexpectedly absent, append with clear headers and warn Daniel.
 
+Never modify the `## Tasks` section (links to GTD/Master). If today's note lacks it,
+copy it from `~/Documents/workspace/templates/daily_log.md`, inserted just before `## Summary`.
+
 ### 10. Confirm
 - Meetings included (time + title, one per line), plus count of follow-up items surfaced
 - Events skipped by the filter
 - Remote work digests ingested in step 2.5 (title · machine · date · where it landed), plus
   any backfilled past-day summaries; omit if none
-- Focus item counts: e.g. "2 Carry-over · 1 Meeting · 3 Linear · 2 Todoist · 1 PR · 2 Reviews · 3 Email"
+- Focus item counts: e.g. "2 Carry-over · 3 Linear · 2 Todoist · 1 PR · 2 Reviews · 3 Email"
+- Task inbox status from `python3 ~/.claude/skills/task-triage/scripts/vault_tasks.py inbox --count`
+  and `... stale --count`, plus `meeting_tasks_imported`, e.g.
+  "📥 Inbox: 6 untriaged (2 stale) · 1 meeting task imported". If >10 untriaged or any stale,
+  suggest `/task-triage`.
 - If any carry-over candidates were dropped in step 8.5, note both counts, e.g.
   "(4 duplicates of today's Linear/GitHub items skipped, 1 more truncated by the 5-item cap)"
 
@@ -301,7 +306,7 @@ unchecked items from the most recent prior occurrence, not to summarize the full
    - Lines starting with `**Action:**`, `AI:`, `TODO:`, or `Action item:`
    - Lines containing `@Daniel`, `@daniel`, or `@DR` — always include regardless of checkbox state
    These go into **Open from last time** in the meeting block.
-   For the **Focus list**, further filter to items explicitly assigned to Daniel:
+   For the **Inbox backstop**, further filter to items explicitly assigned to Daniel:
    must contain `@Daniel`, `@daniel`, `@DR`, `[Daniel]`, `[Daniel Rothenberg]`,
    or begin with `Daniel →` / `Daniel:`.
 4. Cap at 3 items per meeting for Open from last time. Clean up whitespace and truncate each to ~120 chars.
