@@ -6,14 +6,14 @@ this file records observed exceptions and project-specific patterns.
 
 ## Dotfiles Setup
 
-- Claude config lives in `~/software/dotfiles/claude/.claude/`, symlinked to `~/.claude/`
-- Machine-specific files use a `.<machine>` suffix; active machine: `brightband`
-- Install (or re-install after changes): `./dotfiles brightband -O` from the dotfiles root
-- Dry-run to preview: `./dotfiles brightband -n`
-- `settings.json.brightband` is the active Claude Code settings (symlinked → `settings.json`)
-- `permission-alert.sh.brightband` → `permission-alert.sh` (macOS permission notifications)
-- `task-complete.sh.brightband` → `task-complete.sh` (macOS task-complete notifications)
-- `post-edit.sh` is universal (no machine suffix); handles PostToolUse ruff formatting
+- Claude config lives in `dotfiles/claude/.claude/`, symlinked into `~/.claude/` by `./dotfiles <machine> -O` (`-n` for dry-run)
+- Machine-specific files use a `.<machine>` suffix and win over the unsuffixed file
+- Machines: `mbp` (personal; no Obsidian vault, no Brightband resources), `brightband` (work MBP, full vault), `brightband-gcp` (Linux VM; vault absent, publishes via `work-digest`)
+- `CLAUDE.md` is a thin importer: `CLAUDE.base.md` (all machines) plus `CLAUDE.vault.md` (brightband machines only; the `-gcp` files are symlinks to the `.brightband` ones)
+- Vault/Brightband skills are gated per machine by `MACHINE_ONLY` in the `dotfiles` script (`work-digest` also on gcp; the rest brightband only)
+- `settings.json` is the vanilla default; `.mbp`, `.brightband`, `.brightband-gcp` override it
+- `permission-alert.sh` / `task-complete.sh` have macOS `.brightband` variants; `post-edit.sh` is universal
+- The installer never deletes stale links: after switching a machine, remove old `~/.claude/skills/<name>` links by hand
 
 ## Workflow Preferences
 

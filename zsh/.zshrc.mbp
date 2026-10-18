@@ -37,3 +37,8 @@ fi
 
 # pipx / local bin
 safe_add_path "$HOME/.local/bin" "append" false
+
+# Wake-on-lan for accessing local roth-home GPU
+alias wake-gpu='wakeonlan d8:43:ae:0f:9d:25'
+alias sleep-gpu='ssh daniel@192.168.1.42 sudo systemctl suspend'
+alias kill-gpu='ssh daniel@192.168.1.42 sudo shutdown now'

@@ -1,0 +1,95 @@
+## Obsidian Vault Notes
+
+The Obsidian knowledge base lives at `~/Documents/workspace/`. **Before any Obsidian
+operation, check whether `~/Documents/workspace/` exists.** Record session notes
+proactively — don't wait to be asked unless the session is trivial.
+
+**If the vault does not exist (remote VM, CI, cloud sandbox)**, do not create the directory
+or write Obsidian notes. Instead, at the end of any session that did meaningful work (code
+merged, a bug root-caused, a benchmark or analysis finished, a design decision made), run the
+`work-digest` skill. It publishes a 1–2 page Markdown digest to
+`brightbandtech/daniel-misc` under `work-logs/`, and the local machine folds it into the
+vault the next morning (`daily-log`) or at EOD (`daily-summary`). This is the only path by
+which remote work reaches the vault — skipping it silently means the work is lost. Skip it
+only for trivial sessions. If `work-digest` is not installed on this machine, say so in your
+final message rather than dropping the notes.
+
+### Daily Log
+
+At the end of any meaningful session, append a concise one-liner to today's daily note:
+
+- **Path**: `~/Documents/workspace/daily/YYYY/YYYY-MM-DD.md`
+- **Insert** new bullet(s) under the `## Notes` heading, immediately before `# Activity Summary`
+- **Format**: `- Brief description of what was accomplished` — if a long-form note was created or
+  updated as part of the session, link to it inline: `- Brief description → [[Note Title]]`
+- **If the file doesn't exist**: create it by copying `~/Documents/workspace/templates/daily_log.md`,
+  replacing all Templater expressions (`<% ... %>`) with today's literal dates and correct nav links
+
+```
+# Daily Log
+
+## Notes
+
+- existing item
+- ← insert new bullets here
+
+# Activity Summary     ← NEVER touch anything from here down
+```
+
+### Long-Form Notes
+
+For significant tools, configurations, research findings, or topics worked on, create or update
+a note in `notes/`:
+
+- **Path**: `~/Documents/workspace/notes/<Descriptive Title>.md`
+- Check for an existing note on the topic before creating; update in place if found
+- **Frontmatter**: `created: YYYY-MM-DD` and `tags: []`
+- Freeform markdown body — use headers, bullets, and code blocks as appropriate
+
+**Working notes from coding sessions** — any analysis, survey, design document, or reference
+material produced during a session should be saved to `notes/` in addition to wherever it lands
+in the project repo. The Obsidian vault is the canonical long-term home; the project copy is
+the working artifact.
+
+- After writing a doc to a project (e.g. `docs/something.md`), immediately mirror it to
+  `~/Documents/workspace/notes/<Descriptive Title>.md` with appropriate frontmatter
+- Link the note from the daily log so it's reachable from any day's context
+
+### Project Directories
+
+For long-running, multi-session work with durable artifacts, the vault has a top-level
+`projects/` folder. Each project gets its own subdirectory:
+
+- **Path**: `~/Documents/workspace/projects/<Project Name>/`
+- **Use when**: Work spans multiple sessions, has ongoing design decisions, tracked plans,
+  or accumulated technical context that is specific to that project and not general knowledge
+
+**What goes in a project directory** (not in `notes/`):
+- Project plans and roadmaps (`plan.md`)
+- Design decision logs (`decisions.md` or per-decision files)
+- Memory/context docs for resuming work across sessions (`context.md`)
+- Data inventories, schema notes, or format references specific to that project
+- Any artifact that belongs to *this project* rather than being reusable general knowledge
+
+**What stays in `notes/`** (not in a project directory):
+- General technical knowledge (tool usage, language patterns, architecture concepts)
+- Cross-project reference material
+- Findings that would be useful outside the context of a single project
+
+**Detecting project context**: Before writing Obsidian artifacts, assess whether the session
+is part of a recognized long-running project:
+1. Check `~/Documents/workspace/projects/` for an existing matching directory
+2. If the work is clearly scoped to a multi-session project (e.g. PREPBUFR processing,
+   a specific library rewrite), write project-specific docs there
+3. General/reusable knowledge still goes to `notes/` even during project sessions
+4. Link project artifacts from the daily log using the project subdirectory path
+
+### When to Record
+
+- **Working notes**: Always mirror to Obsidian immediately after writing any substantive
+  document to a project repo (analysis, design docs, survey reports, testing notes, etc.)
+- **Check in proactively** during a session: after completing a significant task or milestone,
+  briefly ask "Want me to log this to your daily note?" before continuing
+- **Summarize at session end** without being asked: write the daily log entry and offer to
+  create/update a long-form note for any substantial topic covered
+- **Immediately** when explicitly asked (e.g., "add a note about this", "log this")

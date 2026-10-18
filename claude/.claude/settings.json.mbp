@@ -1,0 +1,8 @@
+{
+  "model": "sonnet",
+  "effortLevel": "medium",
+  "_comment": [
+    "Personal MBP: no Obsidian vault logging and no Brightband resources.",
+    "Vault/Brightband config lives in settings.json.brightband / .brightband-gcp."
+  ]
+}

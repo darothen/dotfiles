@@ -45,7 +45,7 @@ DOTFILES = [".config", "bash", "bin", "claude", "conda", "emacs", "git", "test",
 # then it will be named ".bashrc.mbp" and when the "mbp" token is passed to the CLI, it will
 # look for files with this extension in preference over the default ".bashrc" file.
 MACHINES = [
-    "mbp",  # Work MacbookPro/OSX config
+    "mbp",  # Personal MacbookPro/OSX config (no Obsidian vault / Brightband resources)
     "roth-lab", # Homelab Ubuntu Server
     "roth-home",  # Home / office desktop
     "legion",  # legion.mit.edu
@@ -59,6 +59,16 @@ MACHINES = [
     "brightband",  # OEAI/Brightband work MBP
     "default",  # Barebones, no-configuration
 ]
+# Vault/Brightband-only assets: path prefixes (relative to a dotfiles subdir) that are only
+# installed on the listed machines. Everything else is installed everywhere.
+MACHINE_ONLY = {
+    "claude/.claude/skills/daily-log": {"brightband"},
+    "claude/.claude/skills/daily-summary": {"brightband"},
+    "claude/.claude/skills/log-work": {"brightband"},
+    "claude/.claude/skills/task-triage": {"brightband"},
+    "claude/.claude/skills/weekly-review": {"brightband"},
+    "claude/.claude/skills/work-digest": {"brightband", "brightband-gcp"},
+}
 DEPRECATED_MACHINES = [
     "legion",
     "svante",
@@ -192,6 +202,16 @@ def install(machine, overwrite, dry):
                     logger.info(">> ln %s -> %s", symlink, target)
                     link(target, symlink, overwrite, dry)
             continue  # Skip the normal processing for zsh
+
+        files = [
+            f
+            for f in files
+            if all(
+                machine in allowed
+                for prefix, allowed in MACHINE_ONLY.items()
+                if (Path(dotfile) / f).as_posix().startswith(prefix + "/")
+            )
+        ]
 
         for m in exclude_machines:
             exclude_machine_suffix = "." + m

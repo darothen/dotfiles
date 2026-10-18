@@ -1,30 +1,9 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(gh api repos/brightbandtech/daniel-misc/contents/*)",
-      "Bash(base64 -d)",
-      "Bash(rg *)",
-      "Bash(sort)",
-      "Bash(stat *)",
-      "Bash(date *)",
-      "Bash(tail *)",
-      "Bash(ls *)",
-      "Bash(test *)",
-      "Read(//Users/daniel/Documents/workspace/**)",
-      "Edit(//Users/daniel/Documents/workspace/**)",
-      "Write(//Users/daniel/Documents/workspace/**)",
-      "Read(//Users/daniel/.claude/skills/**)"
-    ],
-    "additionalDirectories": [
-      "/Users/daniel/Documents/workspace"
-    ]
-  },
   "model": "sonnet",
   "effortLevel": "medium",
   "_comment": [
-    "Default Claude Code configuration",
-    "This file represents the vanilla Claude Code installation with no customizations.",
-    "For machine-specific configurations, create settings.json.<machine> files.",
+    "Default Claude Code configuration (no vault, no Brightband resources).",
+    "Machine-specific variants: settings.json.<machine> (mbp, brightband, brightband-gcp).",
     "See: https://code.claude.com/docs"
   ]
 }
