@@ -19,6 +19,9 @@ safe_source "$HOME/software/google-cloud-sdk/completion.zsh.inc" "Google Cloud S
 # pixi PATH
 safe_add_path "$HOME/.pixi/bin" "append" false
 
+# golang
+safe_add_path "/usr/local/go/bin" "append" false
+
 # jj (Jujutsu) completions - conditional on installation
 if [[ -f "/usr/local/bin/jj" ]]; then
     source <(COMPLETE=zsh jj)
@@ -26,3 +29,8 @@ fi
 
 # Claude Code alias
 # alias claude="$HOME/.claude/local/claude"
+
+# Cursor: launch without stale CUDA LD_LIBRARY_PATH from older sessions
+cursor() {
+    command env -u LD_LIBRARY_PATH /usr/share/cursor/cursor "$@"
+}

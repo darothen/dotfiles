@@ -10,7 +10,9 @@ fi
 
 # CUDA Toolkit paths
 export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
-export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+# NOTE: we don't add to our LD_LIBRARY_PATH so that we avoid conflicts with
+# uv and pixi environments (we don't ever run nvcc by itself)
+# export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
 # Add uv to path
 source "$HOME/.local/bin/env"
