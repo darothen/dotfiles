@@ -12,3 +12,12 @@ autoload -U compinit && compinit
 # Local bin environment
 safe_source "$HOME/.local/bin/env" "local bin environment"
 
+# Local aliases
+alias dcup="docker compose up -d"
+alias dcdn="docker compose down -d"
+alias stats="uv tool run glances"
+
+alias wake-gpu='wakeonlan d8:43:ae:0f:9d:25'
+alias sleep-gpu='ssh daniel@192.168.1.42 sudo systemctl suspend'
+alias kill-gpu='ssh daniel@192.168.1.42 sudo shutdown now'
+

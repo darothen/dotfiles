@@ -1,6 +1,9 @@
 {
-  "model": "sonnet",
+  "model": "opus",
   "effortLevel": "medium",
+  "tui": "fullscreen",
+  "theme": "auto",
+  "agentPushNotifEnabled": true,
   "_comment": [
     "Default Claude Code configuration (no vault, no Brightband resources).",
     "Machine-specific variants: settings.json.<machine> (mbp, brightband, brightband-gcp).",
