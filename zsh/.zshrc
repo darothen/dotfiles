@@ -182,3 +182,19 @@ fi
 # ============================================================================
 
 export PATH="/Users/daniel/.pixi/bin:$PATH"
+
+# List Claude Code sessions across all directories, newest first.
+# Usage: claude-sessions [count]   (default 20)
+claude-sessions() {
+  local n=${1:-20} f cwd prompt
+  for f in $(ls -t ~/.claude/projects/*/*.jsonl 2>/dev/null | head -n "$n"); do
+    cwd=$(jq -rn 'first(inputs | select(.cwd) | .cwd) // ""' "$f" 2>/dev/null)
+    prompt=$(jq -rn 'first(inputs
+      | select(.type == "user" and (.isMeta | not))
+      | .message.content
+      | if type == "string" then . else ([.[] | select(.type == "text") | .text][0] // empty) end
+      | select(startswith("<") | not)) // ""' "$f" 2>/dev/null | tr '\n' ' ' | sed 's/ *$//' | cut -c1-90)
+    printf '\e[2m%s\e[0m  \e[36m%s\e[0m  %s\n    %s\n' \
+      "$(stat -f '%Sm' -t '%m-%d %H:%M' "$f")" "${cwd/#$HOME/~}" "$(basename "$f" .jsonl)" "${prompt:-(no prompt: slash command or empty session)}"
+  done
+}

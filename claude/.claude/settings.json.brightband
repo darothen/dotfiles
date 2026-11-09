@@ -89,7 +89,10 @@
       "Edit(~/Documents/workspace/**)",
       "Write(~/workspace/**)",
       "Write(~/software/dotfiles/**)",
-      "Write(~/Documents/workspace/**)"
+      "Write(~/Documents/workspace/**)",
+      "Read(~/Documents/workspace/**)",
+      "Bash(gh api repos/brightbandtech/daniel-misc/contents/*)",
+      "Bash(base64 -d)"
     ],
     "deny": [
       "Bash(git push --force:*)",
@@ -100,7 +103,8 @@
       "Bash(sudo:*)"
     ],
     "additionalDirectories": [
-      "~/Documents/workspace"
+      "~/Documents/workspace",
+      "~/workspace/brightband-core"
     ]
   },
   "hooks": {
@@ -136,6 +140,17 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh -c 'rex __internal session-start --agent claude 2>/dev/null || true'",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
@@ -158,7 +173,7 @@
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "verbose": true,
-  "preferredNotifChannel": "ghostty",
+  "preferredNotifChannel": "auto",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "autoMode": {
@@ -188,14 +203,6 @@
       "**Org-specific CLIs**: None configured — project-local tooling observed includes pixi, uv, uvx, ruff, just, gh (per ~/.claude/CLAUDE.md conventions), and td/parqeye/glogin/gscp/gsls seen in usage but not documented",
       "routine under ~/Documents/workspace/ prefix: Obsidian vault operations (daily logs, literature notes, topic notes, project directories) as described in ~/.claude/CLAUDE.md and the kb skill"
     ]
-  },
-  "mcpServers": {
-    "zotero": {
-      "command": "/Users/daniel/.local/bin/zotero-mcp",
-      "env": {
-        "ZOTERO_LOCAL": "true"
-      }
-    }
   },
   "model": "sonnet"
 }
